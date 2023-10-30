@@ -33,6 +33,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  http: ^1.1.0
+  get_it: ^7.6.4
+  rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
