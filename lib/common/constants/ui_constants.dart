@@ -1,0 +1,2 @@
+const STANDARD_PADDING = 15.0;
+const SMALL_PADDING = 8.0;
