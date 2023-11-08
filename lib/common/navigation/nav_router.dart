@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/constants/nav_routes.dart';
+import 'package:split_the_bill/auth/screens/login_screen.dart';
 
 class NavRouter {
   void returnBack(BuildContext context) {
@@ -12,15 +12,15 @@ class NavRouter {
   }
 
   Future<void> toLogin(BuildContext context) {
-    return Navigator.of(context).pushNamedAndRemoveUntil(
-      NavRoutes.loginScreen,
+    return Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
       (route) => false,
     );
   }
 
   Future<void> toRegistration(BuildContext context) {
-    return Navigator.of(context).pushNamedAndRemoveUntil(
-      NavRoutes.registrationScreen,
+    return Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
       (route) => false,
     );
   }

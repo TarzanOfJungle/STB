@@ -1,9 +1,9 @@
 enum HttpMethod {
-  GET("GET"),
-  POST("POST"),
-  PUT("PUT"),
-  DELETE("DELETE"),
-  HEAD("HEAD");
+  get("GET"),
+  post("POST"),
+  put("PUT"),
+  delete("DELETE"),
+  head("HEAD");
 
   final String stringRepresentation;
 
