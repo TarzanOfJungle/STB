@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:split_the_bill/products/models/product/product.dart';
 
-part 'product_shopping_assignment.freezed.dart';
+part "product_shopping_assignment.freezed.dart";
 part 'product_shopping_assignment.g.dart';
 
 /// Represents a product assigned to a given shopping

@@ -5,17 +5,17 @@ import '../../shoppings_list/models/shopping_with_context/shopping_with_context.
 import '../models/tab_view_item.dart';
 import '../screens/detail_page.dart';
 
-class ShoppingTabviewPageWrapper extends StatefulWidget {
+class ShoppingDetailTabviewWrapper extends StatefulWidget {
   final ShoppingWithContext shopping;
 
-  const ShoppingTabviewPageWrapper({super.key, required this.shopping});
+  const ShoppingDetailTabviewWrapper({super.key, required this.shopping});
 
   @override
-  State<ShoppingTabviewPageWrapper> createState() =>
-      _ShoppingTabviewPageWrapperState();
+  State<ShoppingDetailTabviewWrapper> createState() =>
+      _ShoppingDetailTabviewWrapperState();
 }
 
-class _ShoppingTabviewPageWrapperState extends State<ShoppingTabviewPageWrapper>
+class _ShoppingDetailTabviewWrapperState extends State<ShoppingDetailTabviewWrapper>
     with SingleTickerProviderStateMixin {
   late final List<TabViewItem> _tabViewItems;
   late final TabController _tabController;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/shopping_detail/widgets/detail_button_section.dart';
+import 'package:split_the_bill/shopping_detail/widgets/detail_info_section.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
 class DetailPage extends StatelessWidget {
@@ -14,6 +16,14 @@ class DetailPage extends StatelessWidget {
         child: Column(
           children: [
             Text(shopping.shopping.description ?? ''),
+            const SizedBox(height: STANDARD_PADDING),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                DetailInfoSection(shopping: shopping),
+                DetailButtonSection(shopping: shopping),
+              ],
+            )
           ],
         ),
       ),

@@ -9,7 +9,7 @@ import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_
 
 final get = GetIt.instance;
 abstract class IocContainer {
-  static void setUpIoc(){
+  static void setUpIoc() {
     get.registerSingleton<NavRouter>(NavRouter());
     get.registerSingleton<BaseApiClient>(AuthenticatedApiClient());
 
