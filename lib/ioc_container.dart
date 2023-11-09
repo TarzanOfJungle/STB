@@ -4,6 +4,7 @@ import 'package:split_the_bill/auth/repositories/auth_repository.dart';
 import 'package:split_the_bill/auth/repositories/auth_repository_base.dart';
 import 'package:split_the_bill/common/api/api_client.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
+import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 
 final get = GetIt.instance;
@@ -18,10 +19,14 @@ abstract class IocContainer {
         AuthRepository(get<ApiClientBase>()));
 
     // Controllers
+    get.registerSingleton<SnackbarMessangerController>(
+        SnackbarMessangerController());
     get.registerSingleton<AuthController>(
       AuthController(
-          client: get<ApiClientBase>(),
-          authRepository: get<AuthRepositoryBase>()),
+        client: get<ApiClientBase>(),
+        authRepository: get<AuthRepositoryBase>(),
+        snackbarMessangerController: get<SnackbarMessangerController>(),
+      ),
     );
   }
 }

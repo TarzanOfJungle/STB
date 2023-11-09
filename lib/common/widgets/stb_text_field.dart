@@ -52,7 +52,6 @@ class _StbTextFieldState extends State<StbTextField> {
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
-            vertical: 2,
           ),
           child: TextFormField( 
             controller: widget.controller,

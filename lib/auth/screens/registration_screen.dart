@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
-import 'package:split_the_bill/auth/models/post_login/post_login.dart';
+import 'package:split_the_bill/auth/models/post_registration/post_registration.dart';
 import 'package:split_the_bill/auth/widgets/auth_screen_template.dart';
-import 'package:split_the_bill/auth/widgets/login_banner.dart';
+import 'package:split_the_bill/auth/widgets/registration_banner.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -11,32 +11,39 @@ import 'package:split_the_bill/common/widgets/stb_text_button.dart';
 import 'package:split_the_bill/common/widgets/stb_text_field.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
-const _NO_ACCOUNT_YET_TEXT = "Don't have an account yet?";
+const _ALREADY_HAVE_ACCOUNT_TEXT = "Already have an account?";
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen> {
   final _authController = get<AuthController>();
   final _navRouter = get<NavRouter>();
 
   final _emailController = TextEditingController(text: "");
+  final _usernameController = TextEditingController(text: "");
   final _passwordController = TextEditingController(text: "");
-  final _loginFormKey = GlobalKey<FormState>();
+  final _registrationFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _listenForLoginSuccess();
+    _listenForRegistrationSuccess();
 
     return AuthScreenTemplate(
-      formKey: _loginFormKey,
-      banner: const LoginBanner(),
-      title: "Login",
+      formKey: _registrationFormKey,
+      banner: const RegistrationBanner(),
+      title: "Registration",
       formFields: [
+        StbTextField(
+          controller: _usernameController,
+          hint: "Username",
+          validator: (value) => Validator.validateUsername(value),
+        ),
+        const SizedBox(height: 10),
         StbTextField(
           controller: _emailController,
           hint: "E-mail",
@@ -51,23 +58,23 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: true,
         ),
       ],
-      confirmButton: _buildLoginButton(),
+      confirmButton: _buildRegistrationButton(),
       appendix: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(_NO_ACCOUNT_YET_TEXT),
+          const Text(_ALREADY_HAVE_ACCOUNT_TEXT),
           const SizedBox(width: 10),
           StbTextButton(
-            text: "Sign up",
-            onTap: () => _navRouter.toRegistration(context),
+            text: "Log in",
+            onTap: () => _navRouter.toLogin(context),
           ),
         ],
       ),
     );
   }
 
-  void _listenForLoginSuccess() {
+  void _listenForRegistrationSuccess() {
     _authController.loggedInUserStream.listen((user) {
       if (user != null) {
         // TODO: go to the home screen
@@ -75,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildRegistrationButton() {
     return StreamBuilder<bool>(
       stream: _authController.isLoadingStream,
       builder: (_, loading) {
@@ -84,23 +91,24 @@ class _LoginScreenState extends State<LoginScreen> {
           visible: !isLoading,
           replacement: const LoadingIndicator(),
           child: StbElevatedButton(
-            text: "Log in",
-            leadingIcon: Icons.login_rounded,
-            onTap: () => _login(),
+            text: "Sign up",
+            leadingIcon: Icons.upload_file_rounded,
+            onTap: () => _register(),
           ),
         );
       },
     );
   }
 
-  void _login() {
-    final isValid = _loginFormKey.currentState!.validate();
+  void _register() {
+    final isValid = _registrationFormKey.currentState!.validate();
     if (isValid) {
-      final loginData = PostLogin(
+      final registrationData = PostRegistration(
+        username: _usernameController.text,
         email: _emailController.text,
         password: _passwordController.text,
       );
-      _authController.login(loginData);
+      _authController.register(registrationData);
     }
   }
 

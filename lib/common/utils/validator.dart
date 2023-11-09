@@ -1,13 +1,26 @@
 abstract class Validator {
-  static const MIN_PASSWORD_LENGTH = 3;
+  static const MIN_PASSWORD_LENGTH = 6;
+  static const MIN_USERNAME_LENGTH = 2;
 
-  static bool validateEmail(String email) {
+  static String? validateEmail(String? email) {
+    final toValidate = email ?? "";
     final regex = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    return regex.hasMatch(email);
+    final isValid =  regex.hasMatch(toValidate);
+    return isValid ? null : "Invalid e-mail";
   }
 
-  static bool validatePassword(String password) {
-    return password.length >= MIN_PASSWORD_LENGTH;
+  static String? validatePassword(String? password) {
+    final toValidate = password ?? "";
+    final isValid = toValidate.length >= MIN_PASSWORD_LENGTH;
+    return isValid
+        ? null
+        : "Password must be at least $MIN_PASSWORD_LENGTH characters long";
+  }
+
+  static String? validateUsername(String? username) {
+    final toValidate = username ?? "";
+    final isValid = toValidate.length >= MIN_USERNAME_LENGTH;
+    return isValid ? null : "Username must be at least $MIN_USERNAME_LENGTH characters long";
   }
 }

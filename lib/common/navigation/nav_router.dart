@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/screens/login_screen.dart';
+import 'package:split_the_bill/auth/screens/registration_screen.dart';
 
 class NavRouter {
   void returnBack(BuildContext context) {
@@ -15,7 +16,7 @@ class NavRouter {
 
   Future<void> toRegistration(BuildContext context) {
     return Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      MaterialPageRoute(builder: (_) => const RegistrationScreen()),
       (route) => false,
     );
   }
