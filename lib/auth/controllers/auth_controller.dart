@@ -9,11 +9,14 @@ class AuthController {
   final BehaviorSubject<AuthenticatedUser?> _loggedInUser =
       BehaviorSubject.seeded(null);
   final BehaviorSubject<String?> _errorMessage = BehaviorSubject.seeded(null);
+  final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
+
   late final ApiClientBase _apiClient;
   late final AuthRepositoryBase _authRepository;
 
   Stream<AuthenticatedUser?> get loggedInUserStream => _loggedInUser.stream;
   AuthenticatedUser? get loggedInUser => _loggedInUser.value;
+  Stream<bool> get isLoadingStream => _isLoading.stream;
   Stream<String?> get errorMessageStream => _errorMessage.stream;
 
   AuthController({
@@ -28,15 +31,18 @@ class AuthController {
 
   Future<void> login(PostLogin loginData) async {
     _errorMessage.add(null);
+    _isLoading.add(true);
     try {
       final user = await _authRepository.logIn(loginData);
       _setLoggedInUser(user);
     } on ApiClientException catch (_) {
-      _errorMessage.add("Wrong username or password");
+      _errorMessage.add("Invalid credentials");
     } on ApiServerException catch (_) {
       _errorMessage.add("Sorry, something went wrong on our servers");
     } catch (_) {
       _errorMessage.add("Something went wrong");
+    } finally {
+      _isLoading.add(false);
     }
   }
 
@@ -44,12 +50,11 @@ class AuthController {
     _setLoggedInUser(null);
   }
 
-  void cleanErrorMessage(){
-    _errorMessage.add(null);
+  void clearError() {
+    if (_errorMessage.hasValue) {
+      _errorMessage.add(null);
+    }
   }
-
-
-
 
   void _setLoggedInUser(AuthenticatedUser? newUser) {
     _loggedInUser.add(newUser);
