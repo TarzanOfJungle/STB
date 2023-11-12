@@ -67,7 +67,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           const SizedBox(width: 10),
           StbTextButton(
             text: "Log in",
-            onTap: () => _navRouter.toLogin(context),
+            onTap: () => _navRouter.toLogin(),
           ),
         ],
       ),
@@ -77,7 +77,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void _listenForRegistrationSuccess() {
     _authController.loggedInUserStream.listen((user) {
       if (user != null) {
-        // TODO: go to the home screen
+        _navRouter.navigateOnLoginSuccess();
       }
     });
   }
@@ -100,7 +100,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void _register() {
+  Future<void> _register() async {
     final isValid = _registrationFormKey.currentState!.validate();
     if (isValid) {
       final registrationData = PostRegistration(
@@ -108,7 +108,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      _authController.register(registrationData);
+      final success = await _authController.register(registrationData);
+      if (success) {
+        _navRouter.navigateOnLoginSuccess();
+      } else {
+        _emptyPassword();
+      }
     }
   }
 

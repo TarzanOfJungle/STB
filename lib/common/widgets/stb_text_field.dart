@@ -35,44 +35,23 @@ class _StbTextFieldState extends State<StbTextField> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
-      child: Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.shadow.withOpacity(0.5),
-              blurRadius: 5,
-              spreadRadius: -1,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(15),
-          color: Theme.of(context).colorScheme.surface,
+      child: TextFormField( 
+        controller: widget.controller,
+        validator: widget.validator,
+        focusNode: _focusNode,
+        autocorrect: false,
+        keyboardType: widget.keyboardType,
+        maxLines: widget.maxLines,
+        obscureText: widget.obscureText,
+        enableSuggestions: widget.enableSuggestions,
+        textCapitalization: widget.textCapitalization,
+        decoration: InputDecoration(
+          hintText: widget.hint,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          child: TextFormField( 
-            controller: widget.controller,
-            validator: widget.validator,
-            focusNode: _focusNode,
-            autocorrect: false,
-            keyboardType: widget.keyboardType,
-            maxLines: widget.maxLines,
-            obscureText: widget.obscureText,
-            enableSuggestions: widget.enableSuggestions,
-            textCapitalization: widget.textCapitalization,
-            decoration: InputDecoration(
-              hintText: widget.hint,
-              border: InputBorder.none,
-            ),
-            onTap: widget.onTap,
-            onTapOutside: (event) {
-              _focusNode.unfocus();
-            },
-          ),
-        ),
+        onTap: widget.onTap,
+        onTapOutside: (event) {
+          _focusNode.unfocus();
+        },
       ),
     );
   }

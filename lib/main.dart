@@ -1,28 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/auth/screens/login_screen.dart';
+import 'package:split_the_bill/common/constants/nav_routes.dart';
+import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/theme/colors.dart';
+import 'package:split_the_bill/common/theme/themes.dart';
 import 'package:split_the_bill/common/widgets/snackbar_messanger_wrapper.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 void main() {
   IocContainer.setUpIoc();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // final _authController = get<AuthController>();
+  // final _navRouter = get<NavRouter>();
+  final _navigatorKey = get<GlobalKey<NavigatorState>>();
 
-  // This widget is the root of your application.
+  MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Split the bill',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const LoginScreen(),
-      builder: (context, child) {
+      theme: StbTheme.getTheme(StbColors.lightColors),
+      darkTheme: StbTheme.getTheme(StbColors.darkColors),
+      navigatorKey: _navigatorKey,
+      routes: NavRouter.routes,
+      initialRoute: NavRoutes.login,
+      builder: (_, child) {
+        // _authController.loggedInUserStream.listen((userState) {
+        //   if (userState == null) {
+        //     Future.delayed(Duration.zero, () => _navRouter.toLogin());
+        //   }
+        // });
+
         return SnackbarMessangerWrapper(
           child: child ?? const SizedBox.shrink(),
         );

@@ -15,16 +15,11 @@ class StbTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onTap,
-      style: TextButton.styleFrom(
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        minimumSize: Size.zero,
-        padding: const EdgeInsets.all(0),
-      ),
       child: Text(
         text,
         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
               fontWeight: FontWeight.bold,
-              color: color ?? Theme.of(context).colorScheme.primary,
+              color: color ?? Theme.of(context).colorScheme.secondary,
             ),
       ),
     );

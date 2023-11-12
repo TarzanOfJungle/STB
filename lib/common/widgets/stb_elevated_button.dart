@@ -45,10 +45,7 @@ class StbElevatedButton extends StatelessWidget {
               ),
             ],
           ),
-        Text(
-          text ?? "",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(text ?? ""),
       ],
     );
   }

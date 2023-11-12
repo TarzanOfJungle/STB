@@ -30,8 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _listenForLoginSuccess();
-
     return AuthScreenTemplate(
       formKey: _loginFormKey,
       banner: const LoginBanner(),
@@ -60,19 +58,11 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(width: 10),
           StbTextButton(
             text: "Sign up",
-            onTap: () => _navRouter.toRegistration(context),
+            onTap: () => _navRouter.toRegistration(),
           ),
         ],
       ),
     );
-  }
-
-  void _listenForLoginSuccess() {
-    _authController.loggedInUserStream.listen((user) {
-      if (user != null) {
-        // TODO: go to the home screen
-      }
-    });
   }
 
   Widget _buildLoginButton() {
@@ -93,14 +83,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _login() {
+  Future<void> _login() async {
     final isValid = _loginFormKey.currentState!.validate();
     if (isValid) {
       final loginData = PostLogin(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      _authController.login(loginData);
+      final success = await _authController.login(loginData);
+      if(success) {
+        _navRouter.navigateOnLoginSuccess();
+      } else {
+        _emptyPassword();
+      }
     }
   }
 
