@@ -15,12 +15,6 @@ class HomeScreen extends StatelessWidget {
           child: const Text("logout"),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("hello world");
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

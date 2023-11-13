@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/post_login/post_login.dart';
+import 'package:split_the_bill/auth/widgets/auth_button/auth_button.dart';
 import 'package:split_the_bill/auth/widgets/auth_screen_template.dart';
 import 'package:split_the_bill/auth/widgets/login_banner.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
-import 'package:split_the_bill/common/widgets/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/stb_text_button.dart';
 import 'package:split_the_bill/common/widgets/stb_text_field.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 const _NO_ACCOUNT_YET_TEXT = "Don't have an account yet?";
+const _NO_INTERNET_MESSAGE = "You need an internet connection to log in";
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -49,7 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: true,
         ),
       ],
-      confirmButton: _buildLoginButton(),
+      confirmButton: AuthButton(
+        title: "Log in",
+        noInternetMessage: _NO_INTERNET_MESSAGE,
+        icon: Icons.login_rounded,
+        onTap: () => _login(),
+      ),
       appendix: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -65,24 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLoginButton() {
-    return StreamBuilder<bool>(
-      stream: _authController.isLoadingStream,
-      builder: (_, loading) {
-        final isLoading = !loading.hasError && loading.hasData && loading.data!;
-        return Visibility(
-          visible: !isLoading,
-          replacement: const LoadingIndicator(),
-          child: StbElevatedButton(
-            text: "Log in",
-            leadingIcon: Icons.login_rounded,
-            onTap: () => _login(),
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> _login() async {
     final isValid = _loginFormKey.currentState!.validate();
     if (isValid) {
@@ -91,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
       );
       final success = await _authController.login(loginData);
-      if(success) {
+      if (success) {
         _navRouter.navigateOnLoginSuccess();
       } else {
         _emptyPassword();

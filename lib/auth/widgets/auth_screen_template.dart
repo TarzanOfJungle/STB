@@ -37,7 +37,7 @@ class AuthScreenTemplate extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 ...formFields,
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
                 confirmButton,
                 const SizedBox(height: 35),
                 if (appendix != null) appendix!

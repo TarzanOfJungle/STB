@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/post_registration/post_registration.dart';
+import 'package:split_the_bill/auth/widgets/auth_button/auth_button.dart';
 import 'package:split_the_bill/auth/widgets/auth_screen_template.dart';
 import 'package:split_the_bill/auth/widgets/registration_banner.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
@@ -12,6 +13,7 @@ import 'package:split_the_bill/common/widgets/stb_text_field.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 const _ALREADY_HAVE_ACCOUNT_TEXT = "Already have an account?";
+const _NO_INTERNET_MESSAGE = "You need an internet connection to sign up";
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -58,7 +60,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           obscureText: true,
         ),
       ],
-      confirmButton: _buildRegistrationButton(),
+      confirmButton: AuthButton(
+        title: "Sign up",
+        noInternetMessage: _NO_INTERNET_MESSAGE,
+        icon: Icons.upload_file_rounded,
+        onTap: () => _register(),
+
+      ),
       appendix: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
