@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/app_bar_button.dart';
 
 import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import '../models/tab_view_item.dart';
@@ -15,7 +16,8 @@ class ShoppingDetailTabviewWrapper extends StatefulWidget {
       _ShoppingDetailTabviewWrapperState();
 }
 
-class _ShoppingDetailTabviewWrapperState extends State<ShoppingDetailTabviewWrapper>
+class _ShoppingDetailTabviewWrapperState
+    extends State<ShoppingDetailTabviewWrapper>
     with SingleTickerProviderStateMixin {
   late final List<TabViewItem> _tabViewItems;
   late final TabController _tabController;
@@ -64,11 +66,13 @@ class _ShoppingDetailTabviewWrapperState extends State<ShoppingDetailTabviewWrap
           ),
         ),
         actions: [
-          ElevatedButton(
+          AppBarButton(
+            label: 'Edit',
             onPressed: () {}, //TODO
-            child: const Text('Edit'),
           ),
-          const SizedBox(width: STANDARD_PADDING,),
+          const SizedBox(
+            width: STANDARD_PADDING,
+          ),
         ],
         bottom: TabBar(
           controller: _tabController,

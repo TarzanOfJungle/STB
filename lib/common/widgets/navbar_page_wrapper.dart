@@ -25,7 +25,6 @@ class _NavbarPageWrapperState extends State<NavbarPageWrapper> {
   }
 
   void _onItemTapped(int index) {
-    // _navRouter.push(context, NavbarPageWrapper(initialIndex: index,));
     setState(() {
       _selectedIndex = index;
     });
@@ -40,6 +39,8 @@ class _NavbarPageWrapperState extends State<NavbarPageWrapper> {
               .map((item) => item.child)
               .toList()[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        unselectedIconTheme: Theme.of(context).iconTheme,
+        selectedIconTheme: _selectedIndex == -1 ? Theme.of(context).iconTheme : Theme.of(context).primaryIconTheme,
         items: NavbarOptions.navbarOptions
             .map((item) =>
                 BottomNavigationBarItem(label: item.label, icon: item.icon))
