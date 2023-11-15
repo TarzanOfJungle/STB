@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/screens/login_screen.dart';
+import 'package:split_the_bill/common/widgets/navbar_page_wrapper.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 void main() {
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const NavbarPageWrapper(),
+      // home: const LoginScreen(),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
+  import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
 import 'package:split_the_bill/auth/models/post_login/post_login.dart';
 import 'package:split_the_bill/auth/repositories/auth_repository_base.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
