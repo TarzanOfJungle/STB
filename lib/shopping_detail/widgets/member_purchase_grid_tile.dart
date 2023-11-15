@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
-
-import '../../users/models/user/user.dart';
 
 class MemberPurchaseGridTile extends StatelessWidget {
   const MemberPurchaseGridTile({

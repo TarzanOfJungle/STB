@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/widgets/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import 'package:split_the_bill/shoppings_list/repositories/mock_shoppings_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/widgets/shopping_tile.dart';
 

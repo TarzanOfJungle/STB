@@ -1,40 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
-import 'package:split_the_bill/auth/models/post_login/post_login.dart';
+import 'package:split_the_bill/auth/models/post_registration/post_registration.dart';
 import 'package:split_the_bill/auth/widgets/auth_button/auth_button.dart';
 import 'package:split_the_bill/auth/widgets/auth_screen_template.dart';
-import 'package:split_the_bill/auth/widgets/login_banner.dart';
+import 'package:split_the_bill/auth/widgets/registration_banner.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
 import 'package:split_the_bill/common/widgets/stb_text_button.dart';
 import 'package:split_the_bill/common/widgets/stb_text_field.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
-const _NO_ACCOUNT_YET_TEXT = "Don't have an account yet?";
-const _NO_INTERNET_MESSAGE = "You need an internet connection to log in";
+const _ALREADY_HAVE_ACCOUNT_TEXT = "Already have an account?";
+const _NO_INTERNET_MESSAGE = "You need an internet connection to sign up";
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen> {
   final _authController = get<AuthController>();
   final _navRouter = get<NavRouter>();
 
   final _emailController = TextEditingController(text: "");
+  final _usernameController = TextEditingController(text: "");
   final _passwordController = TextEditingController(text: "");
-  final _loginFormKey = GlobalKey<FormState>();
+  final _registrationFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    _listenForRegistrationSuccess();
+
     return AuthScreenTemplate(
-      formKey: _loginFormKey,
-      banner: const LoginBanner(),
-      title: "Login",
+      formKey: _registrationFormKey,
+      banner: const RegistrationBanner(),
+      title: "Registration",
       formFields: [
+        StbTextField(
+          controller: _usernameController,
+          hint: "Username",
+          validator: (value) => Validator.validateUsername(value),
+        ),
+        const SizedBox(height: 10),
         StbTextField(
           controller: _emailController,
           hint: "E-mail",
@@ -50,34 +59,44 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
       confirmButton: AuthButton(
-        title: "Log in",
+        title: "Sign up",
         noInternetMessage: _NO_INTERNET_MESSAGE,
-        icon: Icons.login_rounded,
-        onTap: () => _login(),
+        icon: Icons.upload_file_rounded,
+        onTap: () => _register(),
+
       ),
       appendix: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(_NO_ACCOUNT_YET_TEXT),
+          const Text(_ALREADY_HAVE_ACCOUNT_TEXT),
           const SizedBox(width: 10),
           StbTextButton(
-            text: "Sign up",
-            onTap: () => _navRouter.toRegistration(),
+            text: "Log in",
+            onTap: () => _navRouter.toLogin(),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _login() async {
-    final isValid = _loginFormKey.currentState!.validate();
+  void _listenForRegistrationSuccess() {
+    _authController.loggedInUserStream.listen((user) {
+      if (user != null) {
+        _navRouter.navigateOnLoginSuccess();
+      }
+    });
+  }
+
+  Future<void> _register() async {
+    final isValid = _registrationFormKey.currentState!.validate();
     if (isValid) {
-      final loginData = PostLogin(
+      final registrationData = PostRegistration(
+        username: _usernameController.text,
         email: _emailController.text,
         password: _passwordController.text,
       );
-      final success = await _authController.login(loginData);
+      final success = await _authController.register(registrationData);
       if (success) {
         _navRouter.navigateOnLoginSuccess();
       } else {

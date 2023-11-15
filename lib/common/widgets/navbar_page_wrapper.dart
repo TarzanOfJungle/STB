@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/navbar_options.dart';
-import 'package:split_the_bill/common/navigation/nav_router.dart';
-
-import '../../ioc_container.dart';
 
 class NavbarPageWrapper extends StatefulWidget {
   final int? initialIndex;
@@ -15,7 +12,6 @@ class NavbarPageWrapper extends StatefulWidget {
 }
 
 class _NavbarPageWrapperState extends State<NavbarPageWrapper> {
-  final _navRouter = get<NavRouter>();
   late int _selectedIndex;
 
   @override
@@ -39,8 +35,7 @@ class _NavbarPageWrapperState extends State<NavbarPageWrapper> {
               .map((item) => item.child)
               .toList()[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        unselectedIconTheme: Theme.of(context).iconTheme,
-        selectedIconTheme: _selectedIndex == -1 ? Theme.of(context).iconTheme : Theme.of(context).primaryIconTheme,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         items: NavbarOptions.navbarOptions
             .map((item) =>
                 BottomNavigationBarItem(label: item.label, icon: item.icon))
