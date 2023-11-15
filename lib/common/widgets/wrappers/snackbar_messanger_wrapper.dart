@@ -80,6 +80,5 @@ class _SnackbarMessangerWrapperState extends State<SnackbarMessangerWrapper> {
         backgroundColor: message.category.color,
       ),
     );
-    //_snackbarMessageController.setMessageShown();
   }
 }

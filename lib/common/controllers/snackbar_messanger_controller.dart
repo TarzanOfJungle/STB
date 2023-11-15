@@ -12,12 +12,4 @@ class SnackbarMessangerController {
   void showSnackbarMessage(SnackbarMessage message) {
     _snackbarMessage.add(message);
   }
-
-  /// Afer showing snackbar in UI, it's [wasShown] tag must be
-  /// set to true, so that the snackbar doesn't get re-shown after
-  /// StreamBuilder gets rebuilt
-  void setMessageShown() {
-    final shownMessage = _snackbarMessage.value?.copyWith(wasShown: true);
-    _snackbarMessage.add(shownMessage);
-  }
 }

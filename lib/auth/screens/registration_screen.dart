@@ -6,8 +6,6 @@ import 'package:split_the_bill/auth/widgets/auth_screen_template.dart';
 import 'package:split_the_bill/auth/widgets/registration_banner.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
-import 'package:split_the_bill/common/widgets/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/stb_text_button.dart';
 import 'package:split_the_bill/common/widgets/stb_text_field.dart';
 import 'package:split_the_bill/ioc_container.dart';
@@ -88,24 +86,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         _navRouter.navigateOnLoginSuccess();
       }
     });
-  }
-
-  Widget _buildRegistrationButton() {
-    return StreamBuilder<bool>(
-      stream: _authController.isLoadingStream,
-      builder: (_, loading) {
-        final isLoading = !loading.hasError && loading.hasData && loading.data!;
-        return Visibility(
-          visible: !isLoading,
-          replacement: const LoadingIndicator(),
-          child: StbElevatedButton(
-            text: "Sign up",
-            leadingIcon: Icons.upload_file_rounded,
-            onTap: () => _register(),
-          ),
-        );
-      },
-    );
   }
 
   Future<void> _register() async {

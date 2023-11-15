@@ -12,8 +12,8 @@ class NavRouter {
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   static Map<String, WidgetBuilder> routes = {
-    NavRoutes.login: (context) => LoginScreen(),
-    NavRoutes.registration: (context) => RegistrationScreen(),
+    NavRoutes.login: (context) => const LoginScreen(),
+    NavRoutes.registration: (context) => const RegistrationScreen(),
     NavRoutes.home: (context) => HomeScreen(),
   };
 
