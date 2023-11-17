@@ -26,7 +26,7 @@ abstract class ApiClientBase {
     Map<String, dynamic>? jsonBody,
     Map<String, String>? queryParams,
     Map<String, String> additionalHeaders = const {},
-    required T Function(Map<String, Object?>) processBody,
+    required T Function(String rawBody) processBody,
   });
 
   /// Sends an HTTP request with optional body. Is expedted not expected to return data,

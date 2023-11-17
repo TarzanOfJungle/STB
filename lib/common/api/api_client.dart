@@ -28,7 +28,7 @@ class ApiClient implements ApiClientBase {
     Map<String, dynamic>? jsonBody,
     Map<String, String>? queryParams,
     Map<String, String> additionalHeaders = const {},
-    required T Function(Map<String, Object?>) processBody,
+    required T Function(String rawBody) processBody,
   }) async {
     final request = _createRequest(
       path: path,
@@ -51,9 +51,7 @@ class ApiClient implements ApiClientBase {
       _handleError(res, notifyErrorListeners);
     }
 
-    final Map<String, Object?> decoded = json.decode(res.body);
-
-    return processBody(decoded);
+    return processBody(res.body);
   }
 
   @override

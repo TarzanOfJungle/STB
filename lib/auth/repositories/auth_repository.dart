@@ -6,6 +6,7 @@ import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/api/http_method.dart';
 import 'package:split_the_bill/common/constants/api_constants.dart';
+import 'package:split_the_bill/common/extensions/json_string_extension.dart';
 import 'package:split_the_bill/users/models/user/user.dart';
 
 class AuthRepository implements AuthRepositoryBase {
@@ -34,7 +35,10 @@ class AuthRepository implements AuthRepositoryBase {
       method: HttpMethod.post,
       useAuthentication: false,
       jsonBody: postLogin.toJson(),
-      processBody: AuthenticatedUser.fromJson,
+      processBody: (rawBody) {
+        final userJson = rawBody.asJsonObject();
+        return AuthenticatedUser.fromJson(userJson);
+      },
     );
     return loggedInUser;
   }
@@ -46,7 +50,10 @@ class AuthRepository implements AuthRepositoryBase {
       method: HttpMethod.post,
       useAuthentication: false,
       jsonBody: postRegistration.toJson(),
-      processBody: User.fromJson,
+      processBody: (rawBody) {
+        final userJson = rawBody.asJsonObject();
+        return User.fromJson(userJson);
+      },
     );
     return newUser;
   }

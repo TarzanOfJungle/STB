@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:split_the_bill/auth/screens/login_screen.dart';
-import 'package:split_the_bill/auth/screens/registration_screen.dart';
+import 'package:split_the_bill/auth/screens/login_page.dart';
+import 'package:split_the_bill/auth/screens/registration_page.dart';
 import 'package:split_the_bill/common/navigation/nav_routes.dart';
 import 'package:split_the_bill/common/widgets/wrappers/bottom_nav_bar_wrapper.dart';
-import 'package:split_the_bill/home/screens/home_screen.dart';
+import 'package:split_the_bill/home/screens/home_page.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
 
 class NavRouter {
@@ -18,11 +18,11 @@ class NavRouter {
     routes: [
       GoRoute(
         path: NavRoute.login.path,
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
         path: NavRoute.registration.path,
-        builder: (context, state) => const RegistrationScreen(),
+        builder: (context, state) => const RegistrationPage(),
       ),
       // Stack of bottom navigation bar
       StatefulShellRoute.indexedStack(
@@ -33,7 +33,7 @@ class NavRouter {
             routes: [
               GoRoute(
                 path: NavRoute.home.path,
-                builder: (context, state) => HomeScreen(),
+                builder: (context, state) => HomePage(),
               )
             ],
           ),
