@@ -29,9 +29,9 @@ class StbColors {
 
   static const lightColors = StbColors(
     brightness: Brightness.light,
-    primary: Color(0xFF009688),
+    primary: Color(0xFF47B891),
     onPrimary: Color(0xFFEDEDED),
-    accent: Color(0xFFFF5722),
+    accent: Color(0xFFFF7A00),
     onAccent: Color(0xFFEDEDED),
     background: Color(0xFFEDEDED),
     backgroundVariant: Color(0xFFE4E4E4),
@@ -43,7 +43,7 @@ class StbColors {
 
   static const darkColors = StbColors(
     brightness: Brightness.dark,
-    primary: Color(0xFF00796B),
+    primary: Color(0xFF28936E),
     onPrimary: Color(0xFFEDEDED),
     accent: Color(0xFFFF5722),
     onAccent: Color(0xFFEDEDED),

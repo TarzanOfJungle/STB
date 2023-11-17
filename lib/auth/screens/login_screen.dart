@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       final success = await _authController.login(loginData);
       if (success) {
-        _navRouter.navigateOnLoginSuccess();
+        _navRouter.toHome();
       } else {
         _emptyPassword();
       }

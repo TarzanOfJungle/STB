@@ -31,8 +31,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _listenForRegistrationSuccess();
-
     return AuthScreenTemplate(
       formKey: _registrationFormKey,
       banner: const RegistrationBanner(),
@@ -80,14 +78,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void _listenForRegistrationSuccess() {
-    _authController.loggedInUserStream.listen((user) {
-      if (user != null) {
-        _navRouter.navigateOnLoginSuccess();
-      }
-    });
-  }
-
   Future<void> _register() async {
     final isValid = _registrationFormKey.currentState!.validate();
     if (isValid) {
@@ -98,7 +88,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       );
       final success = await _authController.register(registrationData);
       if (success) {
-        _navRouter.navigateOnLoginSuccess();
+        _navRouter.toHome();
       } else {
         _emptyPassword();
       }

@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/repositories/auth_repository.dart';
@@ -17,17 +16,13 @@ final get = GetIt.instance;
 
 abstract class IocContainer {
   static void setUpIoc() {
-    get.registerSingleton<GlobalKey<NavigatorState>>(
-        GlobalKey<NavigatorState>());
-    get.registerSingleton<NavRouter>(
-        NavRouter(get<GlobalKey<NavigatorState>>()));
+    get.registerSingleton<NavRouter>(NavRouter());
     get.registerSingleton<ApiClientBase>(ApiClient());
     get.registerSingleton<Connectivity>(Connectivity());
 
     get.registerSingleton<AuthRepositoryBase>(
         AuthRepository(get<ApiClientBase>()));
     get.registerSingleton<ShoppingsRepositoryBase>(MockShoppingsRepository());
-
 
     get.registerSingleton<SnackbarMessangerController>(
         SnackbarMessangerController());

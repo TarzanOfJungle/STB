@@ -23,7 +23,10 @@ abstract class StbTheme {
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedItemColor: colors.accent,
-        unselectedItemColor: colors.primary,
+        unselectedItemColor: colors.onPrimary,
+        backgroundColor: colors.primary,
+        showUnselectedLabels: false,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
