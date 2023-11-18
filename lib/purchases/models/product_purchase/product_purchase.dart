@@ -16,6 +16,9 @@ class ProductPurchase with _$ProductPurchase {
   double get ammountSpent => userPurchases.fold(0,
       (previousValue, purchaser) => previousValue + purchaser.ammountPurchased);
 
+  int get quantityPurchased => userPurchases.fold(
+      0, (previousValue, purchaser) => previousValue + purchaser.quantity);
+
   const ProductPurchase._();
 
   factory ProductPurchase.fromJson(Map<String, Object?> json) =>

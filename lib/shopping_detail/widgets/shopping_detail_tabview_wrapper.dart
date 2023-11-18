@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/app_bar_button.dart';
+import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 
 import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import '../models/tab_view_item.dart';

@@ -6,8 +6,8 @@ import 'package:split_the_bill/auth/widgets/auth_screen_template.dart';
 import 'package:split_the_bill/auth/widgets/login_banner.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
-import 'package:split_the_bill/common/widgets/stb_text_button.dart';
-import 'package:split_the_bill/common/widgets/stb_text_field.dart';
+import 'package:split_the_bill/common/widgets/components/stb_text_button.dart';
+import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 const _NO_ACCOUNT_YET_TEXT = "Don't have an account yet?";

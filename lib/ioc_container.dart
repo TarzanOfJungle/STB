@@ -8,6 +8,11 @@ import 'package:split_the_bill/common/api/api_client.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
+import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository.dart';
+import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
+import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository.dart';
+import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/repositories/mock_shoppings_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
@@ -20,10 +25,16 @@ abstract class IocContainer {
     get.registerSingleton<ApiClientBase>(ApiClient());
     get.registerSingleton<Connectivity>(Connectivity());
 
+    // Repositories
     get.registerSingleton<AuthRepositoryBase>(
         AuthRepository(get<ApiClientBase>()));
     get.registerSingleton<ShoppingsRepositoryBase>(MockShoppingsRepository());
+    get.registerSingleton<ProductAssignmentsRepositoryBase>(
+        ProductAssignmentsRepository(get<ApiClientBase>()));
+    get.registerSingleton<ProductPurchasesRepositoryBase>(
+        ProductPurchasesRepository(get<ApiClientBase>()));
 
+    // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
         SnackbarMessangerController());
     get.registerSingleton<AuthController>(
@@ -33,6 +44,10 @@ abstract class IocContainer {
         snackbarMessangerController: get<SnackbarMessangerController>(),
       ),
     );
+    get.registerSingleton<PurchasesController>(PurchasesController(
+      productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
+      productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
+    ));
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
       apiClient: get<ApiClientBase>(),

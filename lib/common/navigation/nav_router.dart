@@ -5,6 +5,7 @@ import 'package:split_the_bill/auth/screens/registration_page.dart';
 import 'package:split_the_bill/common/navigation/nav_routes.dart';
 import 'package:split_the_bill/common/widgets/wrappers/bottom_nav_bar_wrapper.dart';
 import 'package:split_the_bill/home/screens/home_page.dart';
+import 'package:split_the_bill/purchases/screens/purchase_tab_page.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
 
 class NavRouter {
@@ -45,7 +46,7 @@ class NavRouter {
                   routes: [
                     GoRoute(
                       path: NavRoute.shoppingDetail.path,
-                      builder: (context, state) => Container(),
+                      builder: (context, state) => PurchaseTabPage(),
                     )
                   ])
             ],
@@ -77,7 +78,8 @@ class NavRouter {
 
   void toShoppingDetail(int shoppingId) {
     // TODO: Call method in the shopping detail controller to fetch the given shopping
-    final fullPath = "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}";
+    final fullPath =
+        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}";
     _router.go(fullPath);
   }
 }

@@ -4,7 +4,7 @@ import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/widgets/auth_button/auth_button_display_type.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
-import 'package:split_the_bill/common/widgets/stb_elevated_button.dart';
+import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 class AuthButton extends StatelessWidget {
