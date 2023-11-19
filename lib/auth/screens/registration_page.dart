@@ -38,20 +38,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
       formFields: [
         StbTextField(
           controller: _usernameController,
-          hint: "Username",
+          label: "Username",
           validator: (value) => Validator.validateUsername(value),
         ),
         const SizedBox(height: 10),
         StbTextField(
           controller: _emailController,
-          hint: "E-mail",
+          label: "E-mail",
           keyboardType: TextInputType.emailAddress,
           validator: (value) => Validator.validateEmail(value),
         ),
         const SizedBox(height: 10),
         StbTextField(
           controller: _passwordController,
-          hint: "Password",
+          label: "Password",
           validator: (value) => Validator.validatePassword(value),
           obscureText: true,
         ),

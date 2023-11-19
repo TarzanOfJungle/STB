@@ -9,6 +9,7 @@ import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
+import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository.dart';
@@ -45,6 +46,11 @@ abstract class IocContainer {
       ),
     );
     get.registerSingleton<PurchasesController>(PurchasesController(
+      productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
+      productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
+    ));
+    get.registerSingleton<SinglePurchaseController>(SinglePurchaseController(
+      authController: get<AuthController>(),
       productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
       productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
     ));

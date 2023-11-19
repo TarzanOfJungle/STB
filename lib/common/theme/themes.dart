@@ -60,6 +60,7 @@ abstract class StbTheme {
         ),
         dialogTheme: DialogTheme(
           backgroundColor: colors.backgroundVariant,
+          surfaceTintColor: colors.backgroundVariant,
           shadowColor: colors.shadow,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20)),

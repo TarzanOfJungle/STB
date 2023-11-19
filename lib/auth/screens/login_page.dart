@@ -37,14 +37,14 @@ class _LoginPageState extends State<LoginPage> {
       formFields: [
         StbTextField(
           controller: _emailController,
-          hint: "E-mail",
+          label: "E-mail",
           keyboardType: TextInputType.emailAddress,
           validator: (value) => Validator.validateEmail(value),
         ),
         const SizedBox(height: 10),
         StbTextField(
           controller: _passwordController,
-          hint: "Password",
+          label: "Password",
           validator: (value) => Validator.validatePassword(value),
           obscureText: true,
         ),

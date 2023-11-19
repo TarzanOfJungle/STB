@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class StbTextField extends StatefulWidget {
   final TextEditingController controller;
   final String? Function(String? value)? validator;
-  final String? hint;
+  final String? label;
   final VoidCallback? onTap;
   final TextInputType keyboardType;
   final int maxLines;
@@ -13,7 +13,7 @@ class StbTextField extends StatefulWidget {
 
   const StbTextField({
     super.key,
-    this.hint,
+    this.label,
     this.onTap,
     this.validator,
     required this.controller,
@@ -46,7 +46,7 @@ class _StbTextFieldState extends State<StbTextField> {
         enableSuggestions: widget.enableSuggestions,
         textCapitalization: widget.textCapitalization,
         decoration: InputDecoration(
-          hintText: widget.hint,
+          labelText: widget.label,
         ),
         onTap: widget.onTap,
         onTapOutside: (event) {

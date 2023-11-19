@@ -8,9 +8,11 @@ const _PRODUCT_ASSIGNMENT_COUNT_SIZE = 55.0;
 class ProductAssignmentListTile extends StatelessWidget {
   final ProductShoppingAssignment productAssignment;
   final ProductPurchase? productPurchase;
+  final VoidCallback onTap;
 
   const ProductAssignmentListTile({
     super.key,
+    required this.onTap,
     required this.productAssignment,
     this.productPurchase,
   });
@@ -18,7 +20,7 @@ class ProductAssignmentListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => print("cigam gadze"),
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: STANDARD_PADDING,
