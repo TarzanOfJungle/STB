@@ -1,15 +1,21 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:split_the_bill/purchases/models/product_assignments_with_purchases.dart';
+import 'package:split_the_bill/purchases/models/product_assignments_with_purchases/product_assignments_with_purchases.dart';
+import 'package:split_the_bill/purchases/models/user_with_purchase_context/user_with_purchase_context.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
+import 'package:split_the_bill/purchases/extensions/user_purchase_create_update.dart';
+import 'package:split_the_bill/purchases/extensions/user_purchase_delete.dart';
 
 class PurchasesController {
   final BehaviorSubject<ProductAssignmentsWithPurchases?>
       _productAssignmentsWithPurchases = BehaviorSubject.seeded(null);
 
   Stream<ProductAssignmentsWithPurchases?>
-      get productsAssignmentsWithPurchases =>
+      get productAssignmentsWithPurchasesStream =>
           _productAssignmentsWithPurchases.stream;
+
+  ProductAssignmentsWithPurchases? get productAssignmentsWithPurchases =>
+      _productAssignmentsWithPurchases.value;
 
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;
@@ -47,6 +53,32 @@ class PurchasesController {
       _productAssignmentsWithPurchases.add(
         ProductAssignmentsWithPurchases.empty(),
       );
+    }
+  }
+
+  void addOrUpdateUserPurchase({
+    required int productId,
+    required UserWithPurchaseContext userPurchase,
+  }) {
+    final newState = productAssignmentsWithPurchases?.withUserPurchase(
+      productId: productId,
+      userPurchase: userPurchase,
+    );
+    if (newState != null) {
+      _productAssignmentsWithPurchases.add(newState);
+    }
+  }
+
+  void deleteUserPurchase({
+    required int productId,
+    required int userId,
+  }) {
+    final newState = productAssignmentsWithPurchases?.withDeletedUserPurchase(
+      productId: productId,
+      userId: userId,
+    );
+    if (newState != null) {
+      _productAssignmentsWithPurchases.add(newState);
     }
   }
 }

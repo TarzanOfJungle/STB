@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -25,6 +26,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
   final _purchaseUnitPriceController = TextEditingController();
 
   final _purchaseController = get<SinglePurchaseController>();
+  final _navRouter = get<NavRouter>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +46,17 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildTitle(context, state),
                 const SizedBox(height: STANDARD_PADDING),
                 _buildGeneralInfo(context, state),
                 const Divider(height: 30),
                 _buildYourPurchase(context),
-                const SizedBox(height: 30),
-                _buildConfirmButton(context, state),
+                const SizedBox(height: 10),
+                _buildErrorMessage(context),
+                const SizedBox(height: 10),
+                _buildActionButtons(context),
               ],
             ),
           ),
@@ -225,11 +230,89 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
     );
   }
 
-  Widget _buildConfirmButton(BuildContext context, PurchaseState state) {
-    return StbElevatedButton(
-      leadingIcon: Icons.shopping_cart_rounded,
-      text: "Confirm purchse",
-      onTap: () => print("purchased"),
+  Widget _buildErrorMessage(BuildContext context) {
+    return StreamBuilder(
+      stream: _purchaseController.errorMessageStream,
+      builder: (context, snapshot) {
+        final showError = !snapshot.hasError && snapshot.hasData;
+        final errorColor = Theme.of(context).colorScheme.error;
+        return Visibility.maintain(
+          visible: showError,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_rounded,
+                color: errorColor,
+                size: 20,
+              ),
+              Text(
+                snapshot.data ?? "",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: errorColor,
+                    ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    final enabled = _purchaseController.dataValidForSaving();
+    final buttonText = _purchaseController.isUsersFirstPurchase
+        ? "Add my purchase"
+        : "Update my purchase";
+
+    return StreamBuilder(
+      stream: _purchaseController.isLoadingStream,
+      builder: (context, snapshot) {
+        final isLoading = snapshot.data ?? true;
+        if(isLoading) {
+          return const LoadingIndicator();
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            StbElevatedButton(
+              leadingIcon: Icons.shopping_cart_rounded,
+              text: buttonText,
+              stretch: true,
+              enabled: enabled,
+              onTap: () async {
+                final success = await _purchaseController.saveChanges();
+                if (success) {
+                  _navRouter.returnBack();
+                }
+              },
+            ),
+            if (!_purchaseController.isUsersFirstPurchase)
+              Column(
+                children: [
+                  const SizedBox(height: 10,),
+                  StbElevatedButton(
+                    leadingIcon: Icons.close_rounded,
+                    color: Theme.of(context).colorScheme.error,
+                    stretch: true,
+                    text: "Cancel my purchase",
+                    onTap: () async {
+                      final success =
+                          await _purchaseController.deleteExistingPurchase();
+                      if (success) {
+                        _navRouter.returnBack();
+                      }
+                    },
+                  ),
+                ],
+              ),
+          ],
+        );
+      }
     );
   }
 }

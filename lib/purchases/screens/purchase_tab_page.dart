@@ -4,7 +4,6 @@ import 'package:split_the_bill/common/widgets/no_data_banner.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
-import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/widgets/dialogs/purchase_dialog.dart';
@@ -20,7 +19,7 @@ class PurchaseTabPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
-        stream: _purchasesController.productsAssignmentsWithPurchases,
+        stream: _purchasesController.productAssignmentsWithPurchasesStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return _buildLoading();
