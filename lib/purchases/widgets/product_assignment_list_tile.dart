@@ -76,15 +76,15 @@ class ProductAssignmentListTile extends StatelessWidget {
   }
 
   Color _getPurchaseCountColor(int toBePurchased, int alreadyPurchased) {
-    const opacity = 0.5;
+    const opacity = 0.4;
 
     if (alreadyPurchased == 0) {
-      return Colors.grey.withOpacity(opacity);
+      return UiConstants.infoColor.withOpacity(opacity);
     }
     if (alreadyPurchased < toBePurchased) {
-      return Colors.amber.withOpacity(opacity);
+      return UiConstants.warningColor.withOpacity(opacity);
     }
-    return Colors.green.withOpacity(opacity);
+    return UiConstants.confirmColor.withOpacity(opacity);
   }
 
   Widget _buildNameAndDescription(BuildContext context) {

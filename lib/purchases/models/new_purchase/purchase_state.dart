@@ -20,6 +20,12 @@ class PurchaseState with _$PurchaseState {
           .where((userPurchase) => userPurchase.user.id == currentUserId)
           .firstOrNull;
 
+  List<UserWithPurchaseContext> get existingPurchasesOfOtherUsers =>
+      existingPurchases?.userPurchases
+          .where((userPurchase) => userPurchase.user.id != currentUserId)
+          .toList() ??
+      [];
+
   int get quantityToBePurchased => existingAssignment.quantity;
 
   int get quantityPurchasedByOtherUsers =>
@@ -29,10 +35,10 @@ class PurchaseState with _$PurchaseState {
       (existingPurchases?.ammountSpent ?? 0) -
       (existingPurchaseOfCurrentUser?.ammountPurchased ?? 0);
 
-
   int get totalPurchasedQuantity {
     return quantityPurchasedByOtherUsers + (currentUserPurchaseQuantity ?? 0);
   }
+
   double get totalPurchasedAmmount {
     final ammountPurchasedByCurrentUser = (currentUserPurchaseQuantity ?? 0) *
         (currentUserPurchaseUnitPrice ?? 0);

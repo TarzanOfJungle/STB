@@ -41,7 +41,8 @@ class ApiClient implements ApiClientBase {
 
     http.Response? res;
     try {
-      final streamed = await _httpClient.send(request);
+      final streamed =
+          await _httpClient.send(request).timeout(ApiConstants.timeout);
       res = await http.Response.fromStream(streamed);
     } catch (_) {
       throw const ApiNoConnectivityException();
@@ -75,7 +76,8 @@ class ApiClient implements ApiClientBase {
 
     http.Response? res;
     try {
-      final streamed = await _httpClient.send(request);
+      final streamed =
+          await _httpClient.send(request).timeout(ApiConstants.timeout);
       res = await http.Response.fromStream(streamed);
     } catch (_) {
       throw const ApiNoConnectivityException();

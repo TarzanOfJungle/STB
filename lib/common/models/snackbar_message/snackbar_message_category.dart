@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/constants/ui_constants.dart';
 
 enum SnackbarMessageCategory {
-  SUCCESS(Colors.green, Icons.check_rounded),
-  WARNING(Colors.amber, Icons.warning_rounded),
-  INFO(Colors.blueGrey, Icons.info_rounded),
+  SUCCESS(UiConstants.confirmColor, Icons.check_rounded),
+  WARNING(UiConstants.warningColor, Icons.warning_rounded),
+  INFO(UiConstants.infoColor, Icons.info_rounded),
   ERROR(Colors.red, Icons.error_rounded);
 
   final Color color;

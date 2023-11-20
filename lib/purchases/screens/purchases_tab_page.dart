@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/no_data_banner.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
-import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
-import 'package:split_the_bill/purchases/widgets/dialogs/purchase_dialog.dart';
 import 'package:split_the_bill/purchases/widgets/product_assignment_list_tile.dart';
 
-class PurchaseTabPage extends StatelessWidget {
+class PurchasesTabPage extends StatelessWidget {
   final _purchasesController = get<PurchasesController>();
-  final _singlePurcahseController = get<SinglePurchaseController>();
+  final _navRouter = get<NavRouter>();
 
-  PurchaseTabPage({super.key});
+  PurchasesTabPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class PurchaseTabPage extends StatelessWidget {
               return ProductAssignmentListTile(
                 productAssignment: assignment,
                 productPurchase: existingPurchases,
-                onTap: () => _showPurchaseDialog(
+                onTap: () => _goToPurchaseDetail(
                   context: context,
                   assignment: assignment,
                   existingPurchases: existingPurchases,
@@ -66,19 +65,14 @@ class PurchaseTabPage extends StatelessWidget {
     );
   }
 
-  void _showPurchaseDialog({
+  void _goToPurchaseDetail({
     required BuildContext context,
     required ProductShoppingAssignment assignment,
     ProductPurchase? existingPurchases,
   }) {
-    _singlePurcahseController.setPurchase(
+    _navRouter.toPurchaseDetail(
       existingAssignment: assignment,
       existingPurchases: existingPurchases,
-    );
-
-    showDialog(
-      context: context,
-      builder: (context) => const PurchaseDialog(),
     );
   }
 }

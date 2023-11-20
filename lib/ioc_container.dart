@@ -22,7 +22,6 @@ final get = GetIt.instance;
 
 abstract class IocContainer {
   static void setUpIoc() {
-    get.registerSingleton<NavRouter>(NavRouter());
     get.registerSingleton<ApiClientBase>(ApiClient());
     get.registerSingleton<Connectivity>(Connectivity());
 
@@ -54,6 +53,7 @@ abstract class IocContainer {
       purchasesController: get<PurchasesController>(),
       productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
       productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
+      snackbarMessangerController: get<SnackbarMessangerController>(),
     ));
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
@@ -62,5 +62,10 @@ abstract class IocContainer {
     ));
     get.registerSingleton<InternetConnectivityService>(
         InternetConnectivityService(get<Connectivity>()));
+
+    // Router
+    get.registerSingleton<NavRouter>(NavRouter(
+      singlePurchaseController: get<SinglePurchaseController>(),
+    ));
   }
 }

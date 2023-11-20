@@ -9,6 +9,7 @@ abstract class StbTheme {
         colorScheme: ColorScheme.fromSeed(
           brightness: colors.brightness,
           seedColor: colors.primary,
+          primary: colors.primary,
           onPrimary: colors.onPrimary,
           background: colors.background,
           onBackground: colors.text,

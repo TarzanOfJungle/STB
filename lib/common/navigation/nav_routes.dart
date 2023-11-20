@@ -4,8 +4,10 @@ enum NavRoute {
   registration("/registration"),
   home("/home"),
   shoppingList("/shoppings"),
+  
   // Nested routes
-  shoppingDetail("shopping-detail");
+  shoppingDetail("shopping-detail"),
+  purchaseDetail("purchase-detail");
 
   final String path;
 

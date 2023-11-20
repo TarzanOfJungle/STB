@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
+import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
+import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
+import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
@@ -20,16 +23,12 @@ class SinglePurchaseController {
       BehaviorSubject.seeded(null);
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
 
-  final StreamController<String?> _errorMessageController =
-      StreamController.broadcast();
-
   Stream<PurchaseState?> get purchaseStateStream => _purchaseState.stream;
   PurchaseState? get purchaseState => _purchaseState.value;
 
   Stream<bool> get isLoadingStream => _isLoading.stream;
   bool get isLoading => _isLoading.value;
 
-  Stream<String?> get errorMessageStream => _errorMessageController.stream;
   bool get isUsersFirstPurchase =>
       purchaseState?.existingPurchaseOfCurrentUser == null;
 
@@ -41,17 +40,20 @@ class SinglePurchaseController {
   late final PurchasesController _purchasesController;
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;
+  late final SnackbarMessangerController _snackbarMessangerController;
 
   SinglePurchaseController({
     required AuthController authController,
     required PurchasesController purchasesController,
     required ProductAssignmentsRepositoryBase productAssignmentsRepository,
     required ProductPurchasesRepositoryBase productPurchasesRepository,
+    required SnackbarMessangerController snackbarMessangerController,
   }) {
     _authController = authController;
     _purchasesController = purchasesController;
     _productAssignmentsRepository = productAssignmentsRepository;
     _productPurchasesRepository = productPurchasesRepository;
+    _snackbarMessangerController = snackbarMessangerController;
   }
 
   /// If current user already purchased some of the given product,
@@ -87,16 +89,25 @@ class SinglePurchaseController {
           .add(currentState.copyWith(currentUserPurchaseQuantity: null));
       return;
     }
-    final newQuantityHigherThanAllowed =
-        (currentState.quantityPurchasedByOtherUsers + newQuantity) >
-            currentState.quantityToBePurchased;
-    if (newQuantity < 0 || newQuantityHigherThanAllowed) {
+    if (newQuantity < 0) {
       _purchaseState.add(currentState);
       return;
     }
-    final newState =
-        currentState.copyWith(currentUserPurchaseQuantity: newQuantity);
-    _purchaseState.add(newState);
+    final newQuantityHigherThanAllowed =
+        (currentState.quantityPurchasedByOtherUsers + newQuantity) >
+            currentState.quantityToBePurchased;
+
+    if (newQuantityHigherThanAllowed) {
+      final maxQuantity = currentState.quantityToBePurchased -
+          currentState.quantityPurchasedByOtherUsers;
+      _purchaseState.add(
+        currentState.copyWith(currentUserPurchaseQuantity: maxQuantity),
+      );
+      return;
+    }
+    _purchaseState.add(
+      currentState.copyWith(currentUserPurchaseQuantity: newQuantity),
+    );
   }
 
   void additionalUnitPriceChanged(double? newUnitPrice) {
@@ -159,18 +170,17 @@ class SinglePurchaseController {
         ),
       );
 
-      _errorMessageController.add(null);
       _isLoading.add(false);
       return true;
     } catch (_) {}
 
-    _errorMessageController.add(_COULDNT_SAVE_CHANGES_MESSAGE);
+    _showError(_COULDNT_SAVE_CHANGES_MESSAGE);
     _isLoading.add(false);
     return false;
   }
 
   Future<bool> deleteExistingPurchase() async {
-    if(isLoading){
+    if (isLoading) {
       return false;
     }
     if (isUsersFirstPurchase) {
@@ -187,12 +197,11 @@ class SinglePurchaseController {
         userId: _currentUser.id,
       );
 
-      _errorMessageController.add(null);
       _isLoading.add(false);
       return true;
     } catch (_) {}
 
-    _errorMessageController.add(_COULDNT_CANCEL_MESSAGE);
+    _showError(_COULDNT_CANCEL_MESSAGE);
     _isLoading.add(false);
     return false;
   }
@@ -208,5 +217,42 @@ class SinglePurchaseController {
     final quantityValid = quantitySum <= purchaseState!.quantityToBePurchased;
 
     return quantityValid;
+  }
+
+  void _showError(String message) {
+    final snackbarMessage = SnackbarMessage(
+      message: message,
+      category: SnackbarMessageCategory.ERROR,
+    );
+    _snackbarMessangerController.showSnackbarMessage(snackbarMessage);
+  }
+
+  UserWithPurchaseContext? getCurrentUserPuchaseToDisplay() {
+    final state = _purchaseState.value;
+    if (state == null) {
+      return null;
+    }
+
+    final userInputEmpty = state.currentUserPurchaseQuantity == null &&
+        state.currentUserPurchaseUnitPrice == null;
+    if (userInputEmpty && state.existingPurchaseOfCurrentUser == null) {
+      return null;
+    }
+    if (state.existingPurchaseOfCurrentUser != null && userInputEmpty) {
+      return state.existingPurchaseOfCurrentUser;
+    }
+    final userQuantity = state.currentUserPurchaseQuantity;
+    final userUnitPrice = state.currentUserPurchaseUnitPrice;
+
+    final currentUserQuantityToDisplay =
+        userQuantity ?? state.existingPurchaseOfCurrentUser?.quantity ?? 0;
+    final currentUserUnitPriceToDisplay =
+        userUnitPrice ?? state.existingPurchaseOfCurrentUser?.unitPrice ?? 0;
+
+    return UserWithPurchaseContext(
+      user: _authController.loggedInUser!.asUser(),
+      quantity: currentUserQuantityToDisplay,
+      unitPrice: currentUserUnitPriceToDisplay,
+    );
   }
 }

@@ -1,4 +1,5 @@
 abstract class ApiConstants {
+  static const Duration timeout = Duration(seconds: 5);
   static const String protocol = "http";
   static const String host = "split-the-bill.somee.com";
   static const String versionPathPrefix = "api/v1";
