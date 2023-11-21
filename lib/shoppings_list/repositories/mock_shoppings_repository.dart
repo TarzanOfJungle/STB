@@ -1,4 +1,6 @@
 import 'package:split_the_bill/shopping_detail/models/shopping/shopping.dart';
+import 'package:split_the_bill/shopping_detail/models/update_shopping/update_shopping.dart';
+import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
 
@@ -30,10 +32,34 @@ class MockShoppingsRepository implements ShoppingsRepositoryBase {
   ];
 
   @override
-  Future<Iterable<ShoppingWithContext>> getShoppings(String searchQuery) {
+  Future<Iterable<ShoppingWithContext>> getShoppings({String? searchQuery}) {
     return Future.delayed(const Duration(seconds: 1), () {
       return _mockShoppings
           .where((shopping) => shopping.shopping.name.contains(searchQuery ?? ''));
     });
+  }
+
+  @override
+  Future<ShoppingWithContext> addShopping({required PostShopping postShopping}) {
+    // TODO: implement addShopping
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ShoppingWithContext> shoppingById({required int shoppingId}) {
+    // TODO: implement shoppingById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> deleteShopping({required int shoppingId}) {
+    // TODO: implement deleteShopping
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ShoppingWithContext> updateShopping({required UpdateShopping updateShopping}) {
+    // TODO: implement updateShopping
+    throw UnimplementedError();
   }
 }

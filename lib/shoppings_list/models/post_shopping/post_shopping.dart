@@ -7,12 +7,9 @@ part 'post_shopping.g.dart';
 @freezed
 class PostShopping with _$PostShopping {
   const factory PostShopping({
-    required int id,
-    required String email,
-    required String username,
-    required String token,
-    DateTime? created,
-    DateTime? updated
+    required String name,
+    DateTime? dueDateTime,
+    String? description,
   }) = _PostShopping;
 
   const PostShopping._();

@@ -20,12 +20,9 @@ PostShopping _$PostShoppingFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PostShopping {
-  int get id => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
-  String get token => throw _privateConstructorUsedError;
-  DateTime? get created => throw _privateConstructorUsedError;
-  DateTime? get updated => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  DateTime? get dueDateTime => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,13 +36,7 @@ abstract class $PostShoppingCopyWith<$Res> {
           PostShopping value, $Res Function(PostShopping) then) =
       _$PostShoppingCopyWithImpl<$Res, PostShopping>;
   @useResult
-  $Res call(
-      {int id,
-      String email,
-      String username,
-      String token,
-      DateTime? created,
-      DateTime? updated});
+  $Res call({String name, DateTime? dueDateTime, String? description});
 }
 
 /// @nodoc
@@ -61,38 +52,23 @@ class _$PostShoppingCopyWithImpl<$Res, $Val extends PostShopping>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? username = null,
-    Object? token = null,
-    Object? created = freezed,
-    Object? updated = freezed,
+    Object? name = null,
+    Object? dueDateTime = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String,
-      created: freezed == created
-          ? _value.created
-          : created // ignore: cast_nullable_to_non_nullable
+      dueDateTime: freezed == dueDateTime
+          ? _value.dueDateTime
+          : dueDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      updated: freezed == updated
-          ? _value.updated
-          : updated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -105,13 +81,7 @@ abstract class _$$PostShoppingImplCopyWith<$Res>
       __$$PostShoppingImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String email,
-      String username,
-      String token,
-      DateTime? created,
-      DateTime? updated});
+  $Res call({String name, DateTime? dueDateTime, String? description});
 }
 
 /// @nodoc
@@ -125,38 +95,23 @@ class __$$PostShoppingImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? username = null,
-    Object? token = null,
-    Object? created = freezed,
-    Object? updated = freezed,
+    Object? name = null,
+    Object? dueDateTime = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$PostShoppingImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      username: null == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String,
-      created: freezed == created
-          ? _value.created
-          : created // ignore: cast_nullable_to_non_nullable
+      dueDateTime: freezed == dueDateTime
+          ? _value.dueDateTime
+          : dueDateTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      updated: freezed == updated
-          ? _value.updated
-          : updated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -165,33 +120,22 @@ class __$$PostShoppingImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PostShoppingImpl extends _PostShopping {
   const _$PostShoppingImpl(
-      {required this.id,
-      required this.email,
-      required this.username,
-      required this.token,
-      this.created,
-      this.updated})
+      {required this.name, this.dueDateTime, this.description})
       : super._();
 
   factory _$PostShoppingImpl.fromJson(Map<String, dynamic> json) =>
       _$$PostShoppingImplFromJson(json);
 
   @override
-  final int id;
+  final String name;
   @override
-  final String email;
+  final DateTime? dueDateTime;
   @override
-  final String username;
-  @override
-  final String token;
-  @override
-  final DateTime? created;
-  @override
-  final DateTime? updated;
+  final String? description;
 
   @override
   String toString() {
-    return 'PostShopping(id: $id, email: $email, username: $username, token: $token, created: $created, updated: $updated)';
+    return 'PostShopping(name: $name, dueDateTime: $dueDateTime, description: $description)';
   }
 
   @override
@@ -199,19 +143,16 @@ class _$PostShoppingImpl extends _PostShopping {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PostShoppingImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.token, token) || other.token == token) &&
-            (identical(other.created, created) || other.created == created) &&
-            (identical(other.updated, updated) || other.updated == updated));
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.dueDateTime, dueDateTime) ||
+                other.dueDateTime == dueDateTime) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, email, username, token, created, updated);
+  int get hashCode => Object.hash(runtimeType, name, dueDateTime, description);
 
   @JsonKey(ignore: true)
   @override
@@ -229,29 +170,20 @@ class _$PostShoppingImpl extends _PostShopping {
 
 abstract class _PostShopping extends PostShopping {
   const factory _PostShopping(
-      {required final int id,
-      required final String email,
-      required final String username,
-      required final String token,
-      final DateTime? created,
-      final DateTime? updated}) = _$PostShoppingImpl;
+      {required final String name,
+      final DateTime? dueDateTime,
+      final String? description}) = _$PostShoppingImpl;
   const _PostShopping._() : super._();
 
   factory _PostShopping.fromJson(Map<String, dynamic> json) =
       _$PostShoppingImpl.fromJson;
 
   @override
-  int get id;
+  String get name;
   @override
-  String get email;
+  DateTime? get dueDateTime;
   @override
-  String get username;
-  @override
-  String get token;
-  @override
-  DateTime? get created;
-  @override
-  DateTime? get updated;
+  String? get description;
   @override
   @JsonKey(ignore: true)
   _$$PostShoppingImplCopyWith<_$PostShoppingImpl> get copyWith =>
