@@ -84,13 +84,9 @@ class SinglePurchaseController {
     if (currentState == null) {
       return;
     }
-    if (newQuantity == null) {
+    if (newQuantity == null || newQuantity <= 0) {
       _purchaseState
           .add(currentState.copyWith(currentUserPurchaseQuantity: null));
-      return;
-    }
-    if (newQuantity < 0) {
-      _purchaseState.add(currentState);
       return;
     }
     final newQuantityHigherThanAllowed =
@@ -115,14 +111,11 @@ class SinglePurchaseController {
     if (currentState == null) {
       return;
     }
-    if (newUnitPrice == null) {
+    if (newUnitPrice == null || newUnitPrice <= 0) {
       _purchaseState.add(currentState.copyWith(
         currentUserPurchaseUnitPrice: null,
       ));
       return;
-    }
-    if (newUnitPrice <= 0) {
-      _purchaseState.add(currentState);
     }
     final newState =
         currentState.copyWith(currentUserPurchaseUnitPrice: newUnitPrice);

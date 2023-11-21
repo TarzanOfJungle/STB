@@ -15,6 +15,7 @@ abstract class StbTheme {
           onBackground: colors.text,
           shadow: colors.shadow,
           secondary: colors.accent,
+          onSecondary: colors.onAccent,
           error: colors.error,
         ),
         appBarTheme: AppBarTheme(

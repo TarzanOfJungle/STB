@@ -26,7 +26,7 @@ class UserPurchaseListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 3),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
         color: isCurrentUser

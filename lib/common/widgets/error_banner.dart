@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:split_the_bill/common/constants/animation_asset.dart';
-import 'package:split_the_bill/common/constants/ui_constants.dart';
 
 const _ERROR_BANNER_HEIGHT = 190.0;
 

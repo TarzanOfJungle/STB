@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/button_row/button_row.dart';
+import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
@@ -11,7 +13,6 @@ import 'package:split_the_bill/purchases/widgets/user_purchase_list_tile.dart';
 
 const _QUANTITY_ICON = Icons.functions_rounded;
 const _AMMOUNT_ICON = Icons.paid_rounded;
-const _INPUT_FIELDS_WIDTH = 150.0;
 
 class PurchasePage extends StatelessWidget {
   final _purchaseController = get<SinglePurchaseController>();
@@ -20,23 +21,23 @@ class PurchasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageTemplate(
-      label: "Purchase",
-      showBackButton: true,
-      child: StreamBuilder(
-        stream: _purchaseController.purchaseStateStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const ErrorBanner(text: "Something went wrong");
-          }
-          if (!snapshot.hasData) {
-            return const LoadingIndicator();
-          }
-          final state = snapshot.data!;
-          return ListView(
-            padding: const EdgeInsets.all(16),
+    return StreamBuilder(
+      stream: _purchaseController.purchaseStateStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const ErrorBanner(text: "Something went wrong");
+        }
+        if (!snapshot.hasData) {
+          return const LoadingIndicator();
+        }
+        final state = snapshot.data!;
+        return PageTemplate(
+          label: state.existingAssignment.product.name,
+          showBackButton: true,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             children: [
-              _buildTitle(context, state),
+              //_buildTitle(context, state),
               const SizedBox(height: STANDARD_PADDING),
               _buildGeneralInfo(context, state),
               PurchaseEditingSection(
@@ -44,92 +45,70 @@ class PurchasePage extends StatelessWidget {
                 ammountIcon: _AMMOUNT_ICON,
                 quantityIcon: _QUANTITY_ICON,
               ),
+              const Divider(height: 30),
               ..._buildUserPurchasesList(context, state),
             ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTitle(BuildContext context, PurchaseState state) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Icon(Icons.shopping_cart_rounded, size: 40),
-        const SizedBox(
-          width: STANDARD_PADDING,
-        ),
-        Expanded(
-          child: Text(
-            state.existingAssignment.product.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-        )
-      ],
+        );
+      },
     );
   }
 
   Widget _buildGeneralInfo(BuildContext context, PurchaseState state) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildGeneralInfoRow(
+        _buildGeneralInfoItem(
           context: context,
           icon: _QUANTITY_ICON,
-          label: "Purchased Quantity: ",
+          label: "Total Qty.",
           value:
               "${state.totalPurchasedQuantity}/${state.quantityToBePurchased}",
         ),
-        _buildGeneralInfoRow(
+        _buildGeneralInfoItem(
           context: context,
           icon: _AMMOUNT_ICON,
-          label: "Purchased ammount: ",
+          label: "Total price",
           value: "${state.totalPurchasedAmmount.toStringAsFixed(1)},-",
         ),
       ],
     );
   }
 
-  Widget _buildGeneralInfoRow({
+  Widget _buildGeneralInfoItem({
     required BuildContext context,
     required IconData icon,
     required String label,
     required String value,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 23,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleMedium,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 25,
             ),
-          ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
-      ),
+            const SizedBox(width: 5),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ],
+        ),
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ],
     );
   }
 

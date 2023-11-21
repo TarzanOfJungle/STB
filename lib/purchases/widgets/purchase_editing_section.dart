@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
+import 'package:split_the_bill/common/widgets/components/number_incremental_input.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -9,7 +10,7 @@ import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
 
-const _INPUT_FIELDS_WIDTH = 150.0;
+const _INPUT_FIELDS_WIDTH = 290.0;
 
 class PurchaseEditingSection extends StatefulWidget {
   final PurchaseState state;
@@ -42,7 +43,9 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Divider(height: 30),
+        const SizedBox(
+          height: 30,
+        ),
         _buildTitle(context),
         const SizedBox(
           height: STANDARD_PADDING,
@@ -52,7 +55,6 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
           height: 20,
         ),
         _buildSaveButton(context),
-        const Divider(height: 30),
       ],
     );
   }
@@ -118,18 +120,28 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
   }
 
   Widget _buildMyPurchase(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        StbNumberInputField(
+        NumberIncrementalInput(
           controller: _purchaseQuantityController,
-          fixedWidth: _INPUT_FIELDS_WIDTH,
           label: "Quantity",
+          fixedWidth: _INPUT_FIELDS_WIDTH,
           prefix: Icon(
             widget.quantityIcon,
             size: 15,
           ),
-          allowDecimals: false,
+          onIncremented: () {
+            final newQuantity =
+                (widget.state.currentUserPurchaseQuantity ?? 0) + 1;
+            _purchaseController.additionalQuantityChanged(newQuantity);
+          },
+          onDecremented: () {
+            final newQuantity =
+                (widget.state.currentUserPurchaseQuantity ?? 0) - 1;
+            _purchaseController.additionalQuantityChanged(newQuantity);
+          },
           onChanged: (value) {
             final newQuantity =
                 _purchaseController.getAdditionalValueFromString(
@@ -137,10 +149,12 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
             _purchaseController.additionalQuantityChanged(newQuantity);
           },
         ),
+        const SizedBox(height: STANDARD_PADDING),
         StbNumberInputField(
           controller: _purchaseUnitPriceController,
-          fixedWidth: _INPUT_FIELDS_WIDTH,
           label: "Unit price",
+          fixedWidth: _INPUT_FIELDS_WIDTH,
+          allowDecimals: true,
           prefix: Icon(
             widget.ammountIcon,
             size: 15,
