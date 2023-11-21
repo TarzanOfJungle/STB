@@ -8,20 +8,23 @@ import 'package:split_the_bill/home/screens/home_page.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
-import 'package:split_the_bill/purchases/screens/purchase_page.dart';
-import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
 
 class NavRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   late final SinglePurchaseController _singlePurchaseController;
+  late final ShoppingDetailController _shoppingDetailController;
 
   RouterConfig<Object> get router => _router;
 
   NavRouter({
     required SinglePurchaseController singlePurchaseController,
+    required ShoppingDetailController shoppingDetailController,
   }) {
     _singlePurchaseController = singlePurchaseController;
+    _shoppingDetailController = shoppingDetailController;
   }
 
   late final _router = GoRouter(
@@ -53,17 +56,12 @@ class NavRouter {
             routes: [
               GoRoute(
                   path: NavRoute.shoppingList.path,
-                  builder: (context, state) => const ShoppingsListPage(),
+                  builder: (context, state) => ShoppingsListPage(),
                   routes: [
                     GoRoute(
-                        path: NavRoute.shoppingDetail.path,
-                        builder: (context, state) => PurchasesTabPage(),
-                        routes: [
-                          GoRoute(
-                            path: NavRoute.purchaseDetail.path,
-                            builder: (context, state) => PurchasePage(),
-                          )
-                        ])
+                      path: NavRoute.shoppingDetail.path,
+                      builder: (context, state) => const ShoppingDetailTabviewWrapper(),
+                    )
                   ])
             ],
           ),
@@ -93,9 +91,8 @@ class NavRouter {
   }
 
   void toShoppingDetail(int shoppingId) {
-    // TODO: Call method in the shopping detail controller to fetch the given shopping
-    final fullPath =
-        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}";
+    _shoppingDetailController.putShopping(shoppingId);
+    final fullPath = "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}";
     _router.go(fullPath);
   }
 

@@ -14,7 +14,9 @@ import 'package:split_the_bill/purchases/repositories/product_assignments/produc
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
-import 'package:split_the_bill/shoppings_list/repositories/mock_shoppings_repository.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
+import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
 
@@ -28,7 +30,9 @@ abstract class IocContainer {
     // Repositories
     get.registerSingleton<AuthRepositoryBase>(
         AuthRepository(get<ApiClientBase>()));
-    get.registerSingleton<ShoppingsRepositoryBase>(MockShoppingsRepository());
+
+    get.registerSingleton<ShoppingsRepositoryBase>(
+        ShoppingsListRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductAssignmentsRepositoryBase>(
         ProductAssignmentsRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductPurchasesRepositoryBase>(
@@ -44,6 +48,15 @@ abstract class IocContainer {
         snackbarMessangerController: get<SnackbarMessangerController>(),
       ),
     );
+
+    get.registerSingleton<ShoppingsListController>(
+      ShoppingsListController(
+          shoppingsListRepository: get<ShoppingsRepositoryBase>(),
+          snackbarMessangerController: get<SnackbarMessangerController>()),
+    );
+    get.registerSingleton<ShoppingDetailController> (
+      ShoppingDetailController(shoppingsListController: get<ShoppingsListController>())
+    );
     get.registerSingleton<PurchasesController>(PurchasesController(
       productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
       productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
@@ -55,6 +68,7 @@ abstract class IocContainer {
       productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
       snackbarMessangerController: get<SnackbarMessangerController>(),
     ));
+
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
       apiClient: get<ApiClientBase>(),
@@ -66,6 +80,7 @@ abstract class IocContainer {
     // Router
     get.registerSingleton<NavRouter>(NavRouter(
       singlePurchaseController: get<SinglePurchaseController>(),
+      shoppingDetailController: get<ShoppingDetailController>(),
     ));
   }
 }

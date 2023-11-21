@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/button_row/button_row.dart';
-import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
