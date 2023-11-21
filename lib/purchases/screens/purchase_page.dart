@@ -35,7 +35,6 @@ class PurchasePage extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
             children: [
-              //_buildTitle(context, state),
               const SizedBox(height: STANDARD_PADDING),
               _buildGeneralInfo(context, state),
               PurchaseEditingSection(

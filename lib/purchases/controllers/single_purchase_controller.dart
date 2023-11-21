@@ -14,6 +14,7 @@ import 'package:split_the_bill/purchases/models/put_product_purchase/put_product
 import 'package:split_the_bill/purchases/models/user_with_purchase_context/user_with_purchase_context.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
 const _COULDNT_SAVE_CHANGES_MESSAGE = "Saving purchase failed.";
 const _COULDNT_CANCEL_MESSAGE = "Cancelling purchase failed.";
@@ -32,11 +33,12 @@ class SinglePurchaseController {
   bool get isUsersFirstPurchase =>
       purchaseState?.existingPurchaseOfCurrentUser == null;
 
-  // TODO: this value will be fetched from the shopping detail controller, once it is implemented
-  int get _currentShoppingId => 1;
+  int? get _currentShoppingId =>
+      _shoppingDetailController.currentShoppingState?.shopping.id;
   AuthenticatedUser get _currentUser => _authController.loggedInUser!;
 
   late final AuthController _authController;
+  late final ShoppingDetailController _shoppingDetailController;
   late final PurchasesController _purchasesController;
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;
@@ -44,12 +46,14 @@ class SinglePurchaseController {
 
   SinglePurchaseController({
     required AuthController authController,
+    required ShoppingDetailController shoppingDetailController,
     required PurchasesController purchasesController,
     required ProductAssignmentsRepositoryBase productAssignmentsRepository,
     required ProductPurchasesRepositoryBase productPurchasesRepository,
     required SnackbarMessangerController snackbarMessangerController,
   }) {
     _authController = authController;
+    _shoppingDetailController = shoppingDetailController;
     _purchasesController = purchasesController;
     _productAssignmentsRepository = productAssignmentsRepository;
     _productPurchasesRepository = productPurchasesRepository;
@@ -134,7 +138,7 @@ class SinglePurchaseController {
   }
 
   Future<bool> saveChanges() async {
-    if (isLoading) {
+    if (isLoading || _currentShoppingId == null) {
       return false;
     }
     if (!dataValidForSaving()) {
@@ -147,7 +151,7 @@ class SinglePurchaseController {
       final unitPrice = purchaseState!.currentUserPurchaseUnitPrice!;
 
       final putRequest = PutProductPurchase(
-        shoppingId: _currentShoppingId,
+        shoppingId: _currentShoppingId!,
         productId: productId,
         quantity: quantity,
         unitPrice: unitPrice,
@@ -173,7 +177,7 @@ class SinglePurchaseController {
   }
 
   Future<bool> deleteExistingPurchase() async {
-    if (isLoading) {
+    if (isLoading || _currentShoppingId == null) {
       return false;
     }
     if (isUsersFirstPurchase) {
@@ -182,7 +186,7 @@ class SinglePurchaseController {
     _isLoading.add(true);
     try {
       await _productPurchasesRepository.deleteProductPurchase(
-        _currentShoppingId,
+        _currentShoppingId!,
         purchaseState!.existingAssignment.product.id,
       );
       _purchasesController.deleteUserPurchase(

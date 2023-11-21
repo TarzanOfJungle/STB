@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/api/http_method.dart';
 import 'package:split_the_bill/common/constants/api_constants.dart';

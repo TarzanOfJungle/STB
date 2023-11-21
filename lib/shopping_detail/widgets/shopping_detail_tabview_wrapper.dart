@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import '../../ioc_container.dart';
 import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
@@ -27,12 +28,12 @@ class _ShoppingDetailTabviewWrapperState
   void initState() {
     super.initState();
     _tabViewItems = [
-      const TabViewItem(
-          textTab: Tab(
+      TabViewItem(
+          textTab: const Tab(
             text: 'Items',
           ),
           tab: Tab(
-            child: Center(child: Text('Items page TBD')), //TODO
+            child: PurchasesTabPage(),
           )),
       TabViewItem(
         textTab: const Tab(

@@ -5,6 +5,7 @@ import 'package:split_the_bill/purchases/repositories/product_assignments/produc
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/purchases/extensions/user_purchase_create_update.dart';
 import 'package:split_the_bill/purchases/extensions/user_purchase_delete.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
 class PurchasesController {
   final BehaviorSubject<ProductAssignmentsWithPurchases?>
@@ -17,26 +18,29 @@ class PurchasesController {
   ProductAssignmentsWithPurchases? get productAssignmentsWithPurchases =>
       _productAssignmentsWithPurchases.value;
 
+  late final ShoppingDetailController _shoppingDetailController;
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;
 
   PurchasesController({
+    required ShoppingDetailController shoppingDetailController,
     required ProductAssignmentsRepositoryBase productAssignmentsRepository,
     required ProductPurchasesRepositoryBase productPurchasesRepository,
   }) {
     _productAssignmentsRepository = productAssignmentsRepository;
     _productPurchasesRepository = productPurchasesRepository;
+    _shoppingDetailController = shoppingDetailController;
 
-    // TODO: only for testing purposes, replace with subscribtion to ShoppingDetailController once implemented
-    Future.delayed(
-      const Duration(seconds: 25),
-      () {
-        fetchAssignmentsAndPurchases(1);
+    _shoppingDetailController.shopping.listen(
+      (newShoppingState) {
+        if (newShoppingState != null) {
+          _fetchAssignmentsAndPurchases(newShoppingState.shopping.id);
+        }
       },
-    ).then((value) => null);
+    );
   }
 
-  Future<void> fetchAssignmentsAndPurchases(int shoppingId) async {
+  Future<void> _fetchAssignmentsAndPurchases(int shoppingId) async {
     _productAssignmentsWithPurchases.add(null);
     try {
       final productAssignments = await _productAssignmentsRepository

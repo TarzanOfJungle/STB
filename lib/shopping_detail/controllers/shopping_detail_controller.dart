@@ -13,6 +13,7 @@ class ShoppingDetailController {
   }
 
   Stream<ShoppingWithContext?> get shopping => _shopping.stream;
+  ShoppingWithContext? get currentShoppingState => _shopping.value;
 
   Future<bool> putShopping(int shoppingId) async {
     var wasSuccess = false;

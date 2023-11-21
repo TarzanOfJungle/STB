@@ -58,11 +58,13 @@ abstract class IocContainer {
       ShoppingDetailController(shoppingsListController: get<ShoppingsListController>())
     );
     get.registerSingleton<PurchasesController>(PurchasesController(
+      shoppingDetailController: get<ShoppingDetailController>(),
       productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
       productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
     ));
     get.registerSingleton<SinglePurchaseController>(SinglePurchaseController(
       authController: get<AuthController>(),
+      shoppingDetailController: get<ShoppingDetailController>(),
       purchasesController: get<PurchasesController>(),
       productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
       productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
