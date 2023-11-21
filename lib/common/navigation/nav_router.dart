@@ -5,10 +5,18 @@ import 'package:split_the_bill/auth/screens/registration_page.dart';
 import 'package:split_the_bill/common/navigation/nav_routes.dart';
 import 'package:split_the_bill/common/widgets/wrappers/bottom_nav_bar_wrapper.dart';
 import 'package:split_the_bill/home/screens/home_page.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
 
 class NavRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  late final ShoppingDetailController _shoppingDetailController;
+
+
+  NavRouter({required ShoppingDetailController shoppingDetailController}) {
+    _shoppingDetailController = shoppingDetailController;
+  }
 
   RouterConfig<Object> get router => _router;
 
@@ -41,11 +49,11 @@ class NavRouter {
             routes: [
               GoRoute(
                   path: NavRoute.shoppingList.path,
-                  builder: (context, state) => const ShoppingsListPage(),
+                  builder: (context, state) => ShoppingsListPage(),
                   routes: [
                     GoRoute(
                       path: NavRoute.shoppingDetail.path,
-                      builder: (context, state) => Container(),
+                      builder: (context, state) => const ShoppingDetailTabviewWrapper(),
                     )
                   ])
             ],
@@ -76,7 +84,8 @@ class NavRouter {
   }
 
   void toShoppingDetail(int shoppingId) {
-    // TODO: Call method in the shopping detail controller to fetch the given shopping
+    _shoppingDetailController.putShopping(shoppingId);
+
     final fullPath = "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}";
     _router.go(fullPath);
   }
