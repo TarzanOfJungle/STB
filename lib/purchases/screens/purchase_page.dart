@@ -9,9 +9,6 @@ import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart
 import 'package:split_the_bill/purchases/widgets/purchase_editing_section.dart';
 import 'package:split_the_bill/purchases/widgets/user_purchase_list_tile.dart';
 
-const _QUANTITY_ICON = Icons.functions_rounded;
-const _AMMOUNT_ICON = Icons.paid_rounded;
-
 class PurchasePage extends StatelessWidget {
   final _purchaseController = get<SinglePurchaseController>();
 
@@ -37,11 +34,7 @@ class PurchasePage extends StatelessWidget {
             children: [
               const SizedBox(height: STANDARD_PADDING),
               _buildGeneralInfo(context, state),
-              PurchaseEditingSection(
-                state: state,
-                ammountIcon: _AMMOUNT_ICON,
-                quantityIcon: _QUANTITY_ICON,
-              ),
+              PurchaseEditingSection(state: state),
               const Divider(height: 30),
               ..._buildUserPurchasesList(context, state),
             ],
@@ -58,14 +51,14 @@ class PurchasePage extends StatelessWidget {
       children: [
         _buildGeneralInfoItem(
           context: context,
-          icon: _QUANTITY_ICON,
+          icon: UiConstants.quantityIcon,
           label: "Total Qty.",
           value:
               "${state.totalPurchasedQuantity}/${state.quantityToBePurchased}",
         ),
         _buildGeneralInfoItem(
           context: context,
-          icon: _AMMOUNT_ICON,
+          icon: UiConstants.ammountIcon,
           label: "Total price",
           value: "${state.totalPurchasedAmmount.toStringAsFixed(1)},-",
         ),
@@ -128,16 +121,12 @@ class PurchasePage extends StatelessWidget {
         UserPurchaseListTile(
           userPurchase: currentUserPurchase,
           isCurrentUser: true,
-          quantityIcon: _QUANTITY_ICON,
-          ammountIcon: _AMMOUNT_ICON,
         ),
       ...state.existingPurchasesOfOtherUsers.map(
         (userPurchase) {
           return UserPurchaseListTile(
             userPurchase: userPurchase,
             isCurrentUser: false,
-            quantityIcon: _QUANTITY_ICON,
-            ammountIcon: _AMMOUNT_ICON,
           );
         },
       ).toList()

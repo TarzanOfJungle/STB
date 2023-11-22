@@ -9,4 +9,7 @@ abstract class UiConstants {
   static const deleteColor = Color.fromARGB(255, 227, 15, 0);
   static const confirmColor = Color.fromARGB(255, 0, 196, 16);
   static const warningColor = Color.fromARGB(255, 237, 162, 0);
+
+  static const quantityIcon = Icons.functions_rounded;
+  static const ammountIcon = Icons.paid_rounded;
 }

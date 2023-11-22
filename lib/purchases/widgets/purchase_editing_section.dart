@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/extensions/set_text_editing_controller_value.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
-import 'package:split_the_bill/common/widgets/components/number_incremental_input.dart';
+import 'package:split_the_bill/common/widgets/components/stb_number_input_field_incremental.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
-import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
 
@@ -15,14 +15,10 @@ const _INPUT_FIELDS_WIDTH = 290.0;
 
 class PurchaseEditingSection extends StatefulWidget {
   final PurchaseState state;
-  final IconData ammountIcon;
-  final IconData quantityIcon;
 
   const PurchaseEditingSection({
     super.key,
     required this.state,
-    required this.ammountIcon,
-    required this.quantityIcon,
   });
 
   @override
@@ -61,10 +57,9 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
   }
 
   void _adjustTextEditingControllersToNewState(PurchaseState newState) {
-    _adjustTextEditingControllerToNewValue(
-      _purchaseQuantityController,
-      newState.currentUserPurchaseQuantity?.toString(),
-    );
+    _purchaseQuantityController
+        .setValue(newState.currentUserPurchaseQuantity?.toString());
+
     // Unit price TF doesn't need to be adjusted continuously, just on initial load
     if (newState.currentUserPurchaseUnitPrice != null &&
         _purchaseUnitPriceController.text.isEmpty) {
@@ -74,21 +69,9 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
       final unitPriceStringValue = unitPriceHasDecimal
           ? newState.currentUserPurchaseUnitPrice!.toString()
           : newState.currentUserPurchaseUnitPrice!.toStringAsFixed(0);
-      _adjustTextEditingControllerToNewValue(
-        _purchaseUnitPriceController,
-        unitPriceStringValue,
-      );
-    }
-  }
 
-  void _adjustTextEditingControllerToNewValue(
-    TextEditingController controller,
-    String? newValue,
-  ) {
-    controller.text = newValue ?? "";
-    controller.selection = TextSelection.collapsed(
-      offset: controller.text.length,
-    );
+      _purchaseUnitPriceController.setValue(unitPriceStringValue);
+    }
   }
 
   Widget _buildTitle(BuildContext context) {
@@ -125,12 +108,12 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        NumberIncrementalInput(
+        StbNumberInputFieldIncremental(
           controller: _purchaseQuantityController,
           label: "Quantity",
           fixedWidth: _INPUT_FIELDS_WIDTH,
-          prefix: Icon(
-            widget.quantityIcon,
+          prefix: const Icon(
+            UiConstants.quantityIcon,
             size: 15,
           ),
           onIncremented: () {
@@ -156,8 +139,8 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
           label: "Unit price",
           fixedWidth: _INPUT_FIELDS_WIDTH,
           allowDecimals: true,
-          prefix: Icon(
-            widget.ammountIcon,
+          prefix: const Icon(
+            UiConstants.ammountIcon,
             size: 15,
           ),
           suffix: const Text(",-"),

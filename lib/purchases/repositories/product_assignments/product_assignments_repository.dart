@@ -12,14 +12,17 @@ class ProductAssignmentsRepository implements ProductAssignmentsRepositoryBase {
   const ProductAssignmentsRepository(this._apiClient);
 
   @override
-  Future<void> addOrUpdateProductAssignment(
-    PutProductShoppingAssignment productShoppingAssignment,
+  Future<ProductShoppingAssignment> addOrUpdateProductAssignment(
+    PutProductShoppingAssignment putProductAssignment,
   ) async {
-    await _apiClient.sendRequest(
+    final newAssignment = await _apiClient.sendDataRequest(
       path: ApiConstants.productShoppingAssignments,
       method: HttpMethod.put,
-      jsonBody: productShoppingAssignment.toJson(),
+      jsonBody: putProductAssignment.toJson(),
+      processBody: (rawBody) =>
+          ProductShoppingAssignment.fromJson(rawBody.asJsonObject()),
     );
+    return newAssignment;
   }
 
   @override

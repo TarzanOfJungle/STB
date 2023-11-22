@@ -6,7 +6,11 @@ import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
+import 'package:split_the_bill/purchases/widgets/dialogs/add_product_assignment_dialog.dart';
 import 'package:split_the_bill/purchases/widgets/product_assignment_list_tile.dart';
+
+const _NO_ITEMS_YET =
+    "This shopping doesn't have any items. Add some by clicking the \"+\" button";
 
 class PurchasesTabPage extends StatelessWidget {
   final _purchasesController = get<PurchasesController>();
@@ -17,6 +21,10 @@ class PurchasesTabPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddProductAssignmentDialog(context),
+        child: const Icon(Icons.add_rounded),
+      ),
       body: StreamBuilder(
         stream: _purchasesController.productAssignmentsWithPurchasesStream,
         builder: (context, snapshot) {
@@ -60,7 +68,7 @@ class PurchasesTabPage extends StatelessWidget {
   Widget _buildNoData() {
     return const Center(
       child: NoDataBanner(
-        text: "No data found",
+        text: _NO_ITEMS_YET,
       ),
     );
   }
@@ -73,6 +81,13 @@ class PurchasesTabPage extends StatelessWidget {
     _navRouter.toPurchaseDetail(
       existingAssignment: assignment,
       existingPurchases: existingPurchases,
+    );
+  }
+
+  void _showAddProductAssignmentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AddProductAssignmentDialog(),
     );
   }
 }

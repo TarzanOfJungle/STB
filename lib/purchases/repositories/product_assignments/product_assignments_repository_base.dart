@@ -8,6 +8,6 @@ abstract class ProductAssignmentsRepositoryBase {
   Future<void> deleteProductAssignmentFromShopping(
       int shoppingId, String productName);
 
-  Future<void> addOrUpdateProductAssignment(
-      PutProductShoppingAssignment productShoppingAssignment);
+  Future<ProductShoppingAssignment> addOrUpdateProductAssignment(
+      PutProductShoppingAssignment putProductAssignment);
 }

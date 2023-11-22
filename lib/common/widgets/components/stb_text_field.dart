@@ -11,13 +11,15 @@ class StbTextField extends StatefulWidget {
   final bool enableSuggestions;
   final TextCapitalization textCapitalization;
   final int? maxLength;
+  final ValueChanged<String>? onChanged;
 
   const StbTextField({
     super.key,
+    required this.controller,
     this.label,
     this.onTap,
+    this.onChanged,
     this.validator,
-    required this.controller,
     this.keyboardType = TextInputType.text,
     this.maxLines = 1,
     this.obscureText = false,
@@ -39,6 +41,7 @@ class _StbTextFieldState extends State<StbTextField> {
       onTap: widget.onTap,
       child: TextFormField(
         controller: widget.controller,
+        onChanged: widget.onChanged,
         validator: widget.validator,
         focusNode: _focusNode,
         autocorrect: false,
