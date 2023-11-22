@@ -44,7 +44,8 @@ class ConfirmationDialog extends StatelessWidget {
               StbElevatedButton(
                 text: 'Cancel',
                 stretch: true,
-                onTap: () => _navRouter.returnBack()
+                onTap: () => _navRouter.returnBack(),
+                color: UiConstants.infoColor,
               ),
               StbElevatedButton(
                 text: 'Do it',
@@ -53,6 +54,7 @@ class ConfirmationDialog extends StatelessWidget {
                   _onConfirm();
                   _navRouter.returnBack();
                 },
+                color: UiConstants.deleteColor,
               )
             ],
           )

@@ -72,7 +72,8 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                     onTap: () {
                       _confirm();
                       _navRouter.returnBack();
-                    }
+                    },
+                    color: UiConstants.confirmColor,
                   )
                 ],
               ),
