@@ -16,6 +16,8 @@ abstract class ApiConstants {
   static const String purchases = "$versionPathPrefix/purchases";
   static const String productPurchases = "$purchases/product-purchases";
 
+  static const String userPurchases = "$purchases/user-purchases";
+
   // Shoppings list
 
   static const String shoppingsList = "$versionPathPrefix/shoppings";

@@ -68,6 +68,7 @@ class PurchasesController {
           .getUserPurchasesOfShopping(shoppingId);
       _usersWithPurchases.add(usersWithPurchases);
     } catch (_) {
+      print('exception');
       _productAssignmentsWithPurchases.add(
         ProductAssignmentsWithPurchases.empty(),
       );

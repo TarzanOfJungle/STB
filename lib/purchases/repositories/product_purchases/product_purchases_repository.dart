@@ -54,7 +54,7 @@ class ProductPurchasesRepository implements ProductPurchasesRepositoryBase {
 
   @override
   Future<List<UserPurchases>> getUserPurchasesOfShopping(int shoppingId) async {
-    final fullPath = "${ApiConstants.productPurchases}/$shoppingId";
+    final fullPath = "${ApiConstants.userPurchases}/$shoppingId";
     final userPurchases = await _apiClient.sendDataRequest(
         path: fullPath,
         method: HttpMethod.get,

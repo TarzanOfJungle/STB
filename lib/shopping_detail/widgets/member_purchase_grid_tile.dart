@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/purchases/models/product_with_purchase_context/product_with_purchase_context.dart';
 import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
 
 class MemberPurchaseGridTile extends StatelessWidget {
@@ -16,7 +17,7 @@ class MemberPurchaseGridTile extends StatelessWidget {
       height: 300.0,
       width: 300.0,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
       ),
       child: Padding(
@@ -31,16 +32,29 @@ class MemberPurchaseGridTile extends StatelessWidget {
               height: SMALL_PADDING,
             ),
             Expanded(
-                child: ListView(
+                child: ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
-              children: const [
-                Text('something'),
-                Text('Another thing'),
-              ],
+              itemBuilder: (_, int index) =>
+                  _buildPurchaseInfoLine(userPurchase.productPurchases[index]),
+              separatorBuilder: (_, __) => const Divider(),
+              itemCount: userPurchase.productPurchases.length,
             ))
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPurchaseInfoLine(
+      ProductWithPurchaseContext productWithPurchaseContext) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+            '${productWithPurchaseContext.quantity}\u00d7 ${productWithPurchaseContext.product.name}'),
+        const Spacer(),
+        Text('${productWithPurchaseContext.unitPrice},-'),
+      ],
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/no_data_banner.dart';
 import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
 import 'package:split_the_bill/shopping_detail/widgets/member_purchase_grid_tile.dart';
 
@@ -25,6 +26,9 @@ class MemberPurchasesSection extends StatelessWidget {
               return const Center(child: Text("Nothing yet"));
             } else {
               final usersPurchases = snapshot.data!.toList();
+              if (usersPurchases.isEmpty) {
+                return const Center(child: NoDataBanner(),);
+              }
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 300.0,
