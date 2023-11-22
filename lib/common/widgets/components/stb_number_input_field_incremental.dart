@@ -4,7 +4,7 @@ import 'package:split_the_bill/common/widgets/components/stb_number_input_field.
 
 const _BUTTON_SCALE = 0.8;
 
-class NumberIncrementalInput extends StatelessWidget {
+class StbNumberInputFieldIncremental extends StatelessWidget {
   final TextEditingController controller;
   final double? fixedWidth;
   final String? Function(String? value)? validator;
@@ -18,7 +18,7 @@ class NumberIncrementalInput extends StatelessWidget {
   final Color? incrementButtonColor;
   final Color? decrementButtonColor;
 
-  const NumberIncrementalInput({
+  const StbNumberInputFieldIncremental({
     super.key,
     this.fixedWidth,
     this.validator,

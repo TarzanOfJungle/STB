@@ -7,8 +7,6 @@ const _ROW_ICON_SIZE = 20.0;
 class UserPurchaseListTile extends StatelessWidget {
   final UserWithPurchaseContext userPurchase;
   final bool isCurrentUser;
-  final IconData quantityIcon;
-  final IconData ammountIcon;
 
   double get _fontSize => isCurrentUser ? 17 : 13;
   FontWeight get _numbersFontWeight =>
@@ -18,8 +16,6 @@ class UserPurchaseListTile extends StatelessWidget {
     super.key,
     required this.userPurchase,
     required this.isCurrentUser,
-    required this.quantityIcon,
-    required this.ammountIcon,
   });
 
   @override
@@ -39,11 +35,11 @@ class UserPurchaseListTile extends StatelessWidget {
           _buildUsername(),
           _buildTextWithPrefixIcon(
             text: userPurchase.quantity.toString(),
-            icon: quantityIcon,
+            icon: UiConstants.quantityIcon,
           ),
           _buildTextWithPrefixIcon(
             text: userPurchase.ammountPurchased.toStringAsFixed(2),
-            icon: ammountIcon,
+            icon: UiConstants.ammountIcon,
           ),
         ],
       ),
