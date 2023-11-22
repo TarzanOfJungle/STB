@@ -8,7 +8,7 @@ import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controll
 import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
-import '../../ioc_container.dart';
+import '../../../ioc_container.dart';
 
 class ShoppingParametersDialog extends StatefulWidget {
   final ShoppingWithContext? shopping;
@@ -53,6 +53,7 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                   StbTextField(
                     controller: _nameController,
                     label: "Name",
+                    maxLength: 30,
                   ),
                   const SizedBox(
                     height: 20.0,
@@ -60,6 +61,7 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                   StbTextField(
                     controller: _descriptionController,
                     label: "Description (optional)",
+                    maxLength: 500,
                   ),
                   const SizedBox(
                     height: 20.0,
@@ -67,7 +69,11 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                   StbElevatedButton(
                     text: widget.shopping == null ? 'Add' : 'Submit',
                     stretch: true,
-                    onTap: () => _confirm().then(Navigator.of(context).pop),
+                    onTap: () {
+                      _confirm();
+                      _navRouter.returnBack();
+                    },
+                    color: UiConstants.confirmColor,
                   )
                 ],
               ),

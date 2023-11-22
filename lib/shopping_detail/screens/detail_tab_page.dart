@@ -37,14 +37,14 @@ class DetailTabPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      DetailInfoSection(shopping: shopping),
+                      DetailInfoSection(),
                       DetailButtonSection(shopping: shopping),
                     ],
                   ),
                   const SizedBox(height: STANDARD_PADDING),
                   ShowSummaryButton(shopping: shopping),
                   const SizedBox(height: STANDARD_PADDING),
-                  MemberPurchasesSection(shopping: shopping),
+                  MemberPurchasesSection(),
                 ],
               ),
             ),

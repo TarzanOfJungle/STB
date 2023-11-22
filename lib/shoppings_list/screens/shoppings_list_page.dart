@@ -4,7 +4,7 @@ import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import 'package:split_the_bill/common/widgets/shopping_parameters_dialog.dart';
+import 'package:split_the_bill/common/widgets/dialogs/shopping_parameters_dialog.dart';
 import 'package:split_the_bill/shoppings_list/widgets/shopping_tile.dart';
 
 import '../../auth/controllers/auth_controller.dart';
@@ -12,7 +12,7 @@ import '../../common/constants/ui_constants.dart';
 import '../../ioc_container.dart';
 
 const String _EMPTY_LIST_MESSAGE = "No shoppings yet";
-const String _LOADING_LIST_ERROR_MESSAGE = "Unable to load list of shopping";
+const String _LOADING_LIST_ERROR_MESSAGE = "Unable to load list of shoppings";
 
 class ShoppingsListPage extends StatelessWidget {
   ShoppingsListPage({super.key});

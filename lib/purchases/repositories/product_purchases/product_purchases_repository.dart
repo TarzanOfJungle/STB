@@ -6,6 +6,8 @@ import 'package:split_the_bill/purchases/models/product_purchase/product_purchas
 import 'package:split_the_bill/purchases/models/put_product_purchase/put_product_purchase.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 
+import '../../models/user_purchases/user_purchases.dart';
+
 class ProductPurchasesRepository implements ProductPurchasesRepositoryBase {
   final ApiClientBase _apiClient;
 
@@ -48,5 +50,19 @@ class ProductPurchasesRepository implements ProductPurchasesRepositoryBase {
     );
 
     return productPurchases;
+  }
+
+  @override
+  Future<List<UserPurchases>> getUserPurchasesOfShopping(int shoppingId) async {
+    final fullPath = "${ApiConstants.userPurchases}/$shoppingId";
+    final userPurchases = await _apiClient.sendDataRequest(
+        path: fullPath,
+        method: HttpMethod.get,
+        processBody: (rawBody) {
+          final jsonArray = rawBody.asJsonObjectArray();
+          return jsonArray.map((item) => UserPurchases.fromJson(item)).toList();
+        },
+    );
+    return userPurchases;
   }
 }

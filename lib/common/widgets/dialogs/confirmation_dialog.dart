@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 
-import '../constants/ui_constants.dart';
+import '../../../ioc_container.dart';
+import '../../constants/ui_constants.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String label;
   final String? description;
-  final void Function() onConfirm;
+  late final Future<void> Function() _onConfirm;
 
-  const ConfirmationDialog(
+  ConfirmationDialog(
       {super.key,
       required this.label,
       this.description,
-      required this.onConfirm});
+      required Future<void> Function() onConfirm}) {
+    _onConfirm = onConfirm;
+  }
+
+  final _navRouter = get<NavRouter>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,26 +29,32 @@ class ConfirmationDialog extends StatelessWidget {
       title: Text(
         label,
         style: const TextStyle(fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(description ?? ''),
+          Text(description ?? '', textAlign: TextAlign.center,),
+          const SizedBox(
+            height: STANDARD_PADDING,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               StbElevatedButton(
                 text: 'Cancel',
                 stretch: true,
-                onTap: Navigator.of(context).pop,
+                onTap: () => _navRouter.returnBack(),
+                color: UiConstants.infoColor,
               ),
               StbElevatedButton(
                 text: 'Do it',
                 stretch: true,
                 onTap: () {
-                  onConfirm;
-                  Navigator.of(context).pop;
+                  _onConfirm();
+                  _navRouter.returnBack();
                 },
+                color: UiConstants.deleteColor,
               )
             ],
           )

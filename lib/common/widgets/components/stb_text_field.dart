@@ -10,6 +10,7 @@ class StbTextField extends StatefulWidget {
   final bool obscureText;
   final bool enableSuggestions;
   final TextCapitalization textCapitalization;
+  final int? maxLength;
 
   const StbTextField({
     super.key,
@@ -22,6 +23,7 @@ class StbTextField extends StatefulWidget {
     this.obscureText = false,
     this.enableSuggestions = false,
     this.textCapitalization = TextCapitalization.none,
+    this.maxLength,
   });
 
   @override
@@ -35,7 +37,7 @@ class _StbTextFieldState extends State<StbTextField> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
-      child: TextFormField( 
+      child: TextFormField(
         controller: widget.controller,
         validator: widget.validator,
         focusNode: _focusNode,
@@ -45,6 +47,7 @@ class _StbTextFieldState extends State<StbTextField> {
         obscureText: widget.obscureText,
         enableSuggestions: widget.enableSuggestions,
         textCapitalization: widget.textCapitalization,
+        maxLength: widget.maxLength,
         decoration: InputDecoration(
           labelText: widget.label,
         ),

@@ -11,6 +11,10 @@ class ProductAssignmentsWithPurchases with _$ProductAssignmentsWithPurchases {
     required List<ProductPurchase> productPurchases,
   }) = _ProductAssignmentsWithPurchases;
 
+  double get totalAmountSpent => productPurchases.fold(0, (previousValue, purchase) => previousValue + purchase.ammountSpent);
+  int get totalItemsPurchased => productPurchases
+      .fold(0, (previousValue, purchase) => previousValue + (purchase.quantityPurchased == purchase.totalQuantityToBePurchased ? 1 : 0));
+
   const ProductAssignmentsWithPurchases._();
 
   factory ProductAssignmentsWithPurchases.empty() =>
