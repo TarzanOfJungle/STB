@@ -67,7 +67,10 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                   StbElevatedButton(
                     text: widget.shopping == null ? 'Add' : 'Submit',
                     stretch: true,
-                    onTap: () => _confirm().then(Navigator.of(context).pop),
+                    onTap: () {
+                      _confirm();
+                      _navRouter.returnBack();
+                    }
                   )
                 ],
               ),

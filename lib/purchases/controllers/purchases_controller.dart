@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/purchases/models/product_assignments_with_purchases/product_assignments_with_purchases.dart';
+import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
 import 'package:split_the_bill/purchases/models/user_with_purchase_context/user_with_purchase_context.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
@@ -11,12 +12,21 @@ class PurchasesController {
   final BehaviorSubject<ProductAssignmentsWithPurchases?>
       _productAssignmentsWithPurchases = BehaviorSubject.seeded(null);
 
+  final BehaviorSubject<List<UserPurchases>> _usersWithPurchases =
+      BehaviorSubject.seeded([]);
+
   Stream<ProductAssignmentsWithPurchases?>
       get productAssignmentsWithPurchasesStream =>
           _productAssignmentsWithPurchases.stream;
 
+  Stream<List<UserPurchases>> get usersWithPurchasesStream =>
+      _usersWithPurchases.stream;
+
   ProductAssignmentsWithPurchases? get productAssignmentsWithPurchases =>
       _productAssignmentsWithPurchases.value;
+
+  List<UserPurchases> get usersWithPurchases =>
+      _usersWithPurchases.value;
 
   late final ShoppingDetailController _shoppingDetailController;
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
@@ -53,10 +63,15 @@ class PurchasesController {
         productPurchases: productPurchases,
       );
       _productAssignmentsWithPurchases.add(assignmentsWithPurchases);
+
+      final usersWithPurchases = await _productPurchasesRepository
+          .getUserPurchasesOfShopping(shoppingId);
+      _usersWithPurchases.add(usersWithPurchases);
     } catch (_) {
       _productAssignmentsWithPurchases.add(
         ProductAssignmentsWithPurchases.empty(),
       );
+      _usersWithPurchases.add([]);
     }
   }
 
