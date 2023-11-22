@@ -8,7 +8,7 @@ import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controll
 import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
-import '../../ioc_container.dart';
+import '../../../ioc_container.dart';
 
 class ShoppingParametersDialog extends StatefulWidget {
   final ShoppingWithContext? shopping;

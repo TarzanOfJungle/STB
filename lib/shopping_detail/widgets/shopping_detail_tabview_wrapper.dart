@@ -6,7 +6,7 @@ import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import '../../ioc_container.dart';
 import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import '../../common/widgets/shopping_parameters_dialog.dart';
+import '../../common/widgets/dialogs/shopping_parameters_dialog.dart';
 import '../models/tab_view_item.dart';
 import '../screens/detail_tab_page.dart';
 

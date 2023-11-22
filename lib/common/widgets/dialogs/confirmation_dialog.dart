@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 
-import '../../ioc_container.dart';
-import '../constants/ui_constants.dart';
+import '../../../ioc_container.dart';
+import '../../constants/ui_constants.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String label;
@@ -50,8 +50,8 @@ class ConfirmationDialog extends StatelessWidget {
                 text: 'Do it',
                 stretch: true,
                 onTap: () {
-                  _onConfirm;
-                  Navigator.of(context).pop;
+                  _onConfirm();
+                  _navRouter.returnBack();
                 },
               )
             ],
