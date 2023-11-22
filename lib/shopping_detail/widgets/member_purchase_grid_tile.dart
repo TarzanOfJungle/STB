@@ -47,14 +47,29 @@ class MemberPurchaseGridTile extends StatelessWidget {
 
   Widget _buildPurchaseInfoLine(
       ProductWithPurchaseContext productWithPurchaseContext) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-            '${productWithPurchaseContext.quantity}\u00d7 ${productWithPurchaseContext.product.name}'),
-        const Spacer(),
-        Text('${productWithPurchaseContext.unitPrice},-'),
-      ],
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                '${productWithPurchaseContext.quantity}\u00d7 ${productWithPurchaseContext.product.name}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(
+              width: SMALL_PADDING,
+            ),
+            Text(
+              '${productWithPurchaseContext.unitPrice},-',
+              textAlign: TextAlign.end,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
