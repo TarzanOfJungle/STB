@@ -53,6 +53,7 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                   StbTextField(
                     controller: _nameController,
                     label: "Name",
+                    maxLength: 30,
                   ),
                   const SizedBox(
                     height: 20.0,
@@ -60,6 +61,7 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
                   StbTextField(
                     controller: _descriptionController,
                     label: "Description (optional)",
+                    maxLength: 500,
                   ),
                   const SizedBox(
                     height: 20.0,

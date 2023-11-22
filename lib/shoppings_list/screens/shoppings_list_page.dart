@@ -12,7 +12,7 @@ import '../../common/constants/ui_constants.dart';
 import '../../ioc_container.dart';
 
 const String _EMPTY_LIST_MESSAGE = "No shoppings yet";
-const String _LOADING_LIST_ERROR_MESSAGE = "Unable to load list of shopping";
+const String _LOADING_LIST_ERROR_MESSAGE = "Unable to load list of shoppings";
 
 class ShoppingsListPage extends StatelessWidget {
   ShoppingsListPage({super.key});

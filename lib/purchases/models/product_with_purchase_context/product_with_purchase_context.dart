@@ -12,6 +12,8 @@ class ProductWithPurchaseContext with _$ProductWithPurchaseContext {
     required double unitPrice,
 }) = _ProductWithPurchaseContext;
 
+  double get totalAmountSpent => unitPrice * quantity;
+
   const ProductWithPurchaseContext._();
 
   factory ProductWithPurchaseContext.fromJson(Map<String, Object?> json) =>

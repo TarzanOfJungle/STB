@@ -17,7 +17,10 @@ class MemberPurchaseGridTile extends StatelessWidget {
       height: 300.0,
       width: 300.0,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme
+            .of(context)
+            .colorScheme
+            .primary,
         borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
       ),
       child: Padding(
@@ -33,12 +36,13 @@ class MemberPurchaseGridTile extends StatelessWidget {
             ),
             Expanded(
                 child: ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (_, int index) =>
-                  _buildPurchaseInfoLine(userPurchase.productPurchases[index]),
-              separatorBuilder: (_, __) => const Divider(),
-              itemCount: userPurchase.productPurchases.length,
-            ))
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (_, int index) =>
+                      _buildPurchaseInfoLine(
+                          userPurchase.productPurchases[index]),
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemCount: userPurchase.productPurchases.length,
+                ))
           ],
         ),
       ),
@@ -47,28 +51,30 @@ class MemberPurchaseGridTile extends StatelessWidget {
 
   Widget _buildPurchaseInfoLine(
       ProductWithPurchaseContext productWithPurchaseContext) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                '${productWithPurchaseContext.quantity}\u00d7 ${productWithPurchaseContext.product.name}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              '${productWithPurchaseContext
+                  .quantity}\u00d7 ${productWithPurchaseContext.product.name}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(
-              width: SMALL_PADDING,
-            ),
-            Text(
-              '${productWithPurchaseContext.unitPrice},-',
-              textAlign: TextAlign.end,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            width: SMALL_PADDING,
+          ),
+          Text(
+            '${productWithPurchaseContext.totalAmountSpent.toStringAsFixed(
+                productWithPurchaseContext.totalAmountSpent
+                    .truncateToDouble() ==
+                    productWithPurchaseContext.totalAmountSpent ? 0 : 2) },-',
+            textAlign: TextAlign.end,
+          ),
+        ],
       ),
     );
   }
