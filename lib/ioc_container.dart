@@ -8,6 +8,8 @@ import 'package:split_the_bill/common/api/api_client.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/groupchat/repositories/group_chat_repository.dart';
+import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository.dart';
@@ -37,6 +39,8 @@ abstract class IocContainer {
         ProductAssignmentsRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductPurchasesRepositoryBase>(
         ProductPurchasesRepository(get<ApiClientBase>()));
+    get.registerSingleton<GroupChatRepositoryBase>(
+        GroupChatRepository(get<ApiClientBase>()));
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
@@ -54,9 +58,8 @@ abstract class IocContainer {
           shoppingsListRepository: get<ShoppingsRepositoryBase>(),
           snackbarMessangerController: get<SnackbarMessangerController>()),
     );
-    get.registerSingleton<ShoppingDetailController> (
-      ShoppingDetailController(shoppingsListController: get<ShoppingsListController>())
-    );
+    get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
+        shoppingsListController: get<ShoppingsListController>()));
     get.registerSingleton<PurchasesController>(PurchasesController(
       shoppingDetailController: get<ShoppingDetailController>(),
       snackbarMessangerController: get<SnackbarMessangerController>(),
