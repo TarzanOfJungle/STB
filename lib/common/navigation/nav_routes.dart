@@ -7,7 +7,8 @@ enum NavRoute {
   
   // Nested routes
   shoppingDetail("shopping-detail"),
-  purchaseDetail("purchase-detail");
+  purchaseDetail("purchase-detail"),
+  memberPurchases("member-purchases");
 
   final String path;
 
