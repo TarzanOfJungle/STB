@@ -11,7 +11,7 @@ import 'package:split_the_bill/purchases/models/put_product_shopping_assignment/
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
-const _SEARCH_QUERY_DEBOUNCE_MILLIS = 600;
+const _SEARCH_QUERY_DEBOUNCE_MILLIS = 500;
 
 class AddProductAssignmentController {
   final BehaviorSubject<AddProductAssignmentState> _addProductAssignmentState =
@@ -64,6 +64,7 @@ class AddProductAssignmentController {
   void resetState() {
     _addProductAssignmentState.add(AddProductAssignmentState.empty());
     _productNameSearchQuery.add(null);
+    _productLookup.add([]);
   }
 
   void setProductAssignmentName(String? newName) {

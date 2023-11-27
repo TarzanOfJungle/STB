@@ -74,4 +74,34 @@ class UsersRepository implements UsersRepositoryBase {
           UserShoppingAssignment.fromJson(rawData.asJsonObject()),
     );
   }
+
+  @override
+  Future<void> assignUserToShopping({
+    required int userId,
+    required int shoppingId,
+  }) {
+    return _apiClient.sendRequest(
+      path: ApiConstants.userToShoppingAssignment,
+      method: HttpMethod.post,
+      queryParams: {
+        "userId": userId.toString(),
+        "shoppingId": shoppingId.toString(),
+      },
+    );
+  }
+
+  @override
+  Future<void> unssignUserFromShopping({
+    required int userId,
+    required int shoppingId,
+  }) {
+    return _apiClient.sendRequest(
+      path: ApiConstants.userToShoppingAssignment,
+      method: HttpMethod.delete,
+      queryParams: {
+        "userId": userId.toString(),
+        "shoppingId": shoppingId.toString(),
+      },
+    );
+  }
 }

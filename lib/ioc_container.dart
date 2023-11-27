@@ -19,6 +19,7 @@ import 'package:split_the_bill/purchases/repositories/product_assignments/produc
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
+import 'package:split_the_bill/shopping_detail/controllers/assign_users_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
@@ -86,6 +87,11 @@ abstract class IocContainer {
       get<SnackbarMessangerController>(),
       get<ProductAssignmentsRepositoryBase>(),
       get<ProductsRepositoryBase>(),
+    ));
+    get.registerSingleton<AssignUsersController>(AssignUsersController(
+      get<ShoppingDetailController>(),
+      get<UsersRepositoryBase>(),
+      get<SnackbarMessangerController>(),
     ));
 
     get.registerSingleton<TokenValidationService>(TokenValidationService(

@@ -7,6 +7,7 @@ import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
+import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
@@ -48,14 +49,10 @@ class _AddProductAssignmentDialogState
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 26,
-        ),
-        child: _buildBody(context),
-      ),
+    return StbDialog(
+      title: "Add shopping item",
+      titleIcon: Icons.add_shopping_cart_rounded,
+      body: _buildBody(context),
     );
   }
 
@@ -75,8 +72,6 @@ class _AddProductAssignmentDialogState
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildTitle(context),
-            const SizedBox(height: 25),
             _buildQuantityTextField(),
             const SizedBox(height: 15),
             _buildProductNameTextField(),
@@ -104,26 +99,6 @@ class _AddProductAssignmentDialogState
   void _adjustTextEditControllersToNewState(AddProductAssignmentState state) {
     _productNameController.setValue(state.productName?.toString());
     _productQuantityController.setValue(state.quantity?.toString());
-  }
-
-  Widget _buildTitle(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.add_shopping_cart_rounded,
-          size: 35,
-        ),
-        const SizedBox(width: 10),
-        Text(
-          "Add shopping item",
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ],
-    );
   }
 
   Widget _buildProductNameTextField() {

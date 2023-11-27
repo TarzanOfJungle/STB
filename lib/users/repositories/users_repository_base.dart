@@ -9,8 +9,20 @@ abstract class UsersRepositoryBase {
     int? shoppingId,
     bool includeSelf = true,
   });
+  
   Future<User> getUserById(int id);
+  
   Future<User> updateUser(PutUser userPut);
+
+  Future<void> assignUserToShopping({
+    required int userId,
+    required int shoppingId,
+  });
+
+  Future<void> unssignUserFromShopping({
+    required int userId,
+    required int shoppingId,
+  });
 
   Stream<WebsocketEventWithData<UserShoppingAssignment>>
       getUserShoppingAssignmentChangesStream();
