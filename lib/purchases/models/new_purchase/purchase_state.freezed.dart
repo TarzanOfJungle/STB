@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PurchaseState {
   int get currentUserId => throw _privateConstructorUsedError;
+  int get currentShoppingId => throw _privateConstructorUsedError;
   ProductShoppingAssignment get existingAssignment =>
       throw _privateConstructorUsedError;
   ProductPurchase? get existingPurchases => throw _privateConstructorUsedError;
@@ -37,6 +38,7 @@ abstract class $PurchaseStateCopyWith<$Res> {
   @useResult
   $Res call(
       {int currentUserId,
+      int currentShoppingId,
       ProductShoppingAssignment existingAssignment,
       ProductPurchase? existingPurchases,
       int? currentUserPurchaseQuantity,
@@ -60,6 +62,7 @@ class _$PurchaseStateCopyWithImpl<$Res, $Val extends PurchaseState>
   @override
   $Res call({
     Object? currentUserId = null,
+    Object? currentShoppingId = null,
     Object? existingAssignment = null,
     Object? existingPurchases = freezed,
     Object? currentUserPurchaseQuantity = freezed,
@@ -69,6 +72,10 @@ class _$PurchaseStateCopyWithImpl<$Res, $Val extends PurchaseState>
       currentUserId: null == currentUserId
           ? _value.currentUserId
           : currentUserId // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentShoppingId: null == currentShoppingId
+          ? _value.currentShoppingId
+          : currentShoppingId // ignore: cast_nullable_to_non_nullable
               as int,
       existingAssignment: null == existingAssignment
           ? _value.existingAssignment
@@ -121,6 +128,7 @@ abstract class _$$PurchaseStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {int currentUserId,
+      int currentShoppingId,
       ProductShoppingAssignment existingAssignment,
       ProductPurchase? existingPurchases,
       int? currentUserPurchaseQuantity,
@@ -144,6 +152,7 @@ class __$$PurchaseStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currentUserId = null,
+    Object? currentShoppingId = null,
     Object? existingAssignment = null,
     Object? existingPurchases = freezed,
     Object? currentUserPurchaseQuantity = freezed,
@@ -153,6 +162,10 @@ class __$$PurchaseStateImplCopyWithImpl<$Res>
       currentUserId: null == currentUserId
           ? _value.currentUserId
           : currentUserId // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentShoppingId: null == currentShoppingId
+          ? _value.currentShoppingId
+          : currentShoppingId // ignore: cast_nullable_to_non_nullable
               as int,
       existingAssignment: null == existingAssignment
           ? _value.existingAssignment
@@ -179,6 +192,7 @@ class __$$PurchaseStateImplCopyWithImpl<$Res>
 class _$PurchaseStateImpl extends _PurchaseState {
   const _$PurchaseStateImpl(
       {required this.currentUserId,
+      required this.currentShoppingId,
       required this.existingAssignment,
       this.existingPurchases,
       this.currentUserPurchaseQuantity,
@@ -187,6 +201,8 @@ class _$PurchaseStateImpl extends _PurchaseState {
 
   @override
   final int currentUserId;
+  @override
+  final int currentShoppingId;
   @override
   final ProductShoppingAssignment existingAssignment;
   @override
@@ -198,7 +214,7 @@ class _$PurchaseStateImpl extends _PurchaseState {
 
   @override
   String toString() {
-    return 'PurchaseState(currentUserId: $currentUserId, existingAssignment: $existingAssignment, existingPurchases: $existingPurchases, currentUserPurchaseQuantity: $currentUserPurchaseQuantity, currentUserPurchaseUnitPrice: $currentUserPurchaseUnitPrice)';
+    return 'PurchaseState(currentUserId: $currentUserId, currentShoppingId: $currentShoppingId, existingAssignment: $existingAssignment, existingPurchases: $existingPurchases, currentUserPurchaseQuantity: $currentUserPurchaseQuantity, currentUserPurchaseUnitPrice: $currentUserPurchaseUnitPrice)';
   }
 
   @override
@@ -208,6 +224,8 @@ class _$PurchaseStateImpl extends _PurchaseState {
             other is _$PurchaseStateImpl &&
             (identical(other.currentUserId, currentUserId) ||
                 other.currentUserId == currentUserId) &&
+            (identical(other.currentShoppingId, currentShoppingId) ||
+                other.currentShoppingId == currentShoppingId) &&
             (identical(other.existingAssignment, existingAssignment) ||
                 other.existingAssignment == existingAssignment) &&
             (identical(other.existingPurchases, existingPurchases) ||
@@ -226,6 +244,7 @@ class _$PurchaseStateImpl extends _PurchaseState {
   int get hashCode => Object.hash(
       runtimeType,
       currentUserId,
+      currentShoppingId,
       existingAssignment,
       existingPurchases,
       currentUserPurchaseQuantity,
@@ -241,6 +260,7 @@ class _$PurchaseStateImpl extends _PurchaseState {
 abstract class _PurchaseState extends PurchaseState {
   const factory _PurchaseState(
       {required final int currentUserId,
+      required final int currentShoppingId,
       required final ProductShoppingAssignment existingAssignment,
       final ProductPurchase? existingPurchases,
       final int? currentUserPurchaseQuantity,
@@ -249,6 +269,8 @@ abstract class _PurchaseState extends PurchaseState {
 
   @override
   int get currentUserId;
+  @override
+  int get currentShoppingId;
   @override
   ProductShoppingAssignment get existingAssignment;
   @override

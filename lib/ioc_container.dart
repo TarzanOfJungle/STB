@@ -10,6 +10,8 @@ import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository.dart';
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
+import 'package:split_the_bill/products/repositories/products_repository.dart';
+import 'package:split_the_bill/products/repositories/products_repository_base.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository.dart';
@@ -41,6 +43,8 @@ abstract class IocContainer {
         ProductPurchasesRepository(get<ApiClientBase>()));
     get.registerSingleton<GroupChatRepositoryBase>(
         GroupChatRepository(get<ApiClientBase>()));
+    get.registerSingleton<ProductsRepositoryBase>(
+        ProductsRepository(get<ApiClientBase>()));
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
@@ -61,18 +65,16 @@ abstract class IocContainer {
     get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
         shoppingsListController: get<ShoppingsListController>()));
     get.registerSingleton<PurchasesController>(PurchasesController(
-      shoppingDetailController: get<ShoppingDetailController>(),
-      snackbarMessangerController: get<SnackbarMessangerController>(),
-      productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
-      productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
+      get<ShoppingDetailController>(),
+      get<SnackbarMessangerController>(),
+      get<ProductAssignmentsRepositoryBase>(),
+      get<ProductPurchasesRepositoryBase>(),
     ));
     get.registerSingleton<SinglePurchaseController>(SinglePurchaseController(
-      authController: get<AuthController>(),
-      shoppingDetailController: get<ShoppingDetailController>(),
-      purchasesController: get<PurchasesController>(),
-      productAssignmentsRepository: get<ProductAssignmentsRepositoryBase>(),
-      productPurchasesRepository: get<ProductPurchasesRepositoryBase>(),
-      snackbarMessangerController: get<SnackbarMessangerController>(),
+      get<AuthController>(),
+      get<ProductPurchasesRepositoryBase>(),
+      get<ProductsRepositoryBase>(),
+      get<SnackbarMessangerController>(),
     ));
 
     get.registerSingleton<TokenValidationService>(TokenValidationService(

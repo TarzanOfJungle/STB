@@ -5,7 +5,8 @@ abstract class ApiConstants {
   static const String host = "vps-d123f020.vps.ovh.net";
   static const String versionPathPrefix = "api/v1";
   static const String websocketAuthenticationQueryKey = "access_token";
-  static const String websocketInitialHandshake = '{"protocol":"json","version":1}';
+  static const String websocketInitialHandshake =
+      '{"protocol":"json","version":1}';
 
   // Auth
   static const String login = "$versionPathPrefix/auth/login";
@@ -26,7 +27,13 @@ abstract class ApiConstants {
   // Shoppings list
   static const String shoppingsList = "$versionPathPrefix/shoppings";
 
+  // Products
+  static const String products= "$versionPathPrefix/products";
+
   // Group chat messages
   static const String shoppingMessages = "$versionPathPrefix/shopping-messages";
-  static const String shoppingMessagesStream = "$versionPathPrefix/live-group-chat";
+
+  // Socket paths
+  static const String shoppingMessagesStream =
+      "$versionPathPrefix/live-group-chat";
 }

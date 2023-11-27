@@ -50,6 +50,7 @@ class PurchasesTabPage extends StatelessWidget {
                 productPurchase: existingPurchases,
                 onTap: () => _goToPurchaseDetail(
                   context: context,
+                  shoppingId: _purchasesController.shoppingId!,
                   assignment: assignment,
                   existingPurchases: existingPurchases,
                 ),
@@ -75,10 +76,12 @@ class PurchasesTabPage extends StatelessWidget {
 
   void _goToPurchaseDetail({
     required BuildContext context,
+    required int shoppingId,
     required ProductShoppingAssignment assignment,
     ProductPurchase? existingPurchases,
   }) {
     _navRouter.toPurchaseDetail(
+      shoppingId: shoppingId,
       existingAssignment: assignment,
       existingPurchases: existingPurchases,
     );

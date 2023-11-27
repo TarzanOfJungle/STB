@@ -9,6 +9,7 @@ part 'purchase_state.freezed.dart';
 class PurchaseState with _$PurchaseState {
   const factory PurchaseState({
     required int currentUserId,
+    required int currentShoppingId,
     required ProductShoppingAssignment existingAssignment,
     ProductPurchase? existingPurchases,
     int? currentUserPurchaseQuantity,

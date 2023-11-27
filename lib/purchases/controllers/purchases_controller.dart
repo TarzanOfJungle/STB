@@ -6,13 +6,9 @@ import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_c
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 import 'package:split_the_bill/purchases/models/product_assignments_with_purchases/product_assignments_with_purchases.dart';
 import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
-import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/models/put_product_shopping_assignment/put_product_shopping_assignment.dart';
-import 'package:split_the_bill/purchases/models/user_with_purchase_context/user_with_purchase_context.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
-import 'package:split_the_bill/purchases/extensions/user_purchase_create_update.dart';
-import 'package:split_the_bill/purchases/extensions/user_purchase_delete.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
 class PurchasesController {
@@ -41,28 +37,22 @@ class PurchasesController {
       _addProductAssignmentState.value;
   bool get isLoading => _isLoading.value;
 
-  int? get _shoppingId =>
+  int? get shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
-  List<UserPurchases> get usersWithPurchases =>
-      _usersWithPurchases.value;
+  List<UserPurchases> get usersWithPurchases => _usersWithPurchases.value;
 
   late final ShoppingDetailController _shoppingDetailController;
   late final SnackbarMessangerController _snackbarMessangerController;
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;
 
-  PurchasesController({
-    required ShoppingDetailController shoppingDetailController,
-    required SnackbarMessangerController snackbarMessangerController,
-    required ProductAssignmentsRepositoryBase productAssignmentsRepository,
-    required ProductPurchasesRepositoryBase productPurchasesRepository,
-  }) {
-    _productAssignmentsRepository = productAssignmentsRepository;
-    _snackbarMessangerController = snackbarMessangerController;
-    _productPurchasesRepository = productPurchasesRepository;
-    _shoppingDetailController = shoppingDetailController;
-
+  PurchasesController(
+    this._shoppingDetailController,
+    this._snackbarMessangerController,
+    this._productAssignmentsRepository,
+    this._productPurchasesRepository,
+  ) {
     _listenForShoppingDetailChanges();
   }
 
@@ -130,7 +120,7 @@ class PurchasesController {
   }
 
   Future<bool> createNewProductAssignment() async {
-    if (isLoading || _shoppingId == null) {
+    if (isLoading || shoppingId == null) {
       return false;
     }
     if (!addProductAssignmentState.canCreateAssignment) {
@@ -139,14 +129,12 @@ class PurchasesController {
     _isLoading.add(true);
     try {
       final newAssigmnet = PutProductShoppingAssignment(
-        shoppingId: _shoppingId!,
+        shoppingId: shoppingId!,
         productName: addProductAssignmentState.productName!,
         quantity: addProductAssignmentState.quantity!,
       );
-      final addedAssignment = await _productAssignmentsRepository
+      await _productAssignmentsRepository
           .addOrUpdateProductAssignment(newAssigmnet);
-
-      _addNewProductAssignment(addedAssignment);
       _addProductAssignmentState.add(AddProductAssignmentState.empty());
       _isLoading.add(false);
       return true;
@@ -160,43 +148,5 @@ class PurchasesController {
     }
     _isLoading.add(false);
     return false;
-  }
-
-  void _addNewProductAssignment(ProductShoppingAssignment assignment) {
-    if (productAssignmentsWithPurchases == null) {
-      return;
-    }
-    final newState =
-        productAssignmentsWithPurchases!.copyWith(productAssignments: [
-      ...productAssignmentsWithPurchases!.productAssignments,
-      assignment,
-    ]);
-    _productAssignmentsWithPurchases.add(newState);
-  }
-
-  void addOrUpdateUserPurchase({
-    required int productId,
-    required UserWithPurchaseContext userPurchase,
-  }) {
-    final newState = productAssignmentsWithPurchases?.withUserPurchase(
-      productId: productId,
-      userPurchase: userPurchase,
-    );
-    if (newState != null) {
-      _productAssignmentsWithPurchases.add(newState);
-    }
-  }
-
-  void deleteUserPurchase({
-    required int productId,
-    required int userId,
-  }) {
-    final newState = productAssignmentsWithPurchases?.withDeletedUserPurchase(
-      productId: productId,
-      userId: userId,
-    );
-    if (newState != null) {
-      _productAssignmentsWithPurchases.add(newState);
-    }
   }
 }

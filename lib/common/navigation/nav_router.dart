@@ -106,10 +106,12 @@ class NavRouter {
   }
 
   void toPurchaseDetail({
+    required int shoppingId,
     required ProductShoppingAssignment existingAssignment,
     ProductPurchase? existingPurchases,
   }) {
     _singlePurchaseController.setPurchase(
+      shoppingId: shoppingId,
       existingAssignment: existingAssignment,
       existingPurchases: existingPurchases,
     );

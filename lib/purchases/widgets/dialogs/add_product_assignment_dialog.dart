@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/extensions/set_text_editing_controller_value.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/button_row/button_row.dart';
+import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
-import 'package:split_the_bill/common/widgets/components/stb_number_input_field_incremental.dart';
+import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -12,7 +15,7 @@ import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 import 'package:split_the_bill/purchases/widgets/product_chip.dart';
 
-const _QUANTITY_INPUT_WIDTH = 150.0;
+const _INCREMENT_BUTTONS_WIDTH = 120.0;
 
 class AddProductAssignmentDialog extends StatefulWidget {
   AddProductAssignmentDialog({super.key});
@@ -66,14 +69,15 @@ class _AddProductAssignmentDialogState
               height: 25,
             ),
             _buildQuantityTextField(),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             StbElevatedButton(
               text: "Add item",
               enabled: state.canCreateAssignment,
               leadingIcon: Icons.add_rounded,
               onTap: () async {
-                final success = await _purchasesController.createNewProductAssignment();
-                if(success){
+                final success =
+                    await _purchasesController.createNewProductAssignment();
+                if (success) {
                   _navRouter.returnBack();
                 }
               },
@@ -121,24 +125,39 @@ class _AddProductAssignmentDialogState
   }
 
   Widget _buildQuantityTextField() {
-    return StbNumberInputFieldIncremental(
-      controller: _productQuantityController,
-      fixedWidth: _QUANTITY_INPUT_WIDTH,
-      label: "Quantity",
-      onChanged: (value) {
-        final quantity = int.tryParse(value);
-        _purchasesController.setAddProductAssignmentQuantity(quantity);
-      },
-      onIncremented: () {
-        final newQuantity =
-            (_purchasesController.addProductAssignmentState.quantity ?? 0) + 1;
-        _purchasesController.setAddProductAssignmentQuantity(newQuantity);
-      },
-      onDecremented: () {
-        final newQuantity =
-            (_purchasesController.addProductAssignmentState.quantity ?? 0) - 1;
-        _purchasesController.setAddProductAssignmentQuantity(newQuantity);
-      },
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: StbNumberInputField(
+            controller: _productQuantityController,
+            label: "Quantity",
+            prefix: const Icon(
+              UiConstants.quantityIcon,
+              size: 15,
+            ),
+            onChanged: (value) {
+              final quantity = int.tryParse(value);
+              _purchasesController.setAddProductAssignmentQuantity(quantity);
+            },
+          ),
+        ),
+        const SizedBox(width: STANDARD_PADDING),
+        ButtonRow(
+          fixedWidth: _INCREMENT_BUTTONS_WIDTH,
+          buttons: [
+            ButtonRowItem(
+              buttonChild: const Icon(Icons.remove_rounded),
+              onTap: () => _addToQuantity(-1),
+            ),
+            ButtonRowItem(
+              buttonChild: const Icon(Icons.add_rounded),
+              onTap: () => _addToQuantity(1),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -146,7 +165,6 @@ class _AddProductAssignmentDialogState
     required AddProductAssignmentState state,
   }) {
     return ListView(
-      scrollDirection: Axis.horizontal,
       children: [
         ...[
           const Product(id: 1, name: "test", description: null, creatorId: 1),
@@ -167,5 +185,12 @@ class _AddProductAssignmentDialogState
             .toList(),
       ],
     );
+  }
+
+  void _addToQuantity(int quantityToAdd) {
+    final newQuantity =
+        (_purchasesController.addProductAssignmentState.quantity ?? 0) +
+            quantityToAdd;
+    _purchasesController.setAddProductAssignmentQuantity(newQuantity);
   }
 }
