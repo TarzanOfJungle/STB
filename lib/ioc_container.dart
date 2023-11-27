@@ -24,6 +24,8 @@ import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controll
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
+import 'package:split_the_bill/users/repositories/users_reposiory.dart';
+import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
 final get = GetIt.instance;
 
@@ -46,6 +48,8 @@ abstract class IocContainer {
         GroupChatRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductsRepositoryBase>(
         ProductsRepository(get<ApiClientBase>()));
+    get.registerSingleton<UsersRepositoryBase>(
+        UsersRepository(get<ApiClientBase>()));
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(

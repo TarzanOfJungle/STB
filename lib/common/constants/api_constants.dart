@@ -21,7 +21,6 @@ abstract class ApiConstants {
   // Purchases
   static const String purchases = "$versionPathPrefix/purchases";
   static const String productPurchases = "$purchases/product-purchases";
-
   static const String userPurchases = "$purchases/user-purchases";
 
   // Shoppings list
@@ -32,6 +31,9 @@ abstract class ApiConstants {
 
   // Group chat messages
   static const String shoppingMessages = "$versionPathPrefix/shopping-messages";
+
+  // Users
+  static const String users = "$versionPathPrefix/users";
 
   // Socket paths
   static const String shoppingMessagesStream =
