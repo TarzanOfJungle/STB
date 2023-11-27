@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/api/http_method.dart';
 import 'package:split_the_bill/common/api/websocket_event.dart';
+import 'package:split_the_bill/common/api/websocket_event_with_data.dart';
 import 'package:split_the_bill/common/constants/api_constants.dart';
 import 'package:split_the_bill/common/extensions/json_string_extension.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -92,9 +93,9 @@ class ApiClient implements ApiClientBase {
   }
 
   @override
-  Stream<void> listenForEvent({
+  Stream<WebsocketEvent> listenForEvents({
     required String path,
-    required WebsocketEvent event,
+    required List<WebsocketEvent> events,
     bool useAuthentication = true,
     Map<String, String>? queryParams,
   }) {
@@ -106,17 +107,17 @@ class ApiClient implements ApiClientBase {
     final channel = _connectWebsocketChannel(uri);
     return channel.stream.where((received) {
       try {
-        return _matchWebsocketEvent(received, event);
+        return _getMatchingEvent(received, events) != null;
       } catch (_) {
         return false;
       }
-    });
+    }).map((received) => _getMatchingEvent(received, events)!);
   }
 
   @override
-  Stream<T> listenForDataEvent<T>({
+  Stream<WebsocketEventWithData<T>> listenForDataEvents<T>({
     required String path,
-    required WebsocketEvent event,
+    required List<WebsocketEvent> events,
     bool useAuthentication = true,
     Map<String, String>? queryParams,
     required T Function(String rawData) processEventData,
@@ -129,15 +130,19 @@ class ApiClient implements ApiClientBase {
     final channel = _connectWebsocketChannel(uri);
     final dataStream = channel.stream.where((received) {
       try {
-        return _matchWebsocketEvent(received, event);
+        return _getMatchingEvent(received, events) != null;
       } catch (_) {
         return false;
       }
     }).map((received) {
+      final event = _getMatchingEvent(received, events)!;
       final string = received.toString().withoutLastChar();
       final arguments = string.asJsonObject()["arguments"] as List;
       final eventData = json.encode(arguments[0]);
-      return processEventData(eventData);
+
+      final result = WebsocketEventWithData(event, processEventData(eventData));
+
+      return result;
     });
 
     return dataStream;
@@ -203,10 +208,14 @@ class ApiClient implements ApiClientBase {
     return channel;
   }
 
-  bool _matchWebsocketEvent(dynamic receivedMessage, WebsocketEvent event) {
+  WebsocketEvent? _getMatchingEvent(
+    dynamic receivedMessage,
+    List<WebsocketEvent> events,
+  ) {
     final string = receivedMessage.toString().withoutLastChar();
-    final object = string.asJsonObject();
-    return object["target"] == event.messageName;
+    final eventName = string.asJsonObject()["target"];
+    final matches = events.where((event) => event.messageName == eventName);
+    return matches.firstOrNull;
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/api/websocket_event.dart';
+import 'package:split_the_bill/common/api/websocket_event_with_data.dart';
 
 import 'http_method.dart';
 
@@ -43,16 +44,16 @@ abstract class ApiClientBase {
   });
 
   /// Subscribes to a websocket stream at the given [path].
-  /// The returned stream only fires on events matching the [event.messageName],
+  /// The returned stream only fires on events matching the [events] message names,
   /// other values are ignored. The stream is not expected to yield any data (just
   /// fires when the given event occurs).
   /// 
   /// If [useAuthentication] is true, current
   /// logged in users's token is appended to the request. Other [queryParams]
   /// are optional. 
-  Stream<void> listenForEvent({
+  Stream<WebsocketEvent> listenForEvents({
     required String path,
-    required WebsocketEvent event,
+    required List<WebsocketEvent> events,
     bool useAuthentication = true,
     Map<String, String>? queryParams,
   });
@@ -65,9 +66,9 @@ abstract class ApiClientBase {
   /// If [useAuthentication] is true, current
   /// logged in users's token is appended to the request. Other [queryParams]
   /// are optional. 
-  Stream<T> listenForDataEvent<T>({
+  Stream<WebsocketEventWithData<T>> listenForDataEvents<T>({
     required String path,
-    required WebsocketEvent event,
+    required List<WebsocketEvent> events,
     bool useAuthentication = true,
     Map<String, String>? queryParams,
     required T Function(String rawData) processEventData

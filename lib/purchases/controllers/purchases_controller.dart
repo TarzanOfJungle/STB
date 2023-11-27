@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
+import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
@@ -11,21 +12,25 @@ import 'package:split_the_bill/purchases/repositories/product_assignments/produc
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
-class PurchasesController {
+class PurchasesController with AuthenticatedSocketObserver {
   final BehaviorSubject<ProductAssignmentsWithPurchases?>
       _productAssignmentsWithPurchases = BehaviorSubject.seeded(null);
+
   final BehaviorSubject<AddProductAssignmentState> _addProductAssignmentState =
       BehaviorSubject.seeded(AddProductAssignmentState.empty());
-  final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
 
   final BehaviorSubject<List<UserPurchases>> _usersWithPurchases =
       BehaviorSubject.seeded([]);
 
+  final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
+
   Stream<ProductAssignmentsWithPurchases?>
       get productAssignmentsWithPurchasesStream =>
           _productAssignmentsWithPurchases.stream;
+
   Stream<AddProductAssignmentState> get addProductAssignmentStateStream =>
       _addProductAssignmentState.stream;
+
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
   Stream<List<UserPurchases>> get usersWithPurchasesStream =>
@@ -33,8 +38,10 @@ class PurchasesController {
 
   ProductAssignmentsWithPurchases? get productAssignmentsWithPurchases =>
       _productAssignmentsWithPurchases.value;
+
   AddProductAssignmentState get addProductAssignmentState =>
       _addProductAssignmentState.value;
+
   bool get isLoading => _isLoading.value;
 
   int? get shoppingId =>
@@ -42,10 +49,10 @@ class PurchasesController {
 
   List<UserPurchases> get usersWithPurchases => _usersWithPurchases.value;
 
-  late final ShoppingDetailController _shoppingDetailController;
-  late final SnackbarMessangerController _snackbarMessangerController;
-  late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
-  late final ProductPurchasesRepositoryBase _productPurchasesRepository;
+  final ShoppingDetailController _shoppingDetailController;
+  final SnackbarMessangerController _snackbarMessangerController;
+  final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
+  final ProductPurchasesRepositoryBase _productPurchasesRepository;
 
   PurchasesController(
     this._shoppingDetailController,
@@ -54,6 +61,7 @@ class PurchasesController {
     this._productPurchasesRepository,
   ) {
     _listenForShoppingDetailChanges();
+    _listenForPurchaseAndAssignmentChanges();
   }
 
   void _listenForShoppingDetailChanges() {
@@ -62,33 +70,41 @@ class PurchasesController {
         if (newShoppingState != null) {
           _productAssignmentsWithPurchases.add(null);
           _addProductAssignmentState.add(AddProductAssignmentState.empty());
-          _fetchAssignmentsAndPurchases(newShoppingState.shopping.id);
+          _loadData(newShoppingState.shopping.id);
         }
       },
     );
   }
 
-  Future<void> _fetchAssignmentsAndPurchases(int shoppingId) async {
+  void _listenForPurchaseAndAssignmentChanges() {
+    cancelAllSubscribtions();
+    observeSocketEvents(
+      eventStream: _productPurchasesRepository.getPurchaseChangesStream,
+      onValueChanged: (newValue) {
+        if (newValue.data.shoppingId == shoppingId) {
+          _refreshData(shoppingId!);
+        }
+      },
+    );
+    observeSocketEvents(
+      eventStream:
+          _productAssignmentsRepository.getProductAssignmentChangesStream,
+      onValueChanged: (newValue) {
+        if (newValue.data.shoppingId == shoppingId) {
+          _refreshData(shoppingId!);
+        }
+      },
+    );
+  }
+
+  Future<void> _loadData(int shoppingId) async {
     if (isLoading) {
       return;
     }
     _productAssignmentsWithPurchases.add(null);
     _isLoading.add(true);
     try {
-      final productAssignments = await _productAssignmentsRepository
-          .getProductAssignmentsOfShopping(shoppingId);
-      final productPurchases = await _productPurchasesRepository
-          .getProductPurchasesOfShopping(shoppingId);
-
-      final assignmentsWithPurchases = ProductAssignmentsWithPurchases(
-        productAssignments: productAssignments,
-        productPurchases: productPurchases,
-      );
-      _productAssignmentsWithPurchases.add(assignmentsWithPurchases);
-
-      final usersWithPurchases = await _productPurchasesRepository
-          .getUserPurchasesOfShopping(shoppingId);
-      _usersWithPurchases.add(usersWithPurchases);
+      _fetchAssignmentsAndPurchases(shoppingId);
     } catch (_) {
       _productAssignmentsWithPurchases.add(
         ProductAssignmentsWithPurchases.empty(),
@@ -102,6 +118,29 @@ class PurchasesController {
       );
     }
     _isLoading.add(false);
+  }
+
+  Future<void> _refreshData(int shoppingId) async {
+    try {
+      _fetchAssignmentsAndPurchases(shoppingId);
+    } catch (_) {}
+  }
+
+  Future<void> _fetchAssignmentsAndPurchases(int shoppingId) async {
+    final productAssignments = await _productAssignmentsRepository
+        .getProductAssignmentsOfShopping(shoppingId);
+    final productPurchases = await _productPurchasesRepository
+        .getProductPurchasesOfShopping(shoppingId);
+
+    final assignmentsWithPurchases = ProductAssignmentsWithPurchases(
+      productAssignments: productAssignments,
+      productPurchases: productPurchases,
+    );
+    _productAssignmentsWithPurchases.add(assignmentsWithPurchases);
+
+    final usersWithPurchases = await _productPurchasesRepository
+        .getUserPurchasesOfShopping(shoppingId);
+    _usersWithPurchases.add(usersWithPurchases);
   }
 
   void setAddProductAssignmentName(String? newName) {

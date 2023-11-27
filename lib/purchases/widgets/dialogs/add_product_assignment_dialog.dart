@@ -11,6 +11,7 @@ import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/products/models/product/product.dart';
+import 'package:split_the_bill/purchases/controllers/product_lookup_controller.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 import 'package:split_the_bill/purchases/widgets/product_chip.dart';
@@ -30,8 +31,15 @@ class _AddProductAssignmentDialogState
   final _productNameController = TextEditingController();
   final _productQuantityController = TextEditingController();
 
+  final _productLookupController = get<ProductLookupController>();
   final _purchasesController = get<PurchasesController>();
   final _navRouter = get<NavRouter>();
+
+  @override
+  void initState() {
+    _productLookupController.setProductNameSearchQuery(null);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,8 +127,10 @@ class _AddProductAssignmentDialogState
       label: "Product name",
       enableSuggestions: true,
       keyboardType: TextInputType.text,
-      onChanged: (value) =>
-          _purchasesController.setAddProductAssignmentName(value),
+      onChanged: (value) {
+        _purchasesController.setAddProductAssignmentName(value);
+        _productLookupController.setProductNameSearchQuery(value);
+      },
     );
   }
 
