@@ -11,8 +11,7 @@ import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/products/models/product/product.dart';
-import 'package:split_the_bill/purchases/controllers/product_lookup_controller.dart';
-import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
+import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 import 'package:split_the_bill/purchases/widgets/product_chip.dart';
 
@@ -31,13 +30,12 @@ class _AddProductAssignmentDialogState
   final _productNameController = TextEditingController();
   final _productQuantityController = TextEditingController();
 
-  final _productLookupController = get<ProductLookupController>();
-  final _purchasesController = get<PurchasesController>();
+  final _addProductAssignmentController = get<AddProductAssignmentController>();
   final _navRouter = get<NavRouter>();
 
   @override
   void initState() {
-    _productLookupController.setProductNameSearchQuery(null);
+    _addProductAssignmentController.startCreatingProductAssignment();
     super.initState();
   }
 
@@ -56,7 +54,7 @@ class _AddProductAssignmentDialogState
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder(
-      stream: _purchasesController.addProductAssignmentStateStream,
+      stream: _addProductAssignmentController.addProductAssignmentStateStream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const ErrorBanner();
@@ -83,8 +81,8 @@ class _AddProductAssignmentDialogState
               enabled: state.canCreateAssignment,
               leadingIcon: Icons.add_rounded,
               onTap: () async {
-                final success =
-                    await _purchasesController.createNewProductAssignment();
+                final success = await _addProductAssignmentController
+                    .createNewProductAssignment();
                 if (success) {
                   _navRouter.returnBack();
                 }
@@ -128,8 +126,7 @@ class _AddProductAssignmentDialogState
       enableSuggestions: true,
       keyboardType: TextInputType.text,
       onChanged: (value) {
-        _purchasesController.setAddProductAssignmentName(value);
-        _productLookupController.setProductNameSearchQuery(value);
+        _addProductAssignmentController.setProductAssignmentName(value);
       },
     );
   }
@@ -149,7 +146,8 @@ class _AddProductAssignmentDialogState
             ),
             onChanged: (value) {
               final quantity = int.tryParse(value);
-              _purchasesController.setAddProductAssignmentQuantity(quantity);
+              _addProductAssignmentController
+                  .setProductAssignmentQuantity(quantity);
             },
           ),
         ),
@@ -198,9 +196,9 @@ class _AddProductAssignmentDialogState
   }
 
   void _addToQuantity(int quantityToAdd) {
-    final newQuantity =
-        (_purchasesController.addProductAssignmentState.quantity ?? 0) +
-            quantityToAdd;
-    _purchasesController.setAddProductAssignmentQuantity(newQuantity);
+    final quantityToAddTo =
+        _addProductAssignmentController.addProductAssignmentState.quantity ?? 0;
+    final newQuantity = quantityToAddTo + quantityToAdd;
+    _addProductAssignmentController.setProductAssignmentQuantity(newQuantity);
   }
 }

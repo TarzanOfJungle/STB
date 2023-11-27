@@ -4,10 +4,8 @@ import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
-import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 import 'package:split_the_bill/purchases/models/product_assignments_with_purchases/product_assignments_with_purchases.dart';
 import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
-import 'package:split_the_bill/purchases/models/put_product_shopping_assignment/put_product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
@@ -15,9 +13,6 @@ import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_contr
 class PurchasesController with AuthenticatedSocketObserver {
   final BehaviorSubject<ProductAssignmentsWithPurchases?>
       _productAssignmentsWithPurchases = BehaviorSubject.seeded(null);
-
-  final BehaviorSubject<AddProductAssignmentState> _addProductAssignmentState =
-      BehaviorSubject.seeded(AddProductAssignmentState.empty());
 
   final BehaviorSubject<List<UserPurchases>> _usersWithPurchases =
       BehaviorSubject.seeded([]);
@@ -28,9 +23,6 @@ class PurchasesController with AuthenticatedSocketObserver {
       get productAssignmentsWithPurchasesStream =>
           _productAssignmentsWithPurchases.stream;
 
-  Stream<AddProductAssignmentState> get addProductAssignmentStateStream =>
-      _addProductAssignmentState.stream;
-
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
   Stream<List<UserPurchases>> get usersWithPurchasesStream =>
@@ -38,9 +30,6 @@ class PurchasesController with AuthenticatedSocketObserver {
 
   ProductAssignmentsWithPurchases? get productAssignmentsWithPurchases =>
       _productAssignmentsWithPurchases.value;
-
-  AddProductAssignmentState get addProductAssignmentState =>
-      _addProductAssignmentState.value;
 
   bool get isLoading => _isLoading.value;
 
@@ -69,7 +58,6 @@ class PurchasesController with AuthenticatedSocketObserver {
       (newShoppingState) {
         if (newShoppingState != null) {
           _productAssignmentsWithPurchases.add(null);
-          _addProductAssignmentState.add(AddProductAssignmentState.empty());
           _loadData(newShoppingState.shopping.id);
         }
       },
@@ -143,49 +131,4 @@ class PurchasesController with AuthenticatedSocketObserver {
     _usersWithPurchases.add(usersWithPurchases);
   }
 
-  void setAddProductAssignmentName(String? newName) {
-    _addProductAssignmentState
-        .add(addProductAssignmentState.copyWith(productName: newName));
-  }
-
-  void setAddProductAssignmentQuantity(int? newQuantity) {
-    if (newQuantity == null || newQuantity <= 0) {
-      _addProductAssignmentState
-          .add(addProductAssignmentState.copyWith(quantity: null));
-      return;
-    }
-    _addProductAssignmentState
-        .add(addProductAssignmentState.copyWith(quantity: newQuantity));
-  }
-
-  Future<bool> createNewProductAssignment() async {
-    if (isLoading || shoppingId == null) {
-      return false;
-    }
-    if (!addProductAssignmentState.canCreateAssignment) {
-      return false;
-    }
-    _isLoading.add(true);
-    try {
-      final newAssigmnet = PutProductShoppingAssignment(
-        shoppingId: shoppingId!,
-        productName: addProductAssignmentState.productName!,
-        quantity: addProductAssignmentState.quantity!,
-      );
-      await _productAssignmentsRepository
-          .addOrUpdateProductAssignment(newAssigmnet);
-      _addProductAssignmentState.add(AddProductAssignmentState.empty());
-      _isLoading.add(false);
-      return true;
-    } catch (_) {
-      _snackbarMessangerController.showSnackbarMessage(
-        SnackbarMessage(
-          message: "Couldn't add shopping item",
-          category: SnackbarMessageCategory.ERROR,
-        ),
-      );
-    }
-    _isLoading.add(false);
-    return false;
-  }
 }

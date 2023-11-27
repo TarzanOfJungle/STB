@@ -12,7 +12,7 @@ import 'package:split_the_bill/groupchat/repositories/group_chat_repository.dart
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
-import 'package:split_the_bill/purchases/controllers/product_lookup_controller.dart';
+import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository.dart';
@@ -58,8 +58,6 @@ abstract class IocContainer {
       ),
     );
 
-    get.registerSingleton<ProductLookupController>(
-        ProductLookupController(get<ProductsRepositoryBase>()));
     get.registerSingleton<ShoppingsListController>(
       ShoppingsListController(
           shoppingsListRepository: get<ShoppingsRepositoryBase>(),
@@ -77,6 +75,13 @@ abstract class IocContainer {
       get<AuthController>(),
       get<ProductPurchasesRepositoryBase>(),
       get<SnackbarMessangerController>(),
+    ));
+    get.registerSingleton<AddProductAssignmentController>(
+        AddProductAssignmentController(
+      get<ShoppingDetailController>(),
+      get<SnackbarMessangerController>(),
+      get<ProductAssignmentsRepositoryBase>(),
+      get<ProductsRepositoryBase>(),
     ));
 
     get.registerSingleton<TokenValidationService>(TokenValidationService(
