@@ -10,15 +10,16 @@ import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
-import 'package:split_the_bill/products/models/product/product.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
-import 'package:split_the_bill/purchases/widgets/product_chip.dart';
+import 'package:split_the_bill/purchases/widgets/product_lookup_list_tile.dart';
 
 const _INCREMENT_BUTTONS_WIDTH = 120.0;
+const _LOOKUP_LIST_HEIGHT = 150.0;
+const _LOOKUP_ANIMATION_DURATION = const Duration(milliseconds: 150);
 
 class AddProductAssignmentDialog extends StatefulWidget {
-  AddProductAssignmentDialog({super.key});
+  const AddProductAssignmentDialog({super.key});
 
   @override
   State<AddProductAssignmentDialog> createState() =>
@@ -35,8 +36,14 @@ class _AddProductAssignmentDialogState
 
   @override
   void initState() {
-    _addProductAssignmentController.startCreatingProductAssignment();
+    _addProductAssignmentController.resetState();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _addProductAssignmentController.resetState();
+    super.dispose();
   }
 
   @override
@@ -70,11 +77,11 @@ class _AddProductAssignmentDialogState
           children: [
             _buildTitle(context),
             const SizedBox(height: 25),
-            _buildProductNameTextField(),
-            const SizedBox(
-              height: 25,
-            ),
             _buildQuantityTextField(),
+            const SizedBox(height: 15),
+            _buildProductNameTextField(),
+            const SizedBox(height: 5),
+            _buildSuggestionsList(),
             const SizedBox(height: 10),
             StbElevatedButton(
               text: "Add item",
@@ -127,6 +134,7 @@ class _AddProductAssignmentDialogState
       keyboardType: TextInputType.text,
       onChanged: (value) {
         _addProductAssignmentController.setProductAssignmentName(value);
+        _addProductAssignmentController.setProductSearchQuery(value);
       },
     );
   }
@@ -169,29 +177,37 @@ class _AddProductAssignmentDialogState
     );
   }
 
-  Widget _buildSuggestionsList({
-    required AddProductAssignmentState state,
-  }) {
-    return ListView(
-      children: [
-        ...[
-          const Product(id: 1, name: "test", description: null, creatorId: 1),
-          const Product(
-              id: 2,
-              name: "Vodka absolut 22.3L",
-              description: "asfd",
-              creatorId: 1),
-        ]
-            .map(
-              // TODO
-              (product) => ProductChip(
-                product: product,
-                onTap: () {},
-                isSelected: false,
-              ),
-            )
-            .toList(),
-      ],
+  Widget _buildSuggestionsList() {
+    return StreamBuilder(
+      stream: _addProductAssignmentController.productLookup,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.hasError) {
+          return const SizedBox.shrink();
+        }
+        final lookupValues = snapshot.data!;
+        final size = lookupValues.isEmpty ? 0.0 : _LOOKUP_LIST_HEIGHT;
+        return AnimatedSize(
+          curve: Curves.easeIn,
+          duration: _LOOKUP_ANIMATION_DURATION,
+          child: SizedBox(
+            height: size,
+            child: ListView.builder(
+              itemCount: lookupValues.length,
+              itemBuilder: (context, index) {
+                final value = lookupValues[index];
+                return ProductLookupListTile(
+                  product: value,
+                  onTap: () {
+                    _addProductAssignmentController
+                        .setProductAssignmentName(value.name);
+                    _addProductAssignmentController.setProductSearchQuery(null);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 

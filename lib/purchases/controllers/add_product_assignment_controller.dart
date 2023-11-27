@@ -54,7 +54,6 @@ class AddProductAssignmentController {
             const Duration(milliseconds: _SEARCH_QUERY_DEBOUNCE_MILLIS))
         .listen((query) async {
       if (query == null) {
-        _productLookup.add([]);
         return;
       }
       final result = await _productsRepository.getProducts(name: query);
@@ -62,7 +61,7 @@ class AddProductAssignmentController {
     });
   }
 
-  void startCreatingProductAssignment() {
+  void resetState() {
     _addProductAssignmentState.add(AddProductAssignmentState.empty());
     _productNameSearchQuery.add(null);
   }
@@ -70,7 +69,15 @@ class AddProductAssignmentController {
   void setProductAssignmentName(String? newName) {
     _addProductAssignmentState
         .add(addProductAssignmentState.copyWith(productName: newName));
-    _productNameSearchQuery.add(newName);
+  }
+
+  void setProductSearchQuery(String? searchQuery) {
+    if (searchQuery == null || searchQuery.isEmpty) {
+      _productNameSearchQuery.add(null);
+      _productLookup.add([]);
+      return;
+    }
+    _productNameSearchQuery.add(searchQuery);
   }
 
   void setProductAssignmentQuantity(int? newQuantity) {

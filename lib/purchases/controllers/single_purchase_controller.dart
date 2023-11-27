@@ -32,7 +32,7 @@ class SinglePurchaseController {
       purchaseState?.existingPurchaseOfCurrentUser == null;
 
   AuthenticatedUser get _currentUser => _authController.loggedInUser!;
-  int? get _currentShoppingId => _purchaseState.value?.currentUserId;
+  int? get _currentShoppingId => _purchaseState.value?.currentShoppingId;
 
   final AuthController _authController;
   final ProductPurchasesRepositoryBase _productPurchasesRepository;
@@ -43,8 +43,6 @@ class SinglePurchaseController {
     this._productPurchasesRepository,
     this._snackbarMessangerController,
   );
-
-  
 
   /// If current user already purchased some of the given product,
   /// method adds his purchase into initial state.
