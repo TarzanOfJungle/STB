@@ -27,7 +27,7 @@ class UsersRepository implements UsersRepositoryBase {
       queryParameters["filter"] = searchQuery;
     }
     if (shoppingId != null) {
-      queryParameters["shopppingId"] = shoppingId.toString();
+      queryParameters["shoppingId"] = shoppingId.toString();
     }
 
     return _apiClient.sendDataRequest(
@@ -91,7 +91,7 @@ class UsersRepository implements UsersRepositoryBase {
   }
 
   @override
-  Future<void> unssignUserFromShopping({
+  Future<void> unassignUserFromShopping({
     required int userId,
     required int shoppingId,
   }) {

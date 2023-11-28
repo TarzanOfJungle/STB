@@ -19,7 +19,7 @@ abstract class UsersRepositoryBase {
     required int shoppingId,
   });
 
-  Future<void> unssignUserFromShopping({
+  Future<void> unassignUserFromShopping({
     required int userId,
     required int shoppingId,
   });

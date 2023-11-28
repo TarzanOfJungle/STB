@@ -46,5 +46,5 @@ abstract class ApiConstants {
   static const String shoppingChangesStream =
       "$versionPathPrefix/live-shoppings";
   static const String userShoppingAssignmentChangesStream =
-      "$versionPathPrefix/live-users-shopping";
+      "$versionPathPrefix/live-users-shoppings";
 }

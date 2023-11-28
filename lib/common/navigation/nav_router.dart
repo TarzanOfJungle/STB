@@ -10,6 +10,7 @@ import 'package:split_the_bill/purchases/models/product_purchase/product_purchas
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/screens/purchase_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/screens/shopping_members_page.dart';
 import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
 
@@ -68,6 +69,11 @@ class NavRouter {
                           path: NavRoute.purchaseDetail.path,
                           builder: (context, state) => PurchasePage(),
                         ),
+                        GoRoute(
+                          path: NavRoute.shoppingMembers.path,
+                          builder: (context, state) =>
+                              const ShoppingMembersPage(),
+                        ),
                       ],
                     )
                   ])
@@ -117,6 +123,12 @@ class NavRouter {
     );
     final fullPath =
         "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.purchaseDetail.path}";
+    _router.go(fullPath);
+  }
+
+  void toShoppingMembers() {
+    final fullPath =
+        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.shoppingMembers.path}";
     _router.go(fullPath);
   }
 }

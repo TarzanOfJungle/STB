@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
-import 'package:split_the_bill/shopping_detail/widgets/dialogs/assign_users_dialog.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
@@ -25,9 +24,9 @@ class DetailButtonSection extends StatelessWidget {
     return Column(
       children: [
         _buildButton(
-          const Icon(Icons.person_add),
-          'Invite users',
-          () => _showAssignUsersDialog(context),
+          const Icon(Icons.person),
+          'Members',
+          () => _navRouter.toShoppingMembers(),
         ),
         _buildButton(
           const Icon(Icons.done),
@@ -77,12 +76,5 @@ class DetailButtonSection extends StatelessWidget {
     } else {
       throw const ApiUnspecifiedException();
     }
-  }
-
-  void _showAssignUsersDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => const AssignUsersDialog(),
-    );
   }
 }
