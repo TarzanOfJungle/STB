@@ -3,17 +3,25 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/products/models/product/product.dart';
 
 const _ICON_BACKGROUND_BORDER_RADIUS = 100.0;
-const _ICON_SIZE = 15.0;
 const _TILE_PADDING = 7.0;
+const _DEFAULT_ICON_SIZE = 15.0;
 
-class ProductLookupListTile extends StatelessWidget {
-  final Product product;
+class LookupListTile extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final String? subtitle;
+  final double? iconSize;
+  final Color? iconBackgroundColor;
   final VoidCallback onTap;
 
-  const ProductLookupListTile({
+  const LookupListTile({
     super.key,
-    required this.product,
+    required this.title,
+    required this.icon,
     required this.onTap,
+    this.subtitle,
+    this.iconSize,
+    this.iconBackgroundColor,
   });
 
   @override
@@ -30,11 +38,12 @@ class ProductLookupListTile extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius:
                     BorderRadius.circular(_ICON_BACKGROUND_BORDER_RADIUS),
-                color: Theme.of(context).colorScheme.primary,
+                color: iconBackgroundColor ??
+                    Theme.of(context).colorScheme.primary,
               ),
-              child: const Icon(
-                Icons.add_shopping_cart_rounded,
-                size: _ICON_SIZE,
+              child: Icon(
+                icon,
+                size: iconSize ?? _DEFAULT_ICON_SIZE,
               ),
             ),
             const SizedBox(width: STANDARD_PADDING),
@@ -43,18 +52,18 @@ class ProductLookupListTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  if (product.description != null)
+                  if (subtitle != null)
                     Text(
-                      product.description!,
+                      subtitle!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.shadow,
+                            color: Theme.of(context).colorScheme.onBackground,
                           ),
                     ),
                 ],

@@ -4,6 +4,7 @@ import 'package:split_the_bill/common/extensions/set_text_editing_controller_val
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/button_row/button_row.dart';
 import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
+import 'package:split_the_bill/common/widgets/components/animated_lookup_list.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
@@ -13,11 +14,9 @@ import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
-import 'package:split_the_bill/purchases/widgets/product_lookup_list_tile.dart';
 
 const _INCREMENT_BUTTONS_WIDTH = 120.0;
 const _LOOKUP_LIST_HEIGHT = 150.0;
-const _LOOKUP_ANIMATION_DURATION = const Duration(milliseconds: 150);
 
 class AddProductAssignmentDialog extends StatefulWidget {
   const AddProductAssignmentDialog({super.key});
@@ -160,27 +159,17 @@ class _AddProductAssignmentDialogState
           return const SizedBox.shrink();
         }
         final lookupValues = snapshot.data!;
-        final size = lookupValues.isEmpty ? 0.0 : _LOOKUP_LIST_HEIGHT;
-        return AnimatedSize(
-          curve: Curves.easeIn,
-          duration: _LOOKUP_ANIMATION_DURATION,
-          child: SizedBox(
-            height: size,
-            child: ListView.builder(
-              itemCount: lookupValues.length,
-              itemBuilder: (context, index) {
-                final value = lookupValues[index];
-                return ProductLookupListTile(
-                  product: value,
-                  onTap: () {
-                    _addProductAssignmentController
-                        .setProductAssignmentName(value.name);
-                    _addProductAssignmentController.setProductSearchQuery(null);
-                  },
-                );
-              },
-            ),
-          ),
+        return AnimatedLookupList(
+          isShown: lookupValues.isNotEmpty,
+          items: lookupValues,
+          itemIcon: Icons.add_shopping_cart_rounded,
+          getItemTitle: (value) => value.name,
+          heightWhenShown: _LOOKUP_LIST_HEIGHT,
+          onItemSelected: (value) {
+            _addProductAssignmentController
+                .setProductAssignmentName(value.name);
+            _addProductAssignmentController.setProductSearchQuery(null);
+          },
         );
       },
     );

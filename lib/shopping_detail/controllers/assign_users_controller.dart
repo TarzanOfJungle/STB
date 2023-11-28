@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
@@ -24,17 +25,19 @@ class AssignUsersController {
       _usersToAdd.stream.map((map) => map.values.toList());
   Stream<List<User>> get usersLookupStream =>
       _usersLookup.stream.map((usersFromLookup) {
-        return _filterAlreadyAddedUsers(usersFromLookup);
+        return _filterUserLookup(usersFromLookup);
       });
 
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
+  final AuthController _authController;
   final ShoppingDetailController _shoppingDetailController;
   final UsersRepositoryBase _usersRepository;
   final SnackbarMessangerController _snackbarMessangerController;
 
   AssignUsersController(
+    this._authController,
     this._shoppingDetailController,
     this._usersRepository,
     this._snackbarMessangerController,
@@ -64,7 +67,7 @@ class AssignUsersController {
   void removeUser(User user) {
     final newUsersToAdd = {..._usersToAdd.value};
     if (newUsersToAdd.containsKey(user.id)) {
-      newUsersToAdd.remove(newUsersToAdd[user.id]);
+      newUsersToAdd.removeWhere((key, value) => key == user.id);
       _usersToAdd.add(newUsersToAdd);
     }
   }
@@ -84,10 +87,11 @@ class AssignUsersController {
     _usersSearchQuery.add(searchQuery);
   }
 
-  List<User> _filterAlreadyAddedUsers(List<User> usersToFilter) {
+  List<User> _filterUserLookup(List<User> usersToFilter) {
     return usersToFilter.where((userToFilter) {
       final alreadyAdded = _usersToAdd.value.containsKey(userToFilter.id);
-      return !alreadyAdded;
+      final isCurrentUser = userToFilter.id == _authController.loggedInUser?.id;
+      return !alreadyAdded && !isCurrentUser;
     }).toList();
   }
 

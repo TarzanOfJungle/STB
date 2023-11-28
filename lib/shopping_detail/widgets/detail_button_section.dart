@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/shopping_detail/widgets/dialogs/assign_users_dialog.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
@@ -26,7 +27,7 @@ class DetailButtonSection extends StatelessWidget {
         _buildButton(
           const Icon(Icons.person_add),
           'Invite users',
-          () {}, //TODO
+          () => _showAssignUsersDialog(context),
         ),
         _buildButton(
           const Icon(Icons.done),
@@ -44,7 +45,8 @@ class DetailButtonSection extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(Icon icon, String text, void Function() onPressedCall, {Color? color}) {
+  Widget _buildButton(Icon icon, String text, void Function() onPressedCall,
+      {Color? color}) {
     return SizedBox(
       width: _BUTTON_WIDTH,
       child: ElevatedButton.icon(
@@ -60,10 +62,10 @@ class DetailButtonSection extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-        label: 'Delete Shopping:\n${shopping.shopping.name}?',
-        description: 'Are you sure about this?\nYou cannot take back this step.',
-        onConfirm: _delete
-      ),
+          label: 'Delete Shopping:\n${shopping.shopping.name}?',
+          description:
+              'Are you sure about this?\nYou cannot take back this step.',
+          onConfirm: _delete),
     );
   }
 
@@ -75,5 +77,12 @@ class DetailButtonSection extends StatelessWidget {
     } else {
       throw const ApiUnspecifiedException();
     }
+  }
+
+  void _showAssignUsersDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const AssignUsersDialog(),
+    );
   }
 }
