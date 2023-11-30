@@ -8,8 +8,8 @@ enum NavRoute {
   // Nested routes
   shoppingDetail("shopping-detail"),
   purchaseDetail("purchase-detail"),
-  memberPurchases("member-purchases");
-
+  memberPurchases("member-purchases"),
+  shoppingSummary("shopping-summary");
   final String path;
 
   const NavRoute(this.path);

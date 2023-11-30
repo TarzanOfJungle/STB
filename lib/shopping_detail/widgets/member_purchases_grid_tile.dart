@@ -116,7 +116,7 @@ class MemberPurchasesGridTile extends StatelessWidget {
           width: SMALL_PADDING,
         ),
         Text(
-          '$totalAmount,-',
+          '${totalAmount.toStringAsFixed(totalAmount.truncateToDouble() == totalAmount ? 0 : 1)},-',
           textAlign: TextAlign.end,
         ),
       ],

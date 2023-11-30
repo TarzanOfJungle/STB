@@ -12,7 +12,9 @@ import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.da
 import 'package:split_the_bill/purchases/screens/purchase_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/screens/member_purchases_page.dart';
+import 'package:split_the_bill/shopping_detail/screens/summary_page.dart';
 import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
+import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
 
 class NavRouter {
@@ -64,7 +66,7 @@ class NavRouter {
                     GoRoute(
                       path: NavRoute.shoppingDetail.path,
                       builder: (context, state) =>
-                      const ShoppingDetailTabviewWrapper(),
+                          const ShoppingDetailTabviewWrapper(),
                       routes: [
                         GoRoute(
                           path: NavRoute.purchaseDetail.path,
@@ -72,8 +74,13 @@ class NavRouter {
                         ),
                         GoRoute(
                             path: NavRoute.memberPurchases.path,
-                            builder: (context, state) => MemberPurchasesPage(userPurchases: state.extra as UserPurchases)
-                        )
+                            builder: (context, state) => MemberPurchasesPage(
+                                userPurchases: state.extra as UserPurchases)),
+                        GoRoute(
+                            path: NavRoute.shoppingSummary.path,
+                            builder: (context, state) => SummaryPage(
+                                  shopping: state.extra as ShoppingWithContext,
+                                ))
                       ],
                     )
                   ])
@@ -120,16 +127,20 @@ class NavRouter {
       existingPurchases: existingPurchases,
     );
     final fullPath =
-        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail
-        .path}/${NavRoute.purchaseDetail.path}";
+        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.purchaseDetail.path}";
     _router.go(fullPath);
   }
 
   void toMemberPurchases(
       {required BuildContext context, required UserPurchases userPurchases}) {
     final fullPath =
-        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail
-        .path}/${NavRoute.memberPurchases.path}";
+        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.memberPurchases.path}";
     _router.go(fullPath, extra: userPurchases);
+  }
+
+  void toShoppingSummary(ShoppingWithContext shoppingWithContext) {
+    final fullPath =
+        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.shoppingSummary.path}";
+    _router.go(fullPath, extra: shoppingWithContext);
   }
 }
