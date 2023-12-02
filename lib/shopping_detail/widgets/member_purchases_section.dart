@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/no_data_banner.dart';
 import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
-import 'package:split_the_bill/shopping_detail/widgets/member_purchase_grid_tile.dart';
+import 'package:split_the_bill/shopping_detail/widgets/member_purchases_grid_tile.dart';
 
 import '../../ioc_container.dart';
 import '../../purchases/controllers/purchases_controller.dart';
@@ -36,7 +36,7 @@ class MemberPurchasesSection extends StatelessWidget {
                   mainAxisSpacing: STANDARD_PADDING,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  return MemberPurchaseGridTile(userPurchase: usersPurchases[index],);
+                  return MemberPurchasesGridTile(userPurchases: usersPurchases[index],);
                 },
                 itemCount: usersPurchases.length,
               );

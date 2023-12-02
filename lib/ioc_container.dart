@@ -15,6 +15,8 @@ import 'package:split_the_bill/purchases/repositories/product_assignments/produc
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/repositories/transactions_repository.dart';
+import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
@@ -37,6 +39,9 @@ abstract class IocContainer {
         ProductAssignmentsRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductPurchasesRepositoryBase>(
         ProductPurchasesRepository(get<ApiClientBase>()));
+    get.registerSingleton<TrasactionsRepositoryBase>(
+      TrasactionsRepository(get<ApiClientBase>())
+    );
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
@@ -54,9 +59,11 @@ abstract class IocContainer {
           shoppingsListRepository: get<ShoppingsRepositoryBase>(),
           snackbarMessangerController: get<SnackbarMessangerController>()),
     );
-    get.registerSingleton<ShoppingDetailController> (
-      ShoppingDetailController(shoppingsListController: get<ShoppingsListController>())
-    );
+    get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
+      shoppingsListController: get<ShoppingsListController>(),
+      trasactionsRepository: get<TrasactionsRepositoryBase>(),
+      snackbarMessangerController: get<SnackbarMessangerController>(),
+    ));
     get.registerSingleton<PurchasesController>(PurchasesController(
       shoppingDetailController: get<ShoppingDetailController>(),
       snackbarMessangerController: get<SnackbarMessangerController>(),

@@ -6,6 +6,7 @@ import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_contr
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
 import '../../ioc_container.dart';
+import 'info_item.dart';
 
 class DetailInfoSection extends StatelessWidget {
   late final ShoppingWithContext _shopping;
@@ -26,36 +27,21 @@ class DetailInfoSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoItem(
-          const Icon(CupertinoIcons.money_dollar),
-          'Amount spent',
-          '${_shopping.ammountSpent},-',
+        InfoItem(
+          icon: const Icon(CupertinoIcons.money_dollar),
+          label: 'Amount spent',
+          data: '${_shopping.ammountSpent},-',
         ),
-        _buildInfoItem(
-          const Icon(CupertinoIcons.shopping_cart),
-          'Items bought',
-          '$_completeItems/${_shopping.numberOfItems}',
+        InfoItem(
+          icon: const Icon(CupertinoIcons.shopping_cart),
+          label: 'Items bought',
+          data: '$_completeItems/${_shopping.numberOfItems}',
         ),
-        _buildInfoItem(
-          const Icon(CupertinoIcons.person_2_fill),
-          'Members',
-          '${_shopping.numberOfParticipants}',
+        InfoItem(
+          icon: const Icon(CupertinoIcons.person_2_fill),
+          label: 'Members',
+          data: '${_shopping.numberOfParticipants}',
         ),
-      ],
-    );
-  }
-
-  Widget _buildInfoItem(Widget icon, String label, String data) {
-    return Row(
-      children: [
-        SizedBox(width: 40.0, child: icon),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(data),
-        ])
       ],
     );
   }
