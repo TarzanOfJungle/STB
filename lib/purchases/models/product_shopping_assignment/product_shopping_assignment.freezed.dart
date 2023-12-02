@@ -23,6 +23,7 @@ ProductShoppingAssignment _$ProductShoppingAssignmentFromJson(
 mixin _$ProductShoppingAssignment {
   Product get product => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
+  int get shoppingId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,7 @@ abstract class $ProductShoppingAssignmentCopyWith<$Res> {
           $Res Function(ProductShoppingAssignment) then) =
       _$ProductShoppingAssignmentCopyWithImpl<$Res, ProductShoppingAssignment>;
   @useResult
-  $Res call({Product product, int quantity});
+  $Res call({Product product, int quantity, int shoppingId});
 
   $ProductCopyWith<$Res> get product;
 }
@@ -57,6 +58,7 @@ class _$ProductShoppingAssignmentCopyWithImpl<$Res,
   $Res call({
     Object? product = null,
     Object? quantity = null,
+    Object? shoppingId = null,
   }) {
     return _then(_value.copyWith(
       product: null == product
@@ -66,6 +68,10 @@ class _$ProductShoppingAssignmentCopyWithImpl<$Res,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
+              as int,
+      shoppingId: null == shoppingId
+          ? _value.shoppingId
+          : shoppingId // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -88,7 +94,7 @@ abstract class _$$ProductShoppingAssignmentImplCopyWith<$Res>
       __$$ProductShoppingAssignmentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Product product, int quantity});
+  $Res call({Product product, int quantity, int shoppingId});
 
   @override
   $ProductCopyWith<$Res> get product;
@@ -109,6 +115,7 @@ class __$$ProductShoppingAssignmentImplCopyWithImpl<$Res>
   $Res call({
     Object? product = null,
     Object? quantity = null,
+    Object? shoppingId = null,
   }) {
     return _then(_$ProductShoppingAssignmentImpl(
       product: null == product
@@ -119,6 +126,10 @@ class __$$ProductShoppingAssignmentImplCopyWithImpl<$Res>
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
               as int,
+      shoppingId: null == shoppingId
+          ? _value.shoppingId
+          : shoppingId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -127,7 +138,7 @@ class __$$ProductShoppingAssignmentImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProductShoppingAssignmentImpl extends _ProductShoppingAssignment {
   const _$ProductShoppingAssignmentImpl(
-      {required this.product, required this.quantity})
+      {required this.product, required this.quantity, required this.shoppingId})
       : super._();
 
   factory _$ProductShoppingAssignmentImpl.fromJson(Map<String, dynamic> json) =>
@@ -137,10 +148,12 @@ class _$ProductShoppingAssignmentImpl extends _ProductShoppingAssignment {
   final Product product;
   @override
   final int quantity;
+  @override
+  final int shoppingId;
 
   @override
   String toString() {
-    return 'ProductShoppingAssignment(product: $product, quantity: $quantity)';
+    return 'ProductShoppingAssignment(product: $product, quantity: $quantity, shoppingId: $shoppingId)';
   }
 
   @override
@@ -150,12 +163,14 @@ class _$ProductShoppingAssignmentImpl extends _ProductShoppingAssignment {
             other is _$ProductShoppingAssignmentImpl &&
             (identical(other.product, product) || other.product == product) &&
             (identical(other.quantity, quantity) ||
-                other.quantity == quantity));
+                other.quantity == quantity) &&
+            (identical(other.shoppingId, shoppingId) ||
+                other.shoppingId == shoppingId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, product, quantity);
+  int get hashCode => Object.hash(runtimeType, product, quantity, shoppingId);
 
   @JsonKey(ignore: true)
   @override
@@ -175,7 +190,8 @@ class _$ProductShoppingAssignmentImpl extends _ProductShoppingAssignment {
 abstract class _ProductShoppingAssignment extends ProductShoppingAssignment {
   const factory _ProductShoppingAssignment(
       {required final Product product,
-      required final int quantity}) = _$ProductShoppingAssignmentImpl;
+      required final int quantity,
+      required final int shoppingId}) = _$ProductShoppingAssignmentImpl;
   const _ProductShoppingAssignment._() : super._();
 
   factory _ProductShoppingAssignment.fromJson(Map<String, dynamic> json) =
@@ -185,6 +201,8 @@ abstract class _ProductShoppingAssignment extends ProductShoppingAssignment {
   Product get product;
   @override
   int get quantity;
+  @override
+  int get shoppingId;
   @override
   @JsonKey(ignore: true)
   _$$ProductShoppingAssignmentImplCopyWith<_$ProductShoppingAssignmentImpl>

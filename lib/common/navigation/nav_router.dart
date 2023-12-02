@@ -12,6 +12,7 @@ import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.da
 import 'package:split_the_bill/purchases/screens/purchase_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/screens/member_purchases_page.dart';
+import 'package:split_the_bill/shopping_detail/screens/shopping_members_page.dart';
 import 'package:split_the_bill/shopping_detail/screens/summary_page.dart';
 import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
@@ -80,7 +81,12 @@ class NavRouter {
                             path: NavRoute.shoppingSummary.path,
                             builder: (context, state) => SummaryPage(
                                   shopping: state.extra as ShoppingWithContext,
-                                ))
+                                )),
+                        GoRoute(
+                          path: NavRoute.shoppingMembers.path,
+                          builder: (context, state) =>
+                              const ShoppingMembersPage(),
+                        ),
                       ],
                     )
                   ])
@@ -119,10 +125,12 @@ class NavRouter {
   }
 
   void toPurchaseDetail({
+    required int shoppingId,
     required ProductShoppingAssignment existingAssignment,
     ProductPurchase? existingPurchases,
   }) {
     _singlePurchaseController.setPurchase(
+      shoppingId: shoppingId,
       existingAssignment: existingAssignment,
       existingPurchases: existingPurchases,
     );
@@ -142,5 +150,11 @@ class NavRouter {
     final fullPath =
         "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.shoppingSummary.path}";
     _router.go(fullPath, extra: shoppingWithContext);
+  }
+
+  void toShoppingMembers() {
+    final fullPath =
+        "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.shoppingMembers.path}";
+    _router.go(fullPath);
   }
 }

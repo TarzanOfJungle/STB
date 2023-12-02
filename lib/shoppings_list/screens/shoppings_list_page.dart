@@ -7,7 +7,6 @@ import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopp
 import 'package:split_the_bill/common/widgets/dialogs/shopping_parameters_dialog.dart';
 import 'package:split_the_bill/shoppings_list/widgets/shopping_tile.dart';
 
-import '../../auth/controllers/auth_controller.dart';
 import '../../common/constants/ui_constants.dart';
 import '../../ioc_container.dart';
 
@@ -18,7 +17,6 @@ class ShoppingsListPage extends StatelessWidget {
   ShoppingsListPage({super.key});
 
   final _shoppingsListController = get<ShoppingsListController>();
-  final _authController = get<AuthController>();
 
   @override
   Widget build(BuildContext context) {

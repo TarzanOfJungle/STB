@@ -51,7 +51,7 @@ class StbColors {
     backgroundVariant: Color(0xFF313131),
     text: Color(0xFFEDEDED),
     shadow: Color(0xFF444444),
-    error: Color(0xFFE30000),
+    error: Color.fromARGB(255, 255, 62, 62),
     onError: Color(0xFFEDEDED),
   );
 }

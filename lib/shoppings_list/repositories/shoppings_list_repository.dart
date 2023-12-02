@@ -1,5 +1,7 @@
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/api/http_method.dart';
+import 'package:split_the_bill/common/api/websocket_event.dart';
+import 'package:split_the_bill/common/api/websocket_event_with_data.dart';
 import 'package:split_the_bill/common/constants/api_constants.dart';
 import 'package:split_the_bill/common/extensions/json_string_extension.dart';
 import 'package:split_the_bill/shopping_detail/models/update_shopping/update_shopping.dart';
@@ -78,5 +80,19 @@ class ShoppingsListRepository implements ShoppingsRepositoryBase {
     return updatedShopping;
   }
 
-
+  @override
+  Stream<WebsocketEventWithData<ShoppingWithContext>>
+      getShoppingChangesStream() {
+    return _apiClient.listenForDataEvents(
+      path: ApiConstants.shoppingChangesStream,
+      events: [
+        WebsocketEvent.shoppingCreated,
+        WebsocketEvent.shoppingUpdated,
+        WebsocketEvent.shoppingDeleted,
+      ],
+      processEventData: (rawData) {
+        return ShoppingWithContext.fromJson(rawData.asJsonObject());
+      },
+    );
+  }
 }

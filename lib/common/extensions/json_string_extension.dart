@@ -9,4 +9,8 @@ extension JsonString on String {
     final List jsonArray = json.decode(this);
     return jsonArray.map((item) => item as Map<String, dynamic>).toList();
   }
+
+  String withoutLastChar() {
+    return substring(0, length-1);
+  }
 }

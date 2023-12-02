@@ -24,9 +24,9 @@ class DetailButtonSection extends StatelessWidget {
     return Column(
       children: [
         _buildButton(
-          const Icon(Icons.person_add),
-          'Invite users',
-          () {}, //TODO
+          const Icon(Icons.person),
+          'Members',
+          () => _navRouter.toShoppingMembers(),
         ),
         _buildButton(
           const Icon(Icons.done),
@@ -44,7 +44,8 @@ class DetailButtonSection extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(Icon icon, String text, void Function() onPressedCall, {Color? color}) {
+  Widget _buildButton(Icon icon, String text, void Function() onPressedCall,
+      {Color? color}) {
     return SizedBox(
       width: _BUTTON_WIDTH,
       child: ElevatedButton.icon(
@@ -60,10 +61,10 @@ class DetailButtonSection extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-        label: 'Delete Shopping:\n${shopping.shopping.name}?',
-        description: 'Are you sure about this?\nYou cannot take back this step.',
-        onConfirm: _delete
-      ),
+          label: 'Delete Shopping:\n${shopping.shopping.name}?',
+          description:
+              'Are you sure about this?\nYou cannot take back this step.',
+          onConfirm: _delete),
     );
   }
 

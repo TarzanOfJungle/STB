@@ -6,15 +6,12 @@ import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
-import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/models/put_product_purchase/put_product_purchase.dart';
 import 'package:split_the_bill/purchases/models/user_with_purchase_context/user_with_purchase_context.dart';
-import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
-import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
 const _COULDNT_SAVE_CHANGES_MESSAGE = "Saving purchase failed.";
 const _COULDNT_CANCEL_MESSAGE = "Cancelling purchase failed.";
@@ -22,6 +19,7 @@ const _COULDNT_CANCEL_MESSAGE = "Cancelling purchase failed.";
 class SinglePurchaseController {
   final BehaviorSubject<PurchaseState?> _purchaseState =
       BehaviorSubject.seeded(null);
+
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
 
   Stream<PurchaseState?> get purchaseStateStream => _purchaseState.stream;
@@ -33,40 +31,28 @@ class SinglePurchaseController {
   bool get isUsersFirstPurchase =>
       purchaseState?.existingPurchaseOfCurrentUser == null;
 
-  int? get _currentShoppingId =>
-      _shoppingDetailController.currentShoppingState?.shopping.id;
   AuthenticatedUser get _currentUser => _authController.loggedInUser!;
+  int? get _currentShoppingId => _purchaseState.value?.currentShoppingId;
 
-  late final AuthController _authController;
-  late final ShoppingDetailController _shoppingDetailController;
-  late final PurchasesController _purchasesController;
-  late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
-  late final ProductPurchasesRepositoryBase _productPurchasesRepository;
-  late final SnackbarMessangerController _snackbarMessangerController;
+  final AuthController _authController;
+  final ProductPurchasesRepositoryBase _productPurchasesRepository;
+  final SnackbarMessangerController _snackbarMessangerController;
 
-  SinglePurchaseController({
-    required AuthController authController,
-    required ShoppingDetailController shoppingDetailController,
-    required PurchasesController purchasesController,
-    required ProductAssignmentsRepositoryBase productAssignmentsRepository,
-    required ProductPurchasesRepositoryBase productPurchasesRepository,
-    required SnackbarMessangerController snackbarMessangerController,
-  }) {
-    _authController = authController;
-    _shoppingDetailController = shoppingDetailController;
-    _purchasesController = purchasesController;
-    _productAssignmentsRepository = productAssignmentsRepository;
-    _productPurchasesRepository = productPurchasesRepository;
-    _snackbarMessangerController = snackbarMessangerController;
-  }
+  SinglePurchaseController(
+    this._authController,
+    this._productPurchasesRepository,
+    this._snackbarMessangerController,
+  );
 
   /// If current user already purchased some of the given product,
   /// method adds his purchase into initial state.
   void setPurchase({
+    required int shoppingId,
     required ProductShoppingAssignment existingAssignment,
     ProductPurchase? existingPurchases,
   }) {
     var newState = PurchaseState(
+      currentShoppingId: shoppingId,
       existingAssignment: existingAssignment,
       existingPurchases: existingPurchases,
       currentUserId: _currentUser.id,
@@ -158,15 +144,6 @@ class SinglePurchaseController {
       );
       await _productPurchasesRepository.addOrUpdateProductPurchase(putRequest);
 
-      _purchasesController.addOrUpdateUserPurchase(
-        productId: purchaseState!.existingAssignment.product.id,
-        userPurchase: UserWithPurchaseContext(
-          user: _authController.loggedInUser!.asUser(),
-          quantity: quantity,
-          unitPrice: unitPrice,
-        ),
-      );
-
       _isLoading.add(false);
       return true;
     } catch (_) {}
@@ -189,11 +166,6 @@ class SinglePurchaseController {
         _currentShoppingId!,
         purchaseState!.existingAssignment.product.id,
       );
-      _purchasesController.deleteUserPurchase(
-        productId: purchaseState!.existingAssignment.product.id,
-        userId: _currentUser.id,
-      );
-
       _isLoading.add(false);
       return true;
     } catch (_) {}

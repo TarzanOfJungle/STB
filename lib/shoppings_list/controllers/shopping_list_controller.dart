@@ -64,7 +64,6 @@ class ShoppingsListController {
   }
 
   Future<ShoppingWithContext?> shoppingById({required int shoppingId}) async {
-    var wasSuccess = false;
     try {
       var shopping =
           await _shoppingsListRepository.shoppingById(shoppingId: shoppingId);

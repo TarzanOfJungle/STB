@@ -1,4 +1,3 @@
-import 'package:split_the_bill/common/api/api_client.dart';
 import 'package:split_the_bill/common/extensions/json_string_extension.dart';
 import 'package:split_the_bill/shopping_detail/models/transaction/transaction.dart';
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';

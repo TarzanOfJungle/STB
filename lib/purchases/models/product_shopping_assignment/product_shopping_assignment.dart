@@ -11,6 +11,7 @@ class ProductShoppingAssignment with _$ProductShoppingAssignment {
   const factory ProductShoppingAssignment({
     required Product product,
     required int quantity,
+    required int shoppingId
   }) = _ProductShoppingAssignment;
 
   const ProductShoppingAssignment._();

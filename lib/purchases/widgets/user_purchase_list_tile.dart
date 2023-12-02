@@ -29,17 +29,24 @@ class UserPurchaseListTile extends StatelessWidget {
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.surface,
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildUsername(),
-          _buildTextWithPrefixIcon(
-            text: userPurchase.quantity.toString(),
-            icon: UiConstants.quantityIcon,
-          ),
-          _buildTextWithPrefixIcon(
-            text: userPurchase.ammountPurchased.toStringAsFixed(2),
-            icon: UiConstants.ammountIcon,
+          const SizedBox(height: SMALL_PADDING),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildTextWithPrefixIcon(
+                text: userPurchase.quantity.toString(),
+                icon: UiConstants.quantityIcon,
+              ),
+              _buildTextWithPrefixIcon(
+                text: userPurchase.ammountPurchased.toStringAsFixed(2),
+                icon: UiConstants.ammountIcon,
+              ),
+            ],
           ),
         ],
       ),
@@ -47,24 +54,23 @@ class UserPurchaseListTile extends StatelessWidget {
   }
 
   Widget _buildUsername() {
-    return Expanded(
-      flex: 2,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (isCurrentUser) const Icon(Icons.person_rounded),
-          Expanded(
-            child: Text(
-              userPurchase.user.username,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: _fontSize,
-              ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (isCurrentUser) const Icon(Icons.person_rounded),
+        Flexible(
+          child: Text(
+            userPurchase.user.username,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: _fontSize,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -73,9 +79,8 @@ class UserPurchaseListTile extends StatelessWidget {
     required IconData icon,
   }) {
     return Expanded(
-      flex: 1,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
@@ -85,7 +90,7 @@ class UserPurchaseListTile extends StatelessWidget {
           const SizedBox(
             width: 4,
           ),
-          Expanded(
+          Flexible(
             child: Text(
               text,
               maxLines: 1,

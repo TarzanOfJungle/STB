@@ -11,6 +11,7 @@ _$ProductShoppingAssignmentImpl _$$ProductShoppingAssignmentImplFromJson(
     _$ProductShoppingAssignmentImpl(
       product: Product.fromJson(json['product'] as Map<String, dynamic>),
       quantity: json['quantity'] as int,
+      shoppingId: json['shoppingId'] as int,
     );
 
 Map<String, dynamic> _$$ProductShoppingAssignmentImplToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$$ProductShoppingAssignmentImplToJson(
     <String, dynamic>{
       'product': instance.product,
       'quantity': instance.quantity,
+      'shoppingId': instance.shoppingId,
     };

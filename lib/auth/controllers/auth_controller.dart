@@ -74,7 +74,8 @@ class AuthController {
         email: registrationData.email,
         password: registrationData.password,
       );
-      wasSuccess = await login(loginData);
+      await _authRepository.logIn(loginData);
+      wasSuccess = true;
     } on ApiServerException catch (_) {
       _showError(_API_SERVER_EXCEPTION_MESSAGE);
     } on ApiException catch (ex) {
