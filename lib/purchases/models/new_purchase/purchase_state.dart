@@ -12,8 +12,8 @@ class PurchaseState with _$PurchaseState {
     required int currentShoppingId,
     required ProductShoppingAssignment existingAssignment,
     ProductPurchase? existingPurchases,
-    int? currentUserPurchaseQuantity,
-    double? currentUserPurchaseUnitPrice,
+    int? editedQuantity,
+    double? editedUnitPrice,
   }) = _PurchaseState;
 
   UserWithPurchaseContext? get existingPurchaseOfCurrentUser =>
@@ -27,7 +27,7 @@ class PurchaseState with _$PurchaseState {
           .toList() ??
       [];
 
-  int get quantityToBePurchased => existingAssignment.quantity;
+  int get totalQuantityToBePurchased => existingAssignment.quantity;
 
   int get quantityPurchasedByOtherUsers =>
       (existingPurchases?.quantityPurchased ?? 0) -
@@ -37,12 +37,12 @@ class PurchaseState with _$PurchaseState {
       (existingPurchaseOfCurrentUser?.ammountPurchased ?? 0);
 
   int get totalPurchasedQuantity {
-    return quantityPurchasedByOtherUsers + (currentUserPurchaseQuantity ?? 0);
+    return quantityPurchasedByOtherUsers + (editedQuantity ?? 0);
   }
 
   double get totalPurchasedAmmount {
-    final ammountPurchasedByCurrentUser = (currentUserPurchaseQuantity ?? 0) *
-        (currentUserPurchaseUnitPrice ?? 0);
+    final ammountPurchasedByCurrentUser =
+        (editedQuantity ?? 0) * (editedUnitPrice ?? 0);
     return ammountPurchasedByOtherUsers + ammountPurchasedByCurrentUser;
   }
 

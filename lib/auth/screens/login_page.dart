@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
       confirmButton: AuthButton(
         title: "Log in",
         noInternetMessage: _NO_INTERNET_MESSAGE,
-        icon: Icons.login_rounded,
+        icon: Icons.person_rounded,
         onTap: () => _login(),
       ),
       appendix: Row(

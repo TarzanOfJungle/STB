@@ -71,7 +71,7 @@ class _AddProductAssignmentDialogState
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildQuantityTextField(),
+            _buildQuantityEditingSection(state),
             const SizedBox(height: 15),
             _buildProductNameTextField(),
             const SizedBox(height: 5),
@@ -113,7 +113,8 @@ class _AddProductAssignmentDialogState
     );
   }
 
-  Widget _buildQuantityTextField() {
+  Widget _buildQuantityEditingSection(AddProductAssignmentState state) {
+    final isMin = state.quantity == null || state.quantity == 0;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,6 +139,7 @@ class _AddProductAssignmentDialogState
           fixedWidth: _INCREMENT_BUTTONS_WIDTH,
           buttons: [
             ButtonRowItem(
+              enabled: !isMin,
               buttonChild: const Icon(Icons.remove_rounded),
               onTap: () => _addToQuantity(-1),
             ),

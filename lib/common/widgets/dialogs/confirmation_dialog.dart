@@ -8,15 +8,22 @@ import '../../constants/ui_constants.dart';
 class ConfirmationDialog extends StatelessWidget {
   final String label;
   final String? description;
-  late final Future<void> Function() _onConfirm;
+  final String confirmText;
+  final String cancelText;
+  final Color confirmColor;
+  final Color cancelColor;
+  late final Future<void> Function() onConfirm;
 
-  ConfirmationDialog(
-      {super.key,
-      required this.label,
-      this.description,
-      required Future<void> Function() onConfirm}) {
-    _onConfirm = onConfirm;
-  }
+  ConfirmationDialog({
+    required this.label,
+    required this.onConfirm,
+    this.confirmText = "Do it",
+    this.cancelText = "Cancel",
+    this.confirmColor = UiConstants.deleteColor,
+    this.cancelColor = UiConstants.infoColor,
+    this.description,
+    super.key,
+  });
 
   final _navRouter = get<NavRouter>();
 
@@ -34,7 +41,10 @@ class ConfirmationDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(description ?? '', textAlign: TextAlign.center,),
+          Text(
+            description ?? '',
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(
             height: STANDARD_PADDING,
           ),
@@ -42,19 +52,19 @@ class ConfirmationDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               StbElevatedButton(
-                text: 'Cancel',
+                text: cancelText,
                 stretch: true,
                 onTap: () => _navRouter.returnBack(),
-                color: UiConstants.infoColor,
+                color: cancelColor,
               ),
               StbElevatedButton(
-                text: 'Do it',
+                text: confirmText,
                 stretch: true,
                 onTap: () {
-                  _onConfirm();
+                  onConfirm();
                   _navRouter.returnBack();
                 },
-                color: UiConstants.deleteColor,
+                color: confirmColor,
               )
             ],
           )

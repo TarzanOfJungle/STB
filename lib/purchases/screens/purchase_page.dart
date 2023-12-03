@@ -34,7 +34,7 @@ class PurchasePage extends StatelessWidget {
             children: [
               const SizedBox(height: STANDARD_PADDING),
               _buildGeneralInfo(context, state),
-              PurchaseEditingSection(state: state),
+              PurchaseEditingSection(purchaseState: state),
               const Divider(height: 30),
               ..._buildUserPurchasesList(context, state),
             ],
@@ -54,7 +54,7 @@ class PurchasePage extends StatelessWidget {
           icon: UiConstants.quantityIcon,
           label: "Total Qty.",
           value:
-              "${state.totalPurchasedQuantity}/${state.quantityToBePurchased}",
+              "${state.totalPurchasedQuantity}/${state.totalQuantityToBePurchased}",
         ),
         _buildGeneralInfoItem(
           context: context,
@@ -135,8 +135,8 @@ class PurchasePage extends StatelessWidget {
 
   bool _showUserPurchasesList(PurchaseState state) {
     final purchasesAlreadyExist = state.existingPurchases != null;
-    final newPurchaseBeingAdded = state.currentUserPurchaseQuantity != null &&
-        state.currentUserPurchaseUnitPrice != null;
+    final newPurchaseBeingAdded = state.editedQuantity != null &&
+        state.editedUnitPrice != null;
 
     return purchasesAlreadyExist || newPurchaseBeingAdded;
   }

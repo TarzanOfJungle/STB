@@ -7,6 +7,7 @@ import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
+import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
@@ -15,11 +16,11 @@ import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart
 const _INCREMENT_BUTTONS_WIDTH = 120.0;
 
 class PurchaseEditingSection extends StatefulWidget {
-  final PurchaseState state;
+  final PurchaseState purchaseState;
 
   const PurchaseEditingSection({
     super.key,
-    required this.state,
+    required this.purchaseState,
   });
 
   @override
@@ -35,7 +36,7 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
 
   @override
   Widget build(BuildContext context) {
-    _adjustTextEditingControllersToNewState(widget.state);
+    _adjustTextEditingControllersToNewState(widget.purchaseState);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -58,18 +59,16 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
   }
 
   void _adjustTextEditingControllersToNewState(PurchaseState newState) {
-    _purchaseQuantityController
-        .setValue(newState.currentUserPurchaseQuantity?.toString());
+    _purchaseQuantityController.setValue(newState.editedQuantity?.toString());
 
     // Unit price TF doesn't need to be adjusted continuously, just on initial load
-    if (newState.currentUserPurchaseUnitPrice != null &&
+    if (newState.editedUnitPrice != null &&
         _purchaseUnitPriceController.text.isEmpty) {
-      final unitPriceHasDecimal =
-          newState.currentUserPurchaseUnitPrice!.roundToDouble() !=
-              newState.currentUserPurchaseUnitPrice!;
+      final unitPriceHasDecimal = newState.editedUnitPrice!.roundToDouble() !=
+          newState.editedUnitPrice!;
       final unitPriceStringValue = unitPriceHasDecimal
-          ? newState.currentUserPurchaseUnitPrice!.toString()
-          : newState.currentUserPurchaseUnitPrice!.toStringAsFixed(0);
+          ? newState.editedUnitPrice!.toString()
+          : newState.editedUnitPrice!.toStringAsFixed(0);
 
       _purchaseUnitPriceController.setValue(unitPriceStringValue);
     }
@@ -89,13 +88,7 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
         ),
         if (!_purchaseController.isUsersFirstPurchase)
           IconButtonWithBackground(
-            onTap: () async {
-              final success =
-                  await _purchaseController.deleteExistingPurchase();
-              if (success) {
-                _navRouter.returnBack();
-              }
-            },
+            onTap: () => _showDeleteDialog(),
             icon: Icons.close_rounded,
             backgroundColor: UiConstants.deleteColor,
             iconColor: Colors.white,
@@ -104,7 +97,11 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
     );
   }
 
-  Widget _buildMyPurchase(BuildContext context) {
+  Widget _buildMyPurchase(context) {
+    final isMin = widget.purchaseState.editedQuantity == null ||
+        widget.purchaseState.editedQuantity == 0;
+    final isMax = widget.purchaseState.editedQuantity ==
+        widget.purchaseState.totalQuantityToBePurchased;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,9 +119,8 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
                   size: 15,
                 ),
                 onChanged: (value) {
-                  final newQuantity =
-                      _purchaseController.getAdditionalValueFromString(
-                          value, (toParse) => int.tryParse(toParse));
+                  final newQuantity = _getAdditionalValueFromString(
+                      value, (toParse) => int.tryParse(toParse));
                   _purchaseController.additionalQuantityChanged(newQuantity);
                 },
               ),
@@ -135,10 +131,12 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
               buttons: [
                 ButtonRowItem(
                   buttonChild: const Icon(Icons.remove_rounded),
+                  enabled: !isMin,
                   onTap: () => _addToQuantity(-1),
                 ),
                 ButtonRowItem(
                   buttonChild: const Icon(Icons.add_rounded),
+                  enabled: !isMax,
                   onTap: () => _addToQuantity(1),
                 ),
               ],
@@ -156,9 +154,8 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
           ),
           suffix: const Text(",-"),
           onChanged: (value) {
-            final newUnitPrice =
-                _purchaseController.getAdditionalValueFromString(
-                    value, (toParse) => double.tryParse(toParse));
+            final newUnitPrice = _getAdditionalValueFromString(
+                value, (toParse) => double.tryParse(toParse));
             _purchaseController.additionalUnitPriceChanged(newUnitPrice);
           },
         ),
@@ -195,9 +192,41 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
     );
   }
 
+  void _showDeleteDialog() {
+    final currentlyPurchasedQuantity =
+        widget.purchaseState.existingPurchaseOfCurrentUser?.quantity ?? 0;
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        label: "Cancel your purchase",
+        description:
+            "You purchased $currentlyPurchasedQuantity pieces of this item. Are you sure you want to cancel your purchase?",
+        confirmText: "Yes",
+        cancelText: "No",
+        onConfirm: () async {
+          final success = await _purchaseController.deleteExistingPurchase();
+          if (success) {
+            _navRouter.returnBack();
+          }
+        },
+      ),
+    );
+  }
+
   void _addToQuantity(int quantityToAdd) {
     final newQuantity =
-        (widget.state.currentUserPurchaseQuantity ?? 0) + quantityToAdd;
+        (widget.purchaseState.editedQuantity ?? 0) + quantityToAdd;
     _purchaseController.additionalQuantityChanged(newQuantity);
+  }
+
+  T? _getAdditionalValueFromString<T extends num>(
+    String value,
+    T? Function(String) parseFunction,
+  ) {
+    final parsed = parseFunction(value);
+    if (parsed == 0) {
+      return null;
+    }
+    return parsed;
   }
 }

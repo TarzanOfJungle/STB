@@ -21,9 +21,8 @@ mixin _$PurchaseState {
   ProductShoppingAssignment get existingAssignment =>
       throw _privateConstructorUsedError;
   ProductPurchase? get existingPurchases => throw _privateConstructorUsedError;
-  int? get currentUserPurchaseQuantity => throw _privateConstructorUsedError;
-  double? get currentUserPurchaseUnitPrice =>
-      throw _privateConstructorUsedError;
+  int? get editedQuantity => throw _privateConstructorUsedError;
+  double? get editedUnitPrice => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PurchaseStateCopyWith<PurchaseState> get copyWith =>
@@ -41,8 +40,8 @@ abstract class $PurchaseStateCopyWith<$Res> {
       int currentShoppingId,
       ProductShoppingAssignment existingAssignment,
       ProductPurchase? existingPurchases,
-      int? currentUserPurchaseQuantity,
-      double? currentUserPurchaseUnitPrice});
+      int? editedQuantity,
+      double? editedUnitPrice});
 
   $ProductShoppingAssignmentCopyWith<$Res> get existingAssignment;
   $ProductPurchaseCopyWith<$Res>? get existingPurchases;
@@ -65,8 +64,8 @@ class _$PurchaseStateCopyWithImpl<$Res, $Val extends PurchaseState>
     Object? currentShoppingId = null,
     Object? existingAssignment = null,
     Object? existingPurchases = freezed,
-    Object? currentUserPurchaseQuantity = freezed,
-    Object? currentUserPurchaseUnitPrice = freezed,
+    Object? editedQuantity = freezed,
+    Object? editedUnitPrice = freezed,
   }) {
     return _then(_value.copyWith(
       currentUserId: null == currentUserId
@@ -85,13 +84,13 @@ class _$PurchaseStateCopyWithImpl<$Res, $Val extends PurchaseState>
           ? _value.existingPurchases
           : existingPurchases // ignore: cast_nullable_to_non_nullable
               as ProductPurchase?,
-      currentUserPurchaseQuantity: freezed == currentUserPurchaseQuantity
-          ? _value.currentUserPurchaseQuantity
-          : currentUserPurchaseQuantity // ignore: cast_nullable_to_non_nullable
+      editedQuantity: freezed == editedQuantity
+          ? _value.editedQuantity
+          : editedQuantity // ignore: cast_nullable_to_non_nullable
               as int?,
-      currentUserPurchaseUnitPrice: freezed == currentUserPurchaseUnitPrice
-          ? _value.currentUserPurchaseUnitPrice
-          : currentUserPurchaseUnitPrice // ignore: cast_nullable_to_non_nullable
+      editedUnitPrice: freezed == editedUnitPrice
+          ? _value.editedUnitPrice
+          : editedUnitPrice // ignore: cast_nullable_to_non_nullable
               as double?,
     ) as $Val);
   }
@@ -131,8 +130,8 @@ abstract class _$$PurchaseStateImplCopyWith<$Res>
       int currentShoppingId,
       ProductShoppingAssignment existingAssignment,
       ProductPurchase? existingPurchases,
-      int? currentUserPurchaseQuantity,
-      double? currentUserPurchaseUnitPrice});
+      int? editedQuantity,
+      double? editedUnitPrice});
 
   @override
   $ProductShoppingAssignmentCopyWith<$Res> get existingAssignment;
@@ -155,8 +154,8 @@ class __$$PurchaseStateImplCopyWithImpl<$Res>
     Object? currentShoppingId = null,
     Object? existingAssignment = null,
     Object? existingPurchases = freezed,
-    Object? currentUserPurchaseQuantity = freezed,
-    Object? currentUserPurchaseUnitPrice = freezed,
+    Object? editedQuantity = freezed,
+    Object? editedUnitPrice = freezed,
   }) {
     return _then(_$PurchaseStateImpl(
       currentUserId: null == currentUserId
@@ -175,13 +174,13 @@ class __$$PurchaseStateImplCopyWithImpl<$Res>
           ? _value.existingPurchases
           : existingPurchases // ignore: cast_nullable_to_non_nullable
               as ProductPurchase?,
-      currentUserPurchaseQuantity: freezed == currentUserPurchaseQuantity
-          ? _value.currentUserPurchaseQuantity
-          : currentUserPurchaseQuantity // ignore: cast_nullable_to_non_nullable
+      editedQuantity: freezed == editedQuantity
+          ? _value.editedQuantity
+          : editedQuantity // ignore: cast_nullable_to_non_nullable
               as int?,
-      currentUserPurchaseUnitPrice: freezed == currentUserPurchaseUnitPrice
-          ? _value.currentUserPurchaseUnitPrice
-          : currentUserPurchaseUnitPrice // ignore: cast_nullable_to_non_nullable
+      editedUnitPrice: freezed == editedUnitPrice
+          ? _value.editedUnitPrice
+          : editedUnitPrice // ignore: cast_nullable_to_non_nullable
               as double?,
     ));
   }
@@ -195,8 +194,8 @@ class _$PurchaseStateImpl extends _PurchaseState {
       required this.currentShoppingId,
       required this.existingAssignment,
       this.existingPurchases,
-      this.currentUserPurchaseQuantity,
-      this.currentUserPurchaseUnitPrice})
+      this.editedQuantity,
+      this.editedUnitPrice})
       : super._();
 
   @override
@@ -208,13 +207,13 @@ class _$PurchaseStateImpl extends _PurchaseState {
   @override
   final ProductPurchase? existingPurchases;
   @override
-  final int? currentUserPurchaseQuantity;
+  final int? editedQuantity;
   @override
-  final double? currentUserPurchaseUnitPrice;
+  final double? editedUnitPrice;
 
   @override
   String toString() {
-    return 'PurchaseState(currentUserId: $currentUserId, currentShoppingId: $currentShoppingId, existingAssignment: $existingAssignment, existingPurchases: $existingPurchases, currentUserPurchaseQuantity: $currentUserPurchaseQuantity, currentUserPurchaseUnitPrice: $currentUserPurchaseUnitPrice)';
+    return 'PurchaseState(currentUserId: $currentUserId, currentShoppingId: $currentShoppingId, existingAssignment: $existingAssignment, existingPurchases: $existingPurchases, editedQuantity: $editedQuantity, editedUnitPrice: $editedUnitPrice)';
   }
 
   @override
@@ -230,25 +229,15 @@ class _$PurchaseStateImpl extends _PurchaseState {
                 other.existingAssignment == existingAssignment) &&
             (identical(other.existingPurchases, existingPurchases) ||
                 other.existingPurchases == existingPurchases) &&
-            (identical(other.currentUserPurchaseQuantity,
-                    currentUserPurchaseQuantity) ||
-                other.currentUserPurchaseQuantity ==
-                    currentUserPurchaseQuantity) &&
-            (identical(other.currentUserPurchaseUnitPrice,
-                    currentUserPurchaseUnitPrice) ||
-                other.currentUserPurchaseUnitPrice ==
-                    currentUserPurchaseUnitPrice));
+            (identical(other.editedQuantity, editedQuantity) ||
+                other.editedQuantity == editedQuantity) &&
+            (identical(other.editedUnitPrice, editedUnitPrice) ||
+                other.editedUnitPrice == editedUnitPrice));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      currentUserId,
-      currentShoppingId,
-      existingAssignment,
-      existingPurchases,
-      currentUserPurchaseQuantity,
-      currentUserPurchaseUnitPrice);
+  int get hashCode => Object.hash(runtimeType, currentUserId, currentShoppingId,
+      existingAssignment, existingPurchases, editedQuantity, editedUnitPrice);
 
   @JsonKey(ignore: true)
   @override
@@ -263,8 +252,8 @@ abstract class _PurchaseState extends PurchaseState {
       required final int currentShoppingId,
       required final ProductShoppingAssignment existingAssignment,
       final ProductPurchase? existingPurchases,
-      final int? currentUserPurchaseQuantity,
-      final double? currentUserPurchaseUnitPrice}) = _$PurchaseStateImpl;
+      final int? editedQuantity,
+      final double? editedUnitPrice}) = _$PurchaseStateImpl;
   const _PurchaseState._() : super._();
 
   @override
@@ -276,9 +265,9 @@ abstract class _PurchaseState extends PurchaseState {
   @override
   ProductPurchase? get existingPurchases;
   @override
-  int? get currentUserPurchaseQuantity;
+  int? get editedQuantity;
   @override
-  double? get currentUserPurchaseUnitPrice;
+  double? get editedUnitPrice;
   @override
   @JsonKey(ignore: true)
   _$$PurchaseStateImplCopyWith<_$PurchaseStateImpl> get copyWith =>

@@ -61,8 +61,8 @@ class SinglePurchaseController {
       final existingPurchaseByUser = newState.existingPurchaseOfCurrentUser;
       if (existingPurchaseByUser != null) {
         newState = newState.copyWith(
-          currentUserPurchaseUnitPrice: existingPurchaseByUser.unitPrice,
-          currentUserPurchaseQuantity: existingPurchaseByUser.quantity,
+          editedUnitPrice: existingPurchaseByUser.unitPrice,
+          editedQuantity: existingPurchaseByUser.quantity,
         );
       }
     }
@@ -75,24 +75,23 @@ class SinglePurchaseController {
       return;
     }
     if (newQuantity == null || newQuantity <= 0) {
-      _purchaseState
-          .add(currentState.copyWith(currentUserPurchaseQuantity: null));
+      _purchaseState.add(currentState.copyWith(editedQuantity: null));
       return;
     }
     final newQuantityHigherThanAllowed =
         (currentState.quantityPurchasedByOtherUsers + newQuantity) >
-            currentState.quantityToBePurchased;
+            currentState.totalQuantityToBePurchased;
 
     if (newQuantityHigherThanAllowed) {
-      final maxQuantity = currentState.quantityToBePurchased -
+      final maxQuantity = currentState.totalQuantityToBePurchased -
           currentState.quantityPurchasedByOtherUsers;
       _purchaseState.add(
-        currentState.copyWith(currentUserPurchaseQuantity: maxQuantity),
+        currentState.copyWith(editedQuantity: maxQuantity),
       );
       return;
     }
     _purchaseState.add(
-      currentState.copyWith(currentUserPurchaseQuantity: newQuantity),
+      currentState.copyWith(editedQuantity: newQuantity),
     );
   }
 
@@ -103,24 +102,12 @@ class SinglePurchaseController {
     }
     if (newUnitPrice == null || newUnitPrice <= 0) {
       _purchaseState.add(currentState.copyWith(
-        currentUserPurchaseUnitPrice: null,
+        editedUnitPrice: null,
       ));
       return;
     }
-    final newState =
-        currentState.copyWith(currentUserPurchaseUnitPrice: newUnitPrice);
+    final newState = currentState.copyWith(editedUnitPrice: newUnitPrice);
     _purchaseState.add(newState);
-  }
-
-  T? getAdditionalValueFromString<T extends num>(
-    String value,
-    T? Function(String) parseFunction,
-  ) {
-    final parsed = parseFunction(value);
-    if (parsed == 0) {
-      return null;
-    }
-    return parsed;
   }
 
   Future<bool> saveChanges() async {
@@ -130,11 +117,12 @@ class SinglePurchaseController {
     if (!dataValidForSaving()) {
       return false;
     }
+    final isUpdate = purchaseState?.existingPurchaseOfCurrentUser != null;
     _isLoading.add(true);
     try {
       final productId = purchaseState!.existingAssignment.product.id;
-      final quantity = purchaseState!.currentUserPurchaseQuantity!;
-      final unitPrice = purchaseState!.currentUserPurchaseUnitPrice!;
+      final quantity = purchaseState!.editedQuantity!;
+      final unitPrice = purchaseState!.editedUnitPrice!;
 
       final putRequest = PutProductPurchase(
         shoppingId: _currentShoppingId!,
@@ -145,6 +133,12 @@ class SinglePurchaseController {
       await _productPurchasesRepository.addOrUpdateProductPurchase(putRequest);
 
       _isLoading.add(false);
+      final message = isUpdate ? "Purchase updated" : "Purchase created";
+      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
+        message: message,
+        category: SnackbarMessageCategory.SUCCESS,
+      ));
+
       return true;
     } catch (_) {}
 
@@ -177,13 +171,14 @@ class SinglePurchaseController {
 
   bool dataValidForSaving() {
     if (purchaseState == null ||
-        purchaseState!.currentUserPurchaseQuantity == null ||
-        purchaseState!.currentUserPurchaseUnitPrice == null) {
+        purchaseState!.editedQuantity == null ||
+        purchaseState!.editedUnitPrice == null) {
       return false;
     }
     final quantitySum = purchaseState!.quantityPurchasedByOtherUsers +
-        purchaseState!.currentUserPurchaseQuantity!;
-    final quantityValid = quantitySum <= purchaseState!.quantityToBePurchased;
+        purchaseState!.editedQuantity!;
+    final quantityValid =
+        quantitySum <= purchaseState!.totalQuantityToBePurchased;
 
     return quantityValid;
   }
@@ -202,16 +197,16 @@ class SinglePurchaseController {
       return null;
     }
 
-    final userInputEmpty = state.currentUserPurchaseQuantity == null &&
-        state.currentUserPurchaseUnitPrice == null;
+    final userInputEmpty =
+        state.editedQuantity == null && state.editedUnitPrice == null;
     if (userInputEmpty && state.existingPurchaseOfCurrentUser == null) {
       return null;
     }
     if (state.existingPurchaseOfCurrentUser != null && userInputEmpty) {
       return state.existingPurchaseOfCurrentUser;
     }
-    final userQuantity = state.currentUserPurchaseQuantity;
-    final userUnitPrice = state.currentUserPurchaseUnitPrice;
+    final userQuantity = state.editedQuantity;
+    final userUnitPrice = state.editedUnitPrice;
 
     final currentUserQuantityToDisplay =
         userQuantity ?? state.existingPurchaseOfCurrentUser?.quantity ?? 0;
