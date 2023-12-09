@@ -1,16 +1,20 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 import 'package:split_the_bill/shopping_detail/widgets/info_item.dart';
 
 import '../../ioc_container.dart';
 import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
+import '../../users/models/user/user.dart';
 import '../models/transaction/transaction.dart';
 
-const double _TRANSACTION_TILE_HEIGHT = 100.0;
+const double _TRANSACTION_TILE_HEIGHT = 80.0;
 const double _CAROUSEL_HEIGHT = 200.0;
 const String _LOADING_ERROR_MESSAGE = 'Something failed, try again later';
 
@@ -20,6 +24,8 @@ class SummaryPage extends StatelessWidget {
   SummaryPage({super.key, required this.shopping});
 
   final _shoppingDetailController = get<ShoppingDetailController>();
+  final _shoppingMembersController = get<ShoppingMembersController>();
+  final _purchasesController = get<PurchasesController>();
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +120,21 @@ class SummaryPage extends StatelessWidget {
   }
 
   Widget _buildNameDisplay(int userId) {
-    // TODO
-    return Text('Id: $userId, here will be name');
+    return FutureBuilder(
+      future: _shoppingMembersController.userById(userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Id: $userId, ERROR');
+        } else if (!snapshot.hasData) {
+          return const LoadingIndicator();
+        } else {
+          if (snapshot.data == null) {
+            return Text('Id: $userId, ERROR');
+          }
+          return Text(snapshot.data!.username);
+        }
+      },
+    );
   }
 
   Widget _buildTransactionAmountDisplay(double amount) {
@@ -137,11 +156,18 @@ class SummaryPage extends StatelessWidget {
       children: [
         SizedBox(
           height: _CAROUSEL_HEIGHT,
-          child: PageView.builder(
-            controller: PageController(viewportFraction: 0.8),
+          child: Swiper(
+            index: 0, // TODO current user
             itemBuilder: (BuildContext context, int itemIndex) {
-              return _buildCarouselItem(context, itemIndex % shopping.numberOfParticipants);
+              return _buildCarouselItem(
+                  context, itemIndex % shopping.numberOfParticipants);
             },
+            itemCount: shopping.numberOfParticipants,
+            pagination: SwiperPagination(
+              builder: DotSwiperPaginationBuilder(
+                activeColor: Theme.of(context).iconTheme.color,
+              ),
+            ),
           ),
         )
       ],
@@ -153,24 +179,60 @@ class SummaryPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
+          color: Theme.of(context).focusColor,
           borderRadius:
               const BorderRadius.all(Radius.circular(STANDARD_BORDER_RADIUS)),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text('$itemIndex'),
-            Text(
-              'Name',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Text(
-              'Amount',
-            ),
-          ],
+        child: StreamBuilder(
+          stream: _shoppingMembersController.currentMembersStream,
+          builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+            if (snapshot.hasError) {
+              return Center(child: Text(snapshot.error.toString()));
+            } else if (!snapshot.hasData) {
+              return const Center(child: LoadingIndicator());
+            } else {
+              var member = snapshot.data![itemIndex];
+              var transactions = _shoppingDetailController.transactions;
+              var amount = transactions.fold(
+                  0.0,
+                  (previousValue, e) => e.payedUserId == member.id
+                      ? (previousValue + e.ammount)
+                      : (e.payingUserId == member.id
+                          ? (previousValue - e.ammount)
+                          : previousValue));
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    member.username,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: SMALL_PADDING,),
+                  Text(
+                    '${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 1)},-',
+                    style: TextStyle(
+                      fontSize:
+                          Theme.of(context).textTheme.titleLarge?.fontSize,
+                      color: amount < 0
+                          ? UiConstants.deleteColor
+                          : UiConstants.confirmColor,
+                    ),
+                  ),
+                  const SizedBox(height: STANDARD_PADDING,),
+                  Text(
+                    'Total amount spent: ${_userTotalAmount(member)},-',
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
+  }
+
+  double _userTotalAmount(User user) {
+    var userPurchases = _purchasesController.usersWithPurchases.firstWhere((element) => element.user.id == user.id);
+    return userPurchases.productPurchases.fold(0.0, (previousValue, element) => previousValue + element.totalAmountSpent);
   }
 }
