@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/extensions/set_text_editing_controller_value.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
-import 'package:split_the_bill/common/widgets/button_row/button_row.dart';
-import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/components/animated_lookup_list.dart';
+import 'package:split_the_bill/common/widgets/components/quantity_editing_section.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
-import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
@@ -15,7 +12,6 @@ import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 
-const _INCREMENT_BUTTONS_WIDTH = 120.0;
 const _LOOKUP_LIST_HEIGHT = 150.0;
 
 class AddProductAssignmentDialog extends StatefulWidget {
@@ -29,7 +25,6 @@ class AddProductAssignmentDialog extends StatefulWidget {
 class _AddProductAssignmentDialogState
     extends State<AddProductAssignmentDialog> {
   final _productNameController = TextEditingController();
-  final _productQuantityController = TextEditingController();
 
   final _addProductAssignmentController = get<AddProductAssignmentController>();
   final _navRouter = get<NavRouter>();
@@ -97,7 +92,6 @@ class _AddProductAssignmentDialogState
 
   void _adjustTextEditControllersToNewState(AddProductAssignmentState state) {
     _productNameController.setValue(state.productName?.toString());
-    _productQuantityController.setValue(state.quantity?.toString());
   }
 
   Widget _buildProductNameTextField() {
@@ -114,42 +108,14 @@ class _AddProductAssignmentDialogState
   }
 
   Widget _buildQuantityEditingSection(AddProductAssignmentState state) {
-    final isMin = state.quantity == null || state.quantity == 0;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: StbNumberInputField(
-            controller: _productQuantityController,
-            label: "Quantity",
-            prefix: const Icon(
-              UiConstants.quantityIcon,
-              size: 15,
-            ),
-            onChanged: (value) {
-              final quantity = int.tryParse(value);
-              _addProductAssignmentController
-                  .setProductAssignmentQuantity(quantity);
-            },
-          ),
-        ),
-        const SizedBox(width: STANDARD_PADDING),
-        ButtonRow(
-          fixedWidth: _INCREMENT_BUTTONS_WIDTH,
-          buttons: [
-            ButtonRowItem(
-              enabled: !isMin,
-              buttonChild: const Icon(Icons.remove_rounded),
-              onTap: () => _addToQuantity(-1),
-            ),
-            ButtonRowItem(
-              buttonChild: const Icon(Icons.add_rounded),
-              onTap: () => _addToQuantity(1),
-            ),
-          ],
-        ),
-      ],
+    final currentQuantity = state.quantity;
+    final decrementEnabled = state.quantity != null && state.quantity! > 0;
+    return QuantityEditingSection(
+      label: "Quantity",
+      currentValue: currentQuantity,
+      decrementEnabled: decrementEnabled,
+      onQuantityChanged: (newQuantity) => _addProductAssignmentController
+          .setProductAssignmentQuantity(newQuantity),
     );
   }
 
@@ -175,12 +141,5 @@ class _AddProductAssignmentDialogState
         );
       },
     );
-  }
-
-  void _addToQuantity(int quantityToAdd) {
-    final quantityToAddTo =
-        _addProductAssignmentController.addProductAssignmentState.quantity ?? 0;
-    final newQuantity = quantityToAddTo + quantityToAdd;
-    _addProductAssignmentController.setProductAssignmentQuantity(newQuantity);
   }
 }

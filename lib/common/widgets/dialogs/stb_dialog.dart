@@ -48,7 +48,7 @@ class StbDialog extends StatelessWidget {
         Flexible(
           child: Text(
             title,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleLarge,
           ),

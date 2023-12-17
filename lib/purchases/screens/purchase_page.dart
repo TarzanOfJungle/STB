@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
+import 'package:split_the_bill/purchases/widgets/dialogs/update_product_assignment_quantity_dialog.dart';
+import 'package:split_the_bill/purchases/widgets/general_info_label.dart';
 import 'package:split_the_bill/purchases/widgets/purchase_editing_section.dart';
 import 'package:split_the_bill/purchases/widgets/user_purchase_list_tile.dart';
 
@@ -49,54 +52,20 @@ class PurchasePage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildGeneralInfoItem(
-          context: context,
+        GeneralInfoLabel(
           icon: UiConstants.quantityIcon,
-          label: "Total Qty.",
           value:
               "${state.totalPurchasedQuantity}/${state.totalQuantityToBePurchased}",
+          label: "Total Qty.",
+          trailingButton: IconButtonWithBackground(
+            onTap: () => _showEditTotalQuantityDialog(context, state),
+            icon: Icons.edit,
+          ),
         ),
-        _buildGeneralInfoItem(
-          context: context,
+        GeneralInfoLabel(
           icon: UiConstants.ammountIcon,
-          label: "Total price",
           value: "${state.totalPurchasedAmmount.toStringAsFixed(1)},-",
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGeneralInfoItem({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 25,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-        Text(
-          label,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.titleMedium,
+          label: "Total price",
         ),
       ],
     );
@@ -135,9 +104,17 @@ class PurchasePage extends StatelessWidget {
 
   bool _showUserPurchasesList(PurchaseState state) {
     final purchasesAlreadyExist = state.existingPurchases != null;
-    final newPurchaseBeingAdded = state.editedQuantity != null &&
-        state.editedUnitPrice != null;
+    final newPurchaseBeingAdded =
+        state.editedQuantity != null && state.editedUnitPrice != null;
 
     return purchasesAlreadyExist || newPurchaseBeingAdded;
+  }
+
+  void _showEditTotalQuantityDialog(BuildContext context, PurchaseState state) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+          UpdateProductAssignmentQuantityDialog(purchaseState: state),
+    );
   }
 }

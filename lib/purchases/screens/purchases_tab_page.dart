@@ -90,7 +90,7 @@ class PurchasesTabPage extends StatelessWidget {
   void _showAddProductAssignmentDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AddProductAssignmentDialog(),
+      builder: (context) => const AddProductAssignmentDialog(),
     );
   }
 }
