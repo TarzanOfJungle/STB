@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/no_data_banner.dart';
@@ -37,25 +38,27 @@ class PurchasesTabPage extends StatelessWidget {
           if (dataEmpty) {
             return _buildNoData();
           }
-          return ListView.separated(
-            itemCount: data.productAssignments.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              final assignment = data.productAssignments[index];
-              final existingPurchases = data.getProductPurchaseOfAssignment(
-                data.productAssignments[index],
-              );
-              return ProductAssignmentListTile(
-                productAssignment: assignment,
-                productPurchase: existingPurchases,
-                onTap: () => _goToPurchaseDetail(
-                  context: context,
-                  shoppingId: _purchasesController.shoppingId!,
-                  assignment: assignment,
-                  existingPurchases: existingPurchases,
-                ),
-              );
-            },
+          return SlidableAutoCloseBehavior(
+            child: ListView.separated(
+              itemCount: data.productAssignments.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                final assignment = data.productAssignments[index];
+                final existingPurchases = data.getProductPurchaseOfAssignment(
+                  data.productAssignments[index],
+                );
+                return ProductAssignmentListTile(
+                  productAssignment: assignment,
+                  productPurchase: existingPurchases,
+                  onTap: () => _goToPurchaseDetail(
+                    context: context,
+                    shoppingId: _purchasesController.shoppingId!,
+                    assignment: assignment,
+                    existingPurchases: existingPurchases,
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

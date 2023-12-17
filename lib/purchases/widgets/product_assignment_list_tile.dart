@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
+import 'package:split_the_bill/ioc_container.dart';
+import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
 
@@ -10,7 +14,9 @@ class ProductAssignmentListTile extends StatelessWidget {
   final ProductPurchase? productPurchase;
   final VoidCallback onTap;
 
-  const ProductAssignmentListTile({
+  final _purchasesController = get<PurchasesController>();
+
+  ProductAssignmentListTile({
     super.key,
     required this.onTap,
     required this.productAssignment,
@@ -19,25 +25,38 @@ class ProductAssignmentListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: STANDARD_PADDING,
-          vertical: 13.0,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildPurchasedCount(context),
-            const SizedBox(
-              width: STANDARD_PADDING,
-            ),
-            Expanded(
-              child: _buildNameAndDescription(context),
-            ),
-            _buildPurchasedAmmount(context),
-          ],
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        children: [
+          SlidableAction(
+            backgroundColor: UiConstants.deleteColor,
+            icon: Icons.delete_rounded,
+            label: "Delete",
+            onPressed: (_) => _showDeleteAssignmentDialog(context),
+          )
+        ],
+      ),
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: STANDARD_PADDING,
+            vertical: 13.0,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildPurchasedCount(context),
+              const SizedBox(
+                width: STANDARD_PADDING,
+              ),
+              Expanded(
+                child: _buildNameAndDescription(context),
+              ),
+              _buildPurchasedAmmount(context),
+            ],
+          ),
         ),
       ),
     );
@@ -131,6 +150,22 @@ class ProductAssignmentListTile extends StatelessWidget {
           Icons.paid_rounded,
         ),
       ],
+    );
+  }
+
+  void _showDeleteAssignmentDialog(BuildContext context) {
+    final productName = productAssignment.product.name;
+    const title = "Delete item";
+    final message =
+        "Are you sure you want to completely remove $productName and all of it's purchases?";
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        label: title,
+        description: message,
+        onConfirm: () =>
+            _purchasesController.deleteProductAssignemnt(productName),
+      ),
     );
   }
 }
