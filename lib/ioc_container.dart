@@ -36,6 +36,8 @@ abstract class IocContainer {
   static void setUpIoc() {
     get.registerSingleton<ApiClientBase>(ApiClient());
     get.registerSingleton<Connectivity>(Connectivity());
+    get.registerSingleton<InternetConnectivityService>(
+        InternetConnectivityService(get<Connectivity>()));
 
     // Repositories
     get.registerSingleton<AuthRepositoryBase>(
@@ -61,9 +63,10 @@ abstract class IocContainer {
         SnackbarMessangerController());
     get.registerSingleton<AuthController>(
       AuthController(
-        client: get<ApiClientBase>(),
-        authRepository: get<AuthRepositoryBase>(),
-        snackbarMessangerController: get<SnackbarMessangerController>(),
+        get<ApiClientBase>(),
+        get<AuthRepositoryBase>(),
+        get<InternetConnectivityService>(),
+        get<SnackbarMessangerController>(),
       ),
     );
 
@@ -108,8 +111,6 @@ abstract class IocContainer {
       apiClient: get<ApiClientBase>(),
       authRepository: get<AuthRepositoryBase>(),
     ));
-    get.registerSingleton<InternetConnectivityService>(
-        InternetConnectivityService(get<Connectivity>()));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(

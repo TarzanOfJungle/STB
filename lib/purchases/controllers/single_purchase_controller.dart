@@ -7,9 +7,9 @@ import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
-import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
+import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
 import 'package:split_the_bill/purchases/models/put_product_purchase/put_product_purchase.dart';
 import 'package:split_the_bill/purchases/models/put_product_shopping_assignment/put_product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/models/user_with_purchase_context/user_with_purchase_context.dart';

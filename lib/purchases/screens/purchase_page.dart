@@ -6,7 +6,7 @@ import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
-import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
+import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
 import 'package:split_the_bill/purchases/widgets/dialogs/update_product_assignment_quantity_dialog.dart';
 import 'package:split_the_bill/purchases/widgets/general_info_label.dart';
 import 'package:split_the_bill/purchases/widgets/purchase_editing_section.dart';

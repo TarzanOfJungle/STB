@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/config/startup.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/theme/colors.dart';
 import 'package:split_the_bill/common/theme/themes.dart';
 import 'package:split_the_bill/common/widgets/wrappers/snackbar_messanger_wrapper.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  IocContainer.setUpIoc();
+void main() async {
+  await Startup.init();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   final _navRouter = get<NavRouter>();
-  
+
   MyApp({super.key});
 
   @override

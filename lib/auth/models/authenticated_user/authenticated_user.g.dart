@@ -3,6 +3,59 @@
 part of 'authenticated_user.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class AuthenticatedUserAdapter extends TypeAdapter<AuthenticatedUser> {
+  @override
+  final int typeId = 0;
+
+  @override
+  AuthenticatedUser read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return AuthenticatedUser(
+      id: fields[1] as int,
+      email: fields[2] as String,
+      username: fields[3] as String,
+      token: fields[4] as String,
+      created: fields[5] as DateTime?,
+      updated: fields[6] as DateTime?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, AuthenticatedUser obj) {
+    writer
+      ..writeByte(6)
+      ..writeByte(1)
+      ..write(obj.id)
+      ..writeByte(2)
+      ..write(obj.email)
+      ..writeByte(3)
+      ..write(obj.username)
+      ..writeByte(4)
+      ..write(obj.token)
+      ..writeByte(5)
+      ..write(obj.created)
+      ..writeByte(6)
+      ..write(obj.updated);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthenticatedUserAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

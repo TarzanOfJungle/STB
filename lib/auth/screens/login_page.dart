@@ -29,6 +29,12 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    _restorePreviousUser();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AuthScreenTemplate(
       formKey: _loginFormKey,
@@ -68,6 +74,13 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _restorePreviousUser() async {
+    final success = await _authController.tryToRecoverLastUser();
+    if (success) {
+      _navRouter.toHome();
+    }
   }
 
   Future<void> _login() async {

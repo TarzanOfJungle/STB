@@ -20,11 +20,17 @@ AuthenticatedUser _$AuthenticatedUserFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AuthenticatedUser {
+  @HiveField(1)
   int get id => throw _privateConstructorUsedError;
+  @HiveField(2)
   String get email => throw _privateConstructorUsedError;
+  @HiveField(3)
   String get username => throw _privateConstructorUsedError;
+  @HiveField(4)
   String get token => throw _privateConstructorUsedError;
+  @HiveField(5)
   DateTime? get created => throw _privateConstructorUsedError;
+  @HiveField(6)
   DateTime? get updated => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,12 +46,12 @@ abstract class $AuthenticatedUserCopyWith<$Res> {
       _$AuthenticatedUserCopyWithImpl<$Res, AuthenticatedUser>;
   @useResult
   $Res call(
-      {int id,
-      String email,
-      String username,
-      String token,
-      DateTime? created,
-      DateTime? updated});
+      {@HiveField(1) int id,
+      @HiveField(2) String email,
+      @HiveField(3) String username,
+      @HiveField(4) String token,
+      @HiveField(5) DateTime? created,
+      @HiveField(6) DateTime? updated});
 }
 
 /// @nodoc
@@ -106,12 +112,12 @@ abstract class _$$AuthenticatedUserImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id,
-      String email,
-      String username,
-      String token,
-      DateTime? created,
-      DateTime? updated});
+      {@HiveField(1) int id,
+      @HiveField(2) String email,
+      @HiveField(3) String username,
+      @HiveField(4) String token,
+      @HiveField(5) DateTime? created,
+      @HiveField(6) DateTime? updated});
 }
 
 /// @nodoc
@@ -165,28 +171,34 @@ class __$$AuthenticatedUserImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AuthenticatedUserImpl extends _AuthenticatedUser {
   const _$AuthenticatedUserImpl(
-      {required this.id,
-      required this.email,
-      required this.username,
-      required this.token,
-      this.created,
-      this.updated})
+      {@HiveField(1) required this.id,
+      @HiveField(2) required this.email,
+      @HiveField(3) required this.username,
+      @HiveField(4) required this.token,
+      @HiveField(5) this.created,
+      @HiveField(6) this.updated})
       : super._();
 
   factory _$AuthenticatedUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$AuthenticatedUserImplFromJson(json);
 
   @override
+  @HiveField(1)
   final int id;
   @override
+  @HiveField(2)
   final String email;
   @override
+  @HiveField(3)
   final String username;
   @override
+  @HiveField(4)
   final String token;
   @override
+  @HiveField(5)
   final DateTime? created;
   @override
+  @HiveField(6)
   final DateTime? updated;
 
   @override
@@ -230,28 +242,34 @@ class _$AuthenticatedUserImpl extends _AuthenticatedUser {
 
 abstract class _AuthenticatedUser extends AuthenticatedUser {
   const factory _AuthenticatedUser(
-      {required final int id,
-      required final String email,
-      required final String username,
-      required final String token,
-      final DateTime? created,
-      final DateTime? updated}) = _$AuthenticatedUserImpl;
+      {@HiveField(1) required final int id,
+      @HiveField(2) required final String email,
+      @HiveField(3) required final String username,
+      @HiveField(4) required final String token,
+      @HiveField(5) final DateTime? created,
+      @HiveField(6) final DateTime? updated}) = _$AuthenticatedUserImpl;
   const _AuthenticatedUser._() : super._();
 
   factory _AuthenticatedUser.fromJson(Map<String, dynamic> json) =
       _$AuthenticatedUserImpl.fromJson;
 
   @override
+  @HiveField(1)
   int get id;
   @override
+  @HiveField(2)
   String get email;
   @override
+  @HiveField(3)
   String get username;
   @override
+  @HiveField(4)
   String get token;
   @override
+  @HiveField(5)
   DateTime? get created;
   @override
+  @HiveField(6)
   DateTime? get updated;
   @override
   @JsonKey(ignore: true)
