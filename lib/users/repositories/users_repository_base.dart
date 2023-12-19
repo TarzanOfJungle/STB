@@ -9,9 +9,9 @@ abstract class UsersRepositoryBase {
     int? shoppingId,
     bool includeSelf = true,
   });
-  
+
   Future<User> getUserById(int id);
-  
+
   Future<User> updateUser(PutUser userPut);
 
   Future<void> assignUserToShopping({
@@ -22,6 +22,10 @@ abstract class UsersRepositoryBase {
   Future<void> unassignUserFromShopping({
     required int userId,
     required int shoppingId,
+  });
+
+  Future<void> updateUserNotificationToken({
+    required String notificationToken,
   });
 
   Stream<WebsocketEventWithData<UserShoppingAssignment>>

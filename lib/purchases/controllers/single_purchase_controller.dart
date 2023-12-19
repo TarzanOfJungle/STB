@@ -258,10 +258,10 @@ class SinglePurchaseController with AuthenticatedSocketObserver {
     try {
       final request = PutProductShoppingAssignment(
         shoppingId: _currentShoppingId!,
-        productName: purchaseState!.existingAssignment.product.name,
+        productId: purchaseState!.existingAssignment.product.id,
         quantity: newQuantity,
       );
-      await _productAssignmentsRepository.addOrUpdateProductAssignment(request);
+      await _productAssignmentsRepository.updateProductAssignment(request);
       _isLoading.add(false);
       _showMessage(_TOTAL_QUANTITY_UPDATED, SnackbarMessageCategory.SUCCESS);
       return true;

@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
+import 'package:split_the_bill/common/controllers/fcm_controller.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
 
 const _INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
@@ -24,12 +25,14 @@ class AuthController {
   final SnackbarMessangerController _snackbarController;
   final InternetConnectivityService _internetConnectivityService;
   final AuthRepositoryBase _authRepository;
+  final FcmController _fcmController;
 
   AuthController(
     this._apiClient,
     this._authRepository,
     this._internetConnectivityService,
     this._snackbarController,
+    this._fcmController,
   );
 
   Stream<AuthenticatedUser?> get loggedInUserStream => _loggedInUser.stream;
@@ -126,6 +129,9 @@ class AuthController {
   void _setLoggedInUser(AuthenticatedUser? newUser) {
     _loggedInUser.add(newUser);
     _apiClient.setToken(newUser?.token);
+    if (newUser != null) {
+      _fcmController.updateNotificationToken();
+    }
   }
 
   void _showError(String errorMessage) {
