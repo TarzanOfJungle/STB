@@ -104,4 +104,17 @@ class UsersRepository implements UsersRepositoryBase {
       },
     );
   }
+
+  @override
+  Future<void> updateUserNotificationToken({
+    required String notificationToken,
+  }) {
+    return _apiClient.sendRequest(
+      path: ApiConstants.updateUserNotificationToken,
+      method: HttpMethod.post,
+      jsonBody: {
+        "notificationToken": notificationToken,
+      },
+    );
+  }
 }

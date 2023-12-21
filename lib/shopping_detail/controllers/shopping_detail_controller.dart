@@ -4,7 +4,6 @@ import 'package:split_the_bill/shopping_detail/models/transaction/transaction.da
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
 
 import '../../common/controllers/snackbar_messanger_controller.dart';
 import '../../common/models/snackbar_message/snackbar_message.dart';

@@ -29,6 +29,12 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    _restorePreviousUser();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AuthScreenTemplate(
       formKey: _loginFormKey,
@@ -52,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
       confirmButton: AuthButton(
         title: "Log in",
         noInternetMessage: _NO_INTERNET_MESSAGE,
-        icon: Icons.login_rounded,
+        icon: Icons.person_rounded,
         onTap: () => _login(),
       ),
       appendix: Row(
@@ -68,6 +74,13 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _restorePreviousUser() async {
+    final success = await _authController.tryToRecoverLastUser();
+    if (success) {
+      _navRouter.toHome();
+    }
   }
 
   Future<void> _login() async {

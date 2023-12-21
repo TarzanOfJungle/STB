@@ -39,6 +39,7 @@ abstract class ApiConstants {
   // Users
   static const String users = "$versionPathPrefix/users";
   static const String userToShoppingAssignment = "$versionPathPrefix/user-shopping-assignments";
+  static const String updateUserNotificationToken = "$versionPathPrefix/users";
 
   // Socket paths
   static const String shoppingMessagesStream =

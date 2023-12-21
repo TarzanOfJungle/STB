@@ -67,12 +67,14 @@ class _SnackbarMessangerWrapperState extends State<SnackbarMessangerWrapper> {
               color: _SNACKBAR_CONTENT_COLOR,
             ),
             const SizedBox(width: 10),
-            Text(
-              message.message,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: _SNACKBAR_FONT_SIZE,
-                color: _SNACKBAR_CONTENT_COLOR,
+            Flexible(
+              child: Text(
+                message.message,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: _SNACKBAR_FONT_SIZE,
+                  color: _SNACKBAR_CONTENT_COLOR,
+                ),
               ),
             ),
           ],

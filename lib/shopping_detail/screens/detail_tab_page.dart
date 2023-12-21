@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/error_banner.dart';
+import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/widgets/detail_button_section.dart';
 import 'package:split_the_bill/shopping_detail/widgets/detail_info_section.dart';
 import 'package:split_the_bill/shopping_detail/widgets/member_purchases_section.dart';
 import 'package:split_the_bill/shopping_detail/widgets/show_summary_button.dart';
-import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
 import '../../common/widgets/loading_indicator.dart';
 import '../../ioc_container.dart';
@@ -14,43 +16,53 @@ class DetailTabPage extends StatelessWidget {
   DetailTabPage({super.key});
 
   final _shoppingDetailController = get<ShoppingDetailController>();
+  final _purchasesController = get<PurchasesController>();
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _shoppingDetailController.shopping,
-        builder: (BuildContext context, AsyncSnapshot<ShoppingWithContext?> snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data == null) {
-            //TODO page loading
-            return const LoadingIndicator();
-          } else {
-            var shopping = snapshot.data!;
-            return Scaffold(
-              body: Padding(
-                padding: const EdgeInsets.all(STANDARD_PADDING),
-                child: Column(
+      stream: Rx.combineLatest2(
+          _shoppingDetailController.shopping,
+          _purchasesController.productAssignmentsWithPurchasesStream,
+          (a, b) => (shopping: a, productAssignments: b)),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const ErrorBanner();
+        } else if (!snapshot.hasData) {
+          //TODO page loading
+          return const LoadingIndicator();
+        }
+        var shopping = snapshot.data!.shopping;
+        var productAssignments = snapshot.data!.productAssignments;
+        if (shopping == null || productAssignments == null) {
+          return const ErrorBanner();
+        }
+        return Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(STANDARD_PADDING),
+            child: Column(
+              children: [
+                Text(shopping.shopping.description ?? ''),
+                const SizedBox(height: STANDARD_PADDING),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(shopping.shopping.description ?? ''),
-                    const SizedBox(height: STANDARD_PADDING),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        DetailInfoSection(),
-                        DetailButtonSection(shopping: shopping),
-                      ],
+                    DetailInfoSection(
+                      shopping: shopping,
+                      productAssignments: productAssignments,
                     ),
-                    const SizedBox(height: STANDARD_PADDING),
-                    ShowSummaryButton(shopping: shopping),
-                    const SizedBox(height: STANDARD_PADDING),
-                    MemberPurchasesSection(),
+                    DetailButtonSection(shopping: shopping),
                   ],
                 ),
-              ),
-            );
-          }
-        },
+                const SizedBox(height: STANDARD_PADDING),
+                ShowSummaryButton(shopping: shopping),
+                const SizedBox(height: STANDARD_PADDING),
+                MemberPurchasesSection(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

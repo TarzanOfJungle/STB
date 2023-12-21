@@ -7,7 +7,7 @@ import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_c
 import 'package:split_the_bill/products/models/product/product.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
-import 'package:split_the_bill/purchases/models/put_product_shopping_assignment/put_product_shopping_assignment.dart';
+import 'package:split_the_bill/purchases/models/post_product_shopping_assignment/post_product_shopping_assignment.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
@@ -99,13 +99,13 @@ class AddProductAssignmentController {
       return false;
     }
     try {
-      final newAssigmnet = PutProductShoppingAssignment(
+      final newAssigmnet = PostProductShoppingAssignment(
         shoppingId: _shoppingId!,
         productName: addProductAssignmentState.productName!,
         quantity: addProductAssignmentState.quantity!,
       );
       await _productAssignmentsRepository
-          .addOrUpdateProductAssignment(newAssigmnet);
+          .addProductShoppingAssignment(newAssigmnet);
       _addProductAssignmentState.add(AddProductAssignmentState.empty());
       return true;
     } catch (_) {

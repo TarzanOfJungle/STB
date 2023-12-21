@@ -7,4 +7,7 @@ abstract class AuthRepositoryBase {
   Future<AuthenticatedUser> logIn(PostLogin postLogin);
   Future<User> register(PostRegistration postRegistration);
   Future<bool> isAccessTokenValid(String token);
+  Future<AuthenticatedUser?> getLastLoggedInUser();
+  Future<void> saveLastLoggedInUser(AuthenticatedUser user);
+  Future<void> deleteLastLoggedInUser();
 }

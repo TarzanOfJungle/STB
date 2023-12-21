@@ -5,6 +5,8 @@ import 'package:split_the_bill/auth/repositories/auth_repository_base.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/api/http_method.dart';
+import 'package:split_the_bill/common/config/hive/hive_constants.dart';
+import 'package:split_the_bill/common/config/hive/hive_utils.dart';
 import 'package:split_the_bill/common/constants/api_constants.dart';
 import 'package:split_the_bill/common/extensions/json_string_extension.dart';
 import 'package:split_the_bill/users/models/user/user.dart';
@@ -21,6 +23,10 @@ class AuthRepository implements AuthRepositoryBase {
         path: ApiConstants.tokenValidation,
         method: HttpMethod.get,
         notifyErrorListeners: false,
+        useAuthentication: false,
+        additionalHeaders: {
+          "Authorization": "Bearer $token"
+        }
       );
     } on ApiClientUnauthorizedException catch (_) {
       return false;
@@ -56,5 +62,37 @@ class AuthRepository implements AuthRepositoryBase {
       },
     );
     return newUser;
+  }
+
+  @override
+  Future<AuthenticatedUser?> getLastLoggedInUser() async {
+    AuthenticatedUser? lastLoggedInUser;
+    await HiveUtils.doInBoxScope<AuthenticatedUser>(
+      boxKey: HiveConstants.AUTHENTICATED_USERS_BOX_KEY,
+      boxScope: (box) async {
+        lastLoggedInUser = box.get(HiveConstants.LAST_LOGGED_IN_USER_KEY);
+      },
+    );
+    return lastLoggedInUser;
+  }
+
+  @override
+  Future<void> saveLastLoggedInUser(AuthenticatedUser user) async {
+    await HiveUtils.doInBoxScope(
+      boxKey: HiveConstants.AUTHENTICATED_USERS_BOX_KEY,
+      boxScope: (box) async {
+        box.put(HiveConstants.LAST_LOGGED_IN_USER_KEY, user);
+      },
+    );
+  }
+
+  @override
+  Future<void> deleteLastLoggedInUser() async {
+    await HiveUtils.doInBoxScope(
+      boxKey: HiveConstants.AUTHENTICATED_USERS_BOX_KEY,
+      boxScope: (box) async {
+        box.delete(HiveConstants.LAST_LOGGED_IN_USER_KEY);
+      },
+    );
   }
 }

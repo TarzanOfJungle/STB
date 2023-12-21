@@ -13,8 +13,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            _authController.logout();
+          onPressed: () async {
+            await _authController.logout();
             _navRouter.toLogin();
           },
           child: const Text("logout"),

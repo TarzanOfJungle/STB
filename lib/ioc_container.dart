@@ -8,6 +8,7 @@ import 'package:split_the_bill/common/api/api_client.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/controllers/fcm_controller.dart';
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository.dart';
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
@@ -36,6 +37,8 @@ abstract class IocContainer {
   static void setUpIoc() {
     get.registerSingleton<ApiClientBase>(ApiClient());
     get.registerSingleton<Connectivity>(Connectivity());
+    get.registerSingleton<InternetConnectivityService>(
+        InternetConnectivityService(get<Connectivity>()));
 
     // Repositories
     get.registerSingleton<AuthRepositoryBase>(
@@ -48,8 +51,7 @@ abstract class IocContainer {
     get.registerSingleton<ProductPurchasesRepositoryBase>(
         ProductPurchasesRepository(get<ApiClientBase>()));
     get.registerSingleton<TrasactionsRepositoryBase>(
-      TrasactionsRepository(get<ApiClientBase>())
-    );
+        TrasactionsRepository(get<ApiClientBase>()));
     get.registerSingleton<GroupChatRepositoryBase>(
         GroupChatRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductsRepositoryBase>(
@@ -60,13 +62,17 @@ abstract class IocContainer {
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
         SnackbarMessangerController());
-    get.registerSingleton<AuthController>(
-      AuthController(
-        client: get<ApiClientBase>(),
-        authRepository: get<AuthRepositoryBase>(),
-        snackbarMessangerController: get<SnackbarMessangerController>(),
-      ),
-    );
+    get.registerSingleton<FcmController>(FcmController(
+      get<UsersRepositoryBase>(),
+      get<InternetConnectivityService>(),
+    ));
+    get.registerSingleton<AuthController>(AuthController(
+      get<ApiClientBase>(),
+      get<AuthRepositoryBase>(),
+      get<InternetConnectivityService>(),
+      get<SnackbarMessangerController>(),
+      get<FcmController>(),
+    ));
 
     get.registerSingleton<ShoppingsListController>(
       ShoppingsListController(
@@ -88,6 +94,7 @@ abstract class IocContainer {
     get.registerSingleton<SinglePurchaseController>(SinglePurchaseController(
       get<AuthController>(),
       get<ProductPurchasesRepositoryBase>(),
+      get<ProductAssignmentsRepositoryBase>(),
       get<SnackbarMessangerController>(),
     ));
     get.registerSingleton<AddProductAssignmentController>(
@@ -109,8 +116,6 @@ abstract class IocContainer {
       apiClient: get<ApiClientBase>(),
       authRepository: get<AuthRepositoryBase>(),
     ));
-    get.registerSingleton<InternetConnectivityService>(
-        InternetConnectivityService(get<Connectivity>()));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(

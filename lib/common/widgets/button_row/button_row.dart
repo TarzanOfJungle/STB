@@ -35,7 +35,7 @@ class ButtonRow extends StatelessWidget {
       children: buttons.map((buttonData) {
         return Expanded(
           child: ElevatedButton(
-            onPressed: buttonData.onTap,
+            onPressed: buttonData.enabled ? buttonData.onTap : null,
             style: ElevatedButton.styleFrom(
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               backgroundColor: buttonData.backgroundColor ??

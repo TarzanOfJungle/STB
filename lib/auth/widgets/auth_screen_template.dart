@@ -24,24 +24,26 @@ class AuthScreenTemplate extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                banner,
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 20),
-                ...formFields,
-                const SizedBox(height: 20),
-                confirmButton,
-                const SizedBox(height: 35),
-                if (appendix != null) appendix!
-              ],
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  banner,
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 20),
+                  ...formFields,
+                  const SizedBox(height: 20),
+                  confirmButton,
+                  const SizedBox(height: 35),
+                  if (appendix != null) appendix!
+                ],
+              ),
             ),
           ),
         ),

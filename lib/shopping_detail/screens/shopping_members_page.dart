@@ -4,6 +4,7 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/animated_lookup_list.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
+import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
@@ -120,7 +121,7 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
                     user: user,
                     currentUserId: currentUserId,
                     onDelete: currentUserIsCreator
-                        ? () => _membersController.unassignUser(user)
+                        ? () => _showUnassignUserDialog(user)
                         : null,
                   ))
             ],
@@ -207,6 +208,18 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _showUnassignUserDialog(User userToUnassign) {
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        label: "Unassign user",
+        description:
+            "Are you sure you want to unassign ${userToUnassign.username}? All of this user's purchases on this shopping will be canceled.",
+        onConfirm: () => _membersController.unassignUser(userToUnassign),
+      ),
     );
   }
 

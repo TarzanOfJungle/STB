@@ -10,7 +10,7 @@ _$PutProductShoppingAssignmentImpl _$$PutProductShoppingAssignmentImplFromJson(
         Map<String, dynamic> json) =>
     _$PutProductShoppingAssignmentImpl(
       shoppingId: json['shoppingId'] as int,
-      productName: json['productName'] as String,
+      productId: json['productId'] as int,
       quantity: json['quantity'] as int,
     );
 
@@ -18,6 +18,6 @@ Map<String, dynamic> _$$PutProductShoppingAssignmentImplToJson(
         _$PutProductShoppingAssignmentImpl instance) =>
     <String, dynamic>{
       'shoppingId': instance.shoppingId,
-      'productName': instance.productName,
+      'productId': instance.productId,
       'quantity': instance.quantity,
     };

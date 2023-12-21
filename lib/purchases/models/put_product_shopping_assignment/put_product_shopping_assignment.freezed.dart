@@ -22,7 +22,7 @@ PutProductShoppingAssignment _$PutProductShoppingAssignmentFromJson(
 /// @nodoc
 mixin _$PutProductShoppingAssignment {
   int get shoppingId => throw _privateConstructorUsedError;
-  String get productName => throw _privateConstructorUsedError;
+  int get productId => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $PutProductShoppingAssignmentCopyWith<$Res> {
       _$PutProductShoppingAssignmentCopyWithImpl<$Res,
           PutProductShoppingAssignment>;
   @useResult
-  $Res call({int shoppingId, String productName, int quantity});
+  $Res call({int shoppingId, int productId, int quantity});
 }
 
 /// @nodoc
@@ -57,7 +57,7 @@ class _$PutProductShoppingAssignmentCopyWithImpl<$Res,
   @override
   $Res call({
     Object? shoppingId = null,
-    Object? productName = null,
+    Object? productId = null,
     Object? quantity = null,
   }) {
     return _then(_value.copyWith(
@@ -65,10 +65,10 @@ class _$PutProductShoppingAssignmentCopyWithImpl<$Res,
           ? _value.shoppingId
           : shoppingId // ignore: cast_nullable_to_non_nullable
               as int,
-      productName: null == productName
-          ? _value.productName
-          : productName // ignore: cast_nullable_to_non_nullable
-              as String,
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as int,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
@@ -86,7 +86,7 @@ abstract class _$$PutProductShoppingAssignmentImplCopyWith<$Res>
       __$$PutProductShoppingAssignmentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int shoppingId, String productName, int quantity});
+  $Res call({int shoppingId, int productId, int quantity});
 }
 
 /// @nodoc
@@ -103,7 +103,7 @@ class __$$PutProductShoppingAssignmentImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? shoppingId = null,
-    Object? productName = null,
+    Object? productId = null,
     Object? quantity = null,
   }) {
     return _then(_$PutProductShoppingAssignmentImpl(
@@ -111,10 +111,10 @@ class __$$PutProductShoppingAssignmentImplCopyWithImpl<$Res>
           ? _value.shoppingId
           : shoppingId // ignore: cast_nullable_to_non_nullable
               as int,
-      productName: null == productName
-          ? _value.productName
-          : productName // ignore: cast_nullable_to_non_nullable
-              as String,
+      productId: null == productId
+          ? _value.productId
+          : productId // ignore: cast_nullable_to_non_nullable
+              as int,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
@@ -128,7 +128,7 @@ class __$$PutProductShoppingAssignmentImplCopyWithImpl<$Res>
 class _$PutProductShoppingAssignmentImpl extends _PutProductShoppingAssignment {
   const _$PutProductShoppingAssignmentImpl(
       {required this.shoppingId,
-      required this.productName,
+      required this.productId,
       required this.quantity})
       : super._();
 
@@ -139,13 +139,13 @@ class _$PutProductShoppingAssignmentImpl extends _PutProductShoppingAssignment {
   @override
   final int shoppingId;
   @override
-  final String productName;
+  final int productId;
   @override
   final int quantity;
 
   @override
   String toString() {
-    return 'PutProductShoppingAssignment(shoppingId: $shoppingId, productName: $productName, quantity: $quantity)';
+    return 'PutProductShoppingAssignment(shoppingId: $shoppingId, productId: $productId, quantity: $quantity)';
   }
 
   @override
@@ -155,16 +155,15 @@ class _$PutProductShoppingAssignmentImpl extends _PutProductShoppingAssignment {
             other is _$PutProductShoppingAssignmentImpl &&
             (identical(other.shoppingId, shoppingId) ||
                 other.shoppingId == shoppingId) &&
-            (identical(other.productName, productName) ||
-                other.productName == productName) &&
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, shoppingId, productName, quantity);
+  int get hashCode => Object.hash(runtimeType, shoppingId, productId, quantity);
 
   @JsonKey(ignore: true)
   @override
@@ -186,7 +185,7 @@ abstract class _PutProductShoppingAssignment
     extends PutProductShoppingAssignment {
   const factory _PutProductShoppingAssignment(
       {required final int shoppingId,
-      required final String productName,
+      required final int productId,
       required final int quantity}) = _$PutProductShoppingAssignmentImpl;
   const _PutProductShoppingAssignment._() : super._();
 
@@ -196,7 +195,7 @@ abstract class _PutProductShoppingAssignment
   @override
   int get shoppingId;
   @override
-  String get productName;
+  int get productId;
   @override
   int get quantity;
   @override

@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:split_the_bill/common/constants/animation_asset.dart';
 
+const _DEFAULT_TEXT = "Something went wrong";
 const _ERROR_BANNER_HEIGHT = 190.0;
 
 class ErrorBanner extends StatelessWidget {
-  final String? text;
+  final String text;
   const ErrorBanner({
     super.key,
-    this.text,
+    this.text = _DEFAULT_TEXT,
   });
 
   @override
@@ -22,12 +23,12 @@ class ErrorBanner extends StatelessWidget {
           AnimationAsset.ERROR.url,
           height: _ERROR_BANNER_HEIGHT,
         ),
-        if (text != null) _buildTextDescription(text!)
+        _buildTextDescription(),
       ],
     );
   }
 
-  Widget _buildTextDescription(String text) {
+  Widget _buildTextDescription() {
     return Column(
       children: [
         Text(

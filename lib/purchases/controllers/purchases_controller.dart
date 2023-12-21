@@ -57,6 +57,7 @@ class PurchasesController with AuthenticatedSocketObserver {
     _shoppingDetailController.shopping.listen(
       (newShoppingState) {
         if (newShoppingState != null) {
+          _isLoading.add(false);
           _productAssignmentsWithPurchases.add(null);
           _loadData(newShoppingState.shopping.id);
         }
@@ -131,4 +132,27 @@ class PurchasesController with AuthenticatedSocketObserver {
     _usersWithPurchases.add(usersWithPurchases);
   }
 
+  Future<void> deleteProductAssignemnt(String productName) async {
+    if (isLoading || shoppingId == null) {
+      return;
+    }
+    _isLoading.add(true);
+    try {
+      await _productAssignmentsRepository.deleteProductAssignmentFromShopping(
+        shoppingId!,
+        productName,
+      );
+      final message = "$productName was removed from this shopping";
+      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
+        message: message,
+        category: SnackbarMessageCategory.INFO,
+      ));
+    } catch (_) {
+      final message = "Failed to remove $productName from this shopping";
+      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
+        message: message,
+        category: SnackbarMessageCategory.ERROR,
+      ));
+    }
+  }
 }

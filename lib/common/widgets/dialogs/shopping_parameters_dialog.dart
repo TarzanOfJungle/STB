@@ -97,8 +97,6 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
       if (wasSuccess) {
         var shopping = await _shoppingsListController.lastUpdatedShopping.first;
         _navRouter.toShoppingDetail(shopping!.shopping.id);
-      } else {
-        throw const ApiUnspecifiedException();
       }
     }
   }

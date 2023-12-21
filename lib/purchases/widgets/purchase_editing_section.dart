@@ -2,24 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/extensions/set_text_editing_controller_value.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
-import 'package:split_the_bill/common/widgets/button_row/button_row.dart';
-import 'package:split_the_bill/common/widgets/button_row/button_row_item.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
+import 'package:split_the_bill/common/widgets/components/quantity_editing_section.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
+import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
-import 'package:split_the_bill/purchases/models/new_purchase/purchase_state.dart';
-
-const _INCREMENT_BUTTONS_WIDTH = 120.0;
+import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
 
 class PurchaseEditingSection extends StatefulWidget {
-  final PurchaseState state;
+  final PurchaseState purchaseState;
 
   const PurchaseEditingSection({
     super.key,
-    required this.state,
+    required this.purchaseState,
   });
 
   @override
@@ -27,7 +25,6 @@ class PurchaseEditingSection extends StatefulWidget {
 }
 
 class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
-  final _purchaseQuantityController = TextEditingController();
   final _purchaseUnitPriceController = TextEditingController();
 
   final _purchaseController = get<SinglePurchaseController>();
@@ -35,7 +32,7 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
 
   @override
   Widget build(BuildContext context) {
-    _adjustTextEditingControllersToNewState(widget.state);
+    _adjustTextEditingControllersToNewState(widget.purchaseState);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -58,18 +55,14 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
   }
 
   void _adjustTextEditingControllersToNewState(PurchaseState newState) {
-    _purchaseQuantityController
-        .setValue(newState.currentUserPurchaseQuantity?.toString());
-
     // Unit price TF doesn't need to be adjusted continuously, just on initial load
-    if (newState.currentUserPurchaseUnitPrice != null &&
+    if (newState.editedUnitPrice != null &&
         _purchaseUnitPriceController.text.isEmpty) {
-      final unitPriceHasDecimal =
-          newState.currentUserPurchaseUnitPrice!.roundToDouble() !=
-              newState.currentUserPurchaseUnitPrice!;
+      final unitPriceHasDecimal = newState.editedUnitPrice!.roundToDouble() !=
+          newState.editedUnitPrice!;
       final unitPriceStringValue = unitPriceHasDecimal
-          ? newState.currentUserPurchaseUnitPrice!.toString()
-          : newState.currentUserPurchaseUnitPrice!.toStringAsFixed(0);
+          ? newState.editedUnitPrice!.toString()
+          : newState.editedUnitPrice!.toStringAsFixed(0);
 
       _purchaseUnitPriceController.setValue(unitPriceStringValue);
     }
@@ -89,13 +82,7 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
         ),
         if (!_purchaseController.isUsersFirstPurchase)
           IconButtonWithBackground(
-            onTap: () async {
-              final success =
-                  await _purchaseController.deleteExistingPurchase();
-              if (success) {
-                _navRouter.returnBack();
-              }
-            },
+            onTap: () => _showDeleteDialog(),
             icon: Icons.close_rounded,
             backgroundColor: UiConstants.deleteColor,
             iconColor: Colors.white,
@@ -104,47 +91,26 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
     );
   }
 
-  Widget _buildMyPurchase(BuildContext context) {
+  Widget _buildMyPurchase(context) {
+    final decrementEnabled = widget.purchaseState.editedQuantity != null &&
+        widget.purchaseState.editedQuantity! > 0;
+    final incrementEnabled = widget.purchaseState.totalPurchasedQuantity <
+        widget.purchaseState.totalQuantityToBePurchased;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: StbNumberInputField(
-                controller: _purchaseQuantityController,
-                label: "Quantity",
-                prefix: const Icon(
-                  UiConstants.quantityIcon,
-                  size: 15,
-                ),
-                onChanged: (value) {
-                  final newQuantity =
-                      _purchaseController.getAdditionalValueFromString(
-                          value, (toParse) => int.tryParse(toParse));
-                  _purchaseController.additionalQuantityChanged(newQuantity);
-                },
-              ),
-            ),
-            const SizedBox(width: STANDARD_PADDING),
-            ButtonRow(
-              fixedWidth: _INCREMENT_BUTTONS_WIDTH,
-              buttons: [
-                ButtonRowItem(
-                  buttonChild: const Icon(Icons.remove_rounded),
-                  onTap: () => _addToQuantity(-1),
-                ),
-                ButtonRowItem(
-                  buttonChild: const Icon(Icons.add_rounded),
-                  onTap: () => _addToQuantity(1),
-                ),
-              ],
-            ),
-          ],
-        ),
+        QuantityEditingSection(
+            label: "Quantity",
+            currentValue: widget.purchaseState.editedQuantity,
+            decrementEnabled: decrementEnabled,
+            incrementEnabled: incrementEnabled,
+            onQuantityChanged: (newQuantity) {
+              final editedValue = _getEditedValueFromString(
+                  newQuantity.toString(),
+                  (stringValue) => int.tryParse(stringValue));
+              _purchaseController.editedQuantityChanged(editedValue);
+            }),
         const SizedBox(height: STANDARD_PADDING),
         StbNumberInputField(
           controller: _purchaseUnitPriceController,
@@ -156,10 +122,9 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
           ),
           suffix: const Text(",-"),
           onChanged: (value) {
-            final newUnitPrice =
-                _purchaseController.getAdditionalValueFromString(
-                    value, (toParse) => double.tryParse(toParse));
-            _purchaseController.additionalUnitPriceChanged(newUnitPrice);
+            final newUnitPrice = _getEditedValueFromString(
+                value, (toParse) => double.tryParse(toParse));
+            _purchaseController.editedUnitPriceChanged(newUnitPrice);
           },
         ),
       ],
@@ -195,9 +160,35 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
     );
   }
 
-  void _addToQuantity(int quantityToAdd) {
-    final newQuantity =
-        (widget.state.currentUserPurchaseQuantity ?? 0) + quantityToAdd;
-    _purchaseController.additionalQuantityChanged(newQuantity);
+  void _showDeleteDialog() {
+    final currentlyPurchasedQuantity =
+        widget.purchaseState.existingPurchaseOfCurrentUser?.quantity ?? 0;
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        label: "Cancel your purchase",
+        description:
+            "You purchased $currentlyPurchasedQuantity pieces of this item. Are you sure you want to cancel your purchase?",
+        confirmText: "Yes",
+        cancelText: "No",
+        onConfirm: () async {
+          final success = await _purchaseController.deleteExistingPurchase();
+          if (success) {
+            _navRouter.returnBack();
+          }
+        },
+      ),
+    );
+  }
+
+  T? _getEditedValueFromString<T extends num>(
+    String value,
+    T? Function(String) parseFunction,
+  ) {
+    final parsed = parseFunction(value);
+    if (parsed == 0) {
+      return null;
+    }
+    return parsed;
   }
 }
