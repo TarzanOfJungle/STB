@@ -7,9 +7,9 @@ import 'package:split_the_bill/common/extensions/json_string_extension.dart';
 import 'package:split_the_bill/shopping_detail/models/update_shopping/update_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
+import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 
-class ShoppingsListRepository implements ShoppingsRepositoryBase {
+class ShoppingsListRepository implements ShoppingsListRepositoryBase {
   final ApiClientBase _apiClient;
 
   const ShoppingsListRepository(this._apiClient);

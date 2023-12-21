@@ -1,9 +1,10 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
+import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/shopping_detail/models/update_shopping/update_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
+import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 
 import '../../common/controllers/snackbar_messanger_controller.dart';
 import '../../common/models/snackbar_message/snackbar_message.dart';
@@ -14,26 +15,35 @@ const String _ADDING_SHOPPING_ERROR_MESSAGE = "Error while adding new shopping";
 const String _INVALID_PARAMETERS_MESSAGE = "Invalid shopping parameters";
 const String _DEFAULT_EXCEPTION_MESSAGE = "Something went wrong";
 
-class ShoppingsListController {
+class ShoppingsListController with AuthenticatedSocketObserver {
   final BehaviorSubject<Iterable<ShoppingWithContext>> _shoppingsList =
       BehaviorSubject.seeded([]);
   final BehaviorSubject<ShoppingWithContext?> _lastUpdatedShopping =
       BehaviorSubject.seeded(null);
-  late final ShoppingsRepositoryBase _shoppingsListRepository;
+  late final ShoppingsListRepositoryBase _shoppingsListRepository;
   late final SnackbarMessangerController _snackbarController;
-
-  ShoppingsListController(
-      {required ShoppingsRepositoryBase shoppingsListRepository,
-      required SnackbarMessangerController snackbarMessangerController}) {
-    _shoppingsListRepository = shoppingsListRepository;
-    _snackbarController = snackbarMessangerController;
-  }
 
   Stream<Iterable<ShoppingWithContext>> get shoppingsListStream =>
       _shoppingsList.stream;
 
   Stream<ShoppingWithContext?> get lastUpdatedShopping =>
       _lastUpdatedShopping.stream;
+
+  ShoppingsListController(
+    this._shoppingsListRepository,
+    this._snackbarController,
+  ) {
+    _listenForShoppingListChanges();
+  }
+
+  void _listenForShoppingListChanges() {
+    observeSocketEvents(
+      eventStream: _shoppingsListRepository.getShoppingChangesStream,
+      onValueChanged: (assignmentEvent) {
+        updateShoppingsList();
+      },
+    );
+  }
 
   Future<bool> updateShoppingsList({String? searchQuery}) async {
     var wasSuccess = false;
