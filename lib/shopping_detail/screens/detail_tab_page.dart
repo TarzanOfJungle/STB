@@ -22,33 +22,34 @@ class DetailTabPage extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<ShoppingWithContext?> snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData || snapshot.data == null) {
             //TODO page loading
             return const LoadingIndicator();
-          }
-          var shopping = snapshot.data!;
-          return Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(STANDARD_PADDING),
-              child: Column(
-                children: [
-                  Text(shopping.shopping.description ?? ''),
-                  const SizedBox(height: STANDARD_PADDING),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      DetailInfoSection(),
-                      DetailButtonSection(shopping: shopping),
-                    ],
-                  ),
-                  const SizedBox(height: STANDARD_PADDING),
-                  ShowSummaryButton(shopping: shopping),
-                  const SizedBox(height: STANDARD_PADDING),
-                  MemberPurchasesSection(),
-                ],
+          } else {
+            var shopping = snapshot.data!;
+            return Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.all(STANDARD_PADDING),
+                child: Column(
+                  children: [
+                    Text(shopping.shopping.description ?? ''),
+                    const SizedBox(height: STANDARD_PADDING),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DetailInfoSection(),
+                        DetailButtonSection(shopping: shopping),
+                      ],
+                    ),
+                    const SizedBox(height: STANDARD_PADDING),
+                    ShowSummaryButton(shopping: shopping),
+                    const SizedBox(height: STANDARD_PADDING),
+                    MemberPurchasesSection(),
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
     );
   }

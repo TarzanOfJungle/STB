@@ -25,7 +25,7 @@ import 'package:split_the_bill/shopping_detail/repositories/transactions_reposit
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
-import 'package:split_the_bill/shoppings_list/repositories/shoppings_repository_base.dart';
+import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
 import 'package:split_the_bill/users/repositories/users_reposiory.dart';
 import 'package:split_the_bill/users/repositories/users_repository_base.dart';
@@ -41,7 +41,7 @@ abstract class IocContainer {
     get.registerSingleton<AuthRepositoryBase>(
         AuthRepository(get<ApiClientBase>()));
 
-    get.registerSingleton<ShoppingsRepositoryBase>(
+    get.registerSingleton<ShoppingsListRepositoryBase>(
         ShoppingsListRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductAssignmentsRepositoryBase>(
         ProductAssignmentsRepository(get<ApiClientBase>()));
@@ -70,13 +70,14 @@ abstract class IocContainer {
 
     get.registerSingleton<ShoppingsListController>(
       ShoppingsListController(
-          shoppingsListRepository: get<ShoppingsRepositoryBase>(),
-          snackbarMessangerController: get<SnackbarMessangerController>()),
+          get<ShoppingsListRepositoryBase>(),
+          get<SnackbarMessangerController>()),
     );
     get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
-      shoppingsListController: get<ShoppingsListController>(),
-      trasactionsRepository: get<TrasactionsRepositoryBase>(),
-      snackbarMessangerController: get<SnackbarMessangerController>(),
+      get<ShoppingsListController>(),
+      get<TrasactionsRepositoryBase>(),
+      get<SnackbarMessangerController>(),
+      get<ShoppingsListRepositoryBase>(),
     ));
     get.registerSingleton<PurchasesController>(PurchasesController(
       get<ShoppingDetailController>(),

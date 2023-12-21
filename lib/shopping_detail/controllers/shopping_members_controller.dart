@@ -15,6 +15,7 @@ const _USERS_ASSIGNED_MESSAGE = "Users assigned";
 const _FAILED_TO_ASSIGN_USERS_MESSAGE =
     "Failed to assign some of the selected users";
 const _FAILED_TO_UNASSIGN_USER = "Failed to unassign this user";
+const _FAILED_TO_GET_USER_BY_ID_MESSAGE = "Failed to get usernames";
 
 class ShoppingMembersController with AuthenticatedSocketObserver {
   final BehaviorSubject<Map<int, User>> _shoppingMembers =
@@ -178,6 +179,19 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
         message: _FAILED_TO_UNASSIGN_USER,
         category: SnackbarMessageCategory.ERROR,
       ));
+    }
+  }
+
+  Future<User?> userById(int userId) async {
+    try {
+      var user = await _usersRepository.getUserById(userId);
+      return user;
+    } catch (_) {
+      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
+        message: _FAILED_TO_GET_USER_BY_ID_MESSAGE,
+        category: SnackbarMessageCategory.ERROR,
+      ));
+      return null;
     }
   }
 }
