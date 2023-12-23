@@ -1,4 +1,3 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,7 +17,7 @@ import '../../users/models/user/user.dart';
 import '../models/transaction/transaction.dart';
 import '../widgets/transactions_filter_section.dart';
 
-const double _TRANSACTION_TILE_HEIGHT = 80.0;
+const double _TRANSACTION_TILE_HEIGHT = 70.0;
 const String _LOADING_ERROR_MESSAGE = 'Something failed, try again later';
 
 class SummaryPage extends StatelessWidget {
@@ -78,13 +77,16 @@ class SummaryPage extends StatelessWidget {
               if (snapshot.hasError) {
                 return Center(child: Text("${snapshot.error}"));
               } else if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(child: LoadingIndicator(),);
+                return const Center(
+                  child: LoadingIndicator(),
+                );
               } else {
                 var selectedUser = snapshot.data?.user;
                 var paymentDirection = snapshot.data!.paymentDirection;
                 var allTransactions = _shoppingDetailController.transactions;
 
-                var transactions = _getFilteredTransactions(selectedUser, paymentDirection, allTransactions);
+                var transactions = _getFilteredTransactions(
+                    selectedUser, paymentDirection, allTransactions);
                 return ListView.separated(
                   itemCount: transactions.length,
                   itemBuilder: (context, index) {
@@ -135,9 +137,9 @@ class SummaryPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildNameDisplay(transaction.payingUserId),
-          _buildTransactionAmountDisplay(transaction.ammount),
-          _buildNameDisplay(transaction.payedUserId),
+          Expanded(flex: 2, child: _buildNameDisplay(transaction.payingUserId)),
+          Expanded(child: _buildTransactionAmountDisplay(transaction.ammount)),
+          Expanded(flex: 2, child: _buildNameDisplay(transaction.payedUserId)),
         ],
       ),
     );
@@ -155,7 +157,10 @@ class SummaryPage extends StatelessWidget {
           if (snapshot.data == null) {
             return Text('Id: $userId, ERROR');
           }
-          return Text(snapshot.data!.username);
+          return Text(
+            snapshot.data!.username,
+            textAlign: TextAlign.center,
+          );
         }
       },
     );
@@ -174,16 +179,25 @@ class SummaryPage extends StatelessWidget {
     );
   }
 
-  List<Transaction> _getFilteredTransactions(User? selectedUser, FilterPaymentDirectionOption paymentDirection, List<Transaction> allTransactions) {
+  List<Transaction> _getFilteredTransactions(
+      User? selectedUser,
+      FilterPaymentDirectionOption paymentDirection,
+      List<Transaction> allTransactions) {
     if (selectedUser == null) {
       return allTransactions;
     } else if (paymentDirection == FilterPaymentDirectionOption.both) {
-      return allTransactions.where((t) =>
-      t.payingUserId == selectedUser.id || t.payedUserId == selectedUser.id)
+      return allTransactions
+          .where((t) =>
+              t.payingUserId == selectedUser.id ||
+              t.payedUserId == selectedUser.id)
           .toList();
     } else if (paymentDirection == FilterPaymentDirectionOption.payed) {
-      return allTransactions.where((t) => t.payedUserId == selectedUser.id).toList();
+      return allTransactions
+          .where((t) => t.payedUserId == selectedUser.id)
+          .toList();
     }
-    return allTransactions.where((t) => t.payingUserId == selectedUser.id).toList();
+    return allTransactions
+        .where((t) => t.payingUserId == selectedUser.id)
+        .toList();
   }
 }
