@@ -27,7 +27,6 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   late final SnackbarMessangerController _snackbarController;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;
   late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
-
   late final UsersRepositoryBase _usersRepository;
 
   Stream<Iterable<ShoppingWithContext>> get shoppingsListStream =>
@@ -40,8 +39,8 @@ class ShoppingsListController with AuthenticatedSocketObserver {
     this._shoppingsListRepository,
     this._snackbarController,
     this._usersRepository,
-      this._productPurchasesRepository,
-      this._productAssignmentsRepository,
+    this._productPurchasesRepository,
+    this._productAssignmentsRepository,
   ) {
     _listenForShoppingListChanges();
     _listenForUsersChanges();
@@ -69,14 +68,14 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   void _listenForPurchaseAndAssignmentChanges() {
     observeSocketEvents(
       eventStream: _productPurchasesRepository.getPurchaseChangesStream,
-      onValueChanged: (newValue) {
+      onValueChanged: (assignmentEvent) {
         updateShoppingsList();
       },
     );
     observeSocketEvents(
       eventStream:
           _productAssignmentsRepository.getProductAssignmentChangesStream,
-      onValueChanged: (newValue) {
+      onValueChanged: (assignmentEvent) {
         updateShoppingsList();
       },
     );

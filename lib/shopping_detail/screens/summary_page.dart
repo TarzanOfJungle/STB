@@ -1,16 +1,22 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
+import 'package:split_the_bill/shopping_detail/controllers/user_filter_controller.dart';
+import 'package:split_the_bill/shopping_detail/models/filter_payment_direction_option.dart';
 import 'package:split_the_bill/shopping_detail/widgets/info_item.dart';
 import 'package:split_the_bill/shopping_detail/widgets/users_balance_carousel.dart';
 
 import '../../ioc_container.dart';
 import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
+import '../../users/models/user/user.dart';
 import '../models/transaction/transaction.dart';
+import '../widgets/transactions_filter_section.dart';
 
 const double _TRANSACTION_TILE_HEIGHT = 80.0;
 const String _LOADING_ERROR_MESSAGE = 'Something failed, try again later';
@@ -22,6 +28,8 @@ class SummaryPage extends StatelessWidget {
 
   final _shoppingDetailController = get<ShoppingDetailController>();
   final _shoppingMembersController = get<ShoppingMembersController>();
+
+  final _userFilterController = get<UserFilterController>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +67,36 @@ class SummaryPage extends StatelessWidget {
       children: [
         UsersBalanceCarousel(shopping: shopping),
         _buildInfoSection(),
+        TransactionsFilterSection(),
         Expanded(
-          child: ListView.separated(
-            itemBuilder: (context, index) {
-              var transaction = _shoppingDetailController.transactions[index];
-              return _buildTransactionTile(context, transaction);
+          child: StreamBuilder(
+            stream: Rx.combineLatest2(
+                _userFilterController.selectedUsersStream,
+                _userFilterController.paymentDirectionStream,
+                (a, b) => (user: a, paymentDirection: b)),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text("${snapshot.error}"));
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return const Center(child: LoadingIndicator(),);
+              } else {
+                var selectedUser = snapshot.data?.user;
+                var paymentDirection = snapshot.data!.paymentDirection;
+                var allTransactions = _shoppingDetailController.transactions;
+
+                var transactions = _getFilteredTransactions(selectedUser, paymentDirection, allTransactions);
+                return ListView.separated(
+                  itemCount: transactions.length,
+                  itemBuilder: (context, index) {
+                    var transaction = transactions[index];
+                    return _buildTransactionTile(context, transaction);
+                  },
+                  separatorBuilder: (_, __) => const SizedBox(
+                    height: SMALL_PADDING,
+                  ),
+                );
+              }
             },
-            separatorBuilder: (_, __) => const SizedBox(
-              height: SMALL_PADDING,
-            ),
-            itemCount: _shoppingDetailController.transactions.length,
           ),
         )
       ],
@@ -144,5 +172,18 @@ class SummaryPage extends StatelessWidget {
         const Icon(CupertinoIcons.arrow_right), //TODO long arrow
       ],
     );
+  }
+
+  List<Transaction> _getFilteredTransactions(User? selectedUser, FilterPaymentDirectionOption paymentDirection, List<Transaction> allTransactions) {
+    if (selectedUser == null) {
+      return allTransactions;
+    } else if (paymentDirection == FilterPaymentDirectionOption.both) {
+      return allTransactions.where((t) =>
+      t.payingUserId == selectedUser.id || t.payedUserId == selectedUser.id)
+          .toList();
+    } else if (paymentDirection == FilterPaymentDirectionOption.payed) {
+      return allTransactions.where((t) => t.payedUserId == selectedUser.id).toList();
+    }
+    return allTransactions.where((t) => t.payingUserId == selectedUser.id).toList();
   }
 }

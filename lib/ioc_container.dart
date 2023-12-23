@@ -22,6 +22,7 @@ import 'package:split_the_bill/purchases/repositories/product_purchases/product_
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/controllers/user_filter_controller.dart';
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository.dart';
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
@@ -76,9 +77,9 @@ abstract class IocContainer {
 
     get.registerSingleton<ShoppingsListController>(
       ShoppingsListController(
-          get<ShoppingsListRepositoryBase>(),
-          get<SnackbarMessangerController>(),
-      get<UsersRepositoryBase>(),
+        get<ShoppingsListRepositoryBase>(),
+        get<SnackbarMessangerController>(),
+        get<UsersRepositoryBase>(),
         get<ProductPurchasesRepositoryBase>(),
         get<ProductAssignmentsRepositoryBase>(),
       ),
@@ -88,6 +89,9 @@ abstract class IocContainer {
       get<TrasactionsRepositoryBase>(),
       get<SnackbarMessangerController>(),
       get<ShoppingsListRepositoryBase>(),
+      get<UsersRepositoryBase>(),
+      get<ProductPurchasesRepositoryBase>(),
+      get<ProductAssignmentsRepositoryBase>(),
     ));
     get.registerSingleton<PurchasesController>(PurchasesController(
       get<ShoppingDetailController>(),
@@ -120,6 +124,8 @@ abstract class IocContainer {
       apiClient: get<ApiClientBase>(),
       authRepository: get<AuthRepositoryBase>(),
     ));
+
+    get.registerSingleton<UserFilterController>(UserFilterController());
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(
