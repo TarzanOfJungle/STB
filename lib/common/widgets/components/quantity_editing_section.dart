@@ -31,6 +31,12 @@ class _QuantityEditingSectionState extends State<QuantityEditingSection> {
   final _quantityEditingController = TextEditingController();
 
   @override
+  void dispose() {
+    _quantityEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _setTextEditingControllerValue(widget.currentValue?.toString());
 

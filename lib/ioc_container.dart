@@ -9,6 +9,7 @@ import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/controllers/fcm_controller.dart';
+import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository.dart';
 import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
@@ -75,8 +76,7 @@ abstract class IocContainer {
     ));
 
     get.registerSingleton<ShoppingsListController>(
-      ShoppingsListController(
-          get<ShoppingsListRepositoryBase>(),
+      ShoppingsListController(get<ShoppingsListRepositoryBase>(),
           get<SnackbarMessangerController>()),
     );
     get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
@@ -108,6 +108,11 @@ abstract class IocContainer {
       get<AuthController>(),
       get<ShoppingDetailController>(),
       get<UsersRepositoryBase>(),
+      get<SnackbarMessangerController>(),
+    ));
+    get.registerSingleton<GroupchatController>(GroupchatController(
+      get<ShoppingDetailController>(),
+      get<GroupChatRepositoryBase>(),
       get<SnackbarMessangerController>(),
     ));
 

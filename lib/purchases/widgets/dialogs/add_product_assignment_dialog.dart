@@ -38,6 +38,7 @@ class _AddProductAssignmentDialogState
   @override
   void dispose() {
     _addProductAssignmentController.resetState();
+    _productNameController.dispose();
     super.dispose();
   }
 

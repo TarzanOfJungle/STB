@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
@@ -25,6 +24,13 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
   final _navRouter = get<NavRouter>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

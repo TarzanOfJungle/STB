@@ -31,6 +31,12 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
   final _navRouter = get<NavRouter>();
 
   @override
+  void dispose() {
+    _purchaseUnitPriceController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _adjustTextEditingControllersToNewState(widget.purchaseState);
 

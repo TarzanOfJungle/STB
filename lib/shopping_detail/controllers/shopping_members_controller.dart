@@ -26,7 +26,7 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
   final StreamController<String?> _usersSearchQuery =
       StreamController.broadcast();
 
-  Stream<List<User>> get currentMembersStream =>
+  Stream<List<User>> get shoppingMembersStream =>
       _shoppingMembers.stream.map((members) => members.values.toList());
   Stream<List<User>> get usersToAddStream =>
       _usersToAdd.stream.map((map) => map.values.toList());
@@ -34,6 +34,8 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
       _usersLookup.stream.map((usersFromLookup) {
         return _filterUserLookup(usersFromLookup);
       });
+
+  List<User> get shoppingMembers => _shoppingMembers.value.values.toList();
 
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/groupchat/screens/groupchat_tab_page.dart';
 import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import '../../ioc_container.dart';
@@ -48,7 +49,7 @@ class _ShoppingDetailTabviewWrapperState
           text: 'Chat',
         ),
         tab: Tab(
-          child: Center(child: Text('Chat page TBD')), //TODO
+          child: GroupchatTabPage(),
         ),
       ),
     ];

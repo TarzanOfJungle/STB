@@ -33,7 +33,7 @@ class UsersBalanceCarousel extends StatelessWidget {
         SizedBox(
           height: _CAROUSEL_HEIGHT,
           child: StreamBuilder(
-              stream: _shoppingMembersController.currentMembersStream,
+              stream: _shoppingMembersController.shoppingMembersStream,
               builder:
                   (BuildContext context, AsyncSnapshot<List<User>?> snapshot) {
                 if (snapshot.hasError) {
