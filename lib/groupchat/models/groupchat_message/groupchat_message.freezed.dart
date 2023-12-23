@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'group_chat_message.dart';
+part of 'groupchat_message.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-GroupChatMessage _$GroupChatMessageFromJson(Map<String, dynamic> json) {
-  return _GroupChatMessage.fromJson(json);
+GroupchatMessage _$GroupchatMessageFromJson(Map<String, dynamic> json) {
+  return _GroupchatMessage.fromJson(json);
 }
 
 /// @nodoc
-mixin _$GroupChatMessage {
+mixin _$GroupchatMessage {
   int get id => throw _privateConstructorUsedError;
   int get userId => throw _privateConstructorUsedError;
   int get shoppingId => throw _privateConstructorUsedError;
@@ -29,15 +29,15 @@ mixin _$GroupChatMessage {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $GroupChatMessageCopyWith<GroupChatMessage> get copyWith =>
+  $GroupchatMessageCopyWith<GroupchatMessage> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GroupChatMessageCopyWith<$Res> {
-  factory $GroupChatMessageCopyWith(
-          GroupChatMessage value, $Res Function(GroupChatMessage) then) =
-      _$GroupChatMessageCopyWithImpl<$Res, GroupChatMessage>;
+abstract class $GroupchatMessageCopyWith<$Res> {
+  factory $GroupchatMessageCopyWith(
+          GroupchatMessage value, $Res Function(GroupchatMessage) then) =
+      _$GroupchatMessageCopyWithImpl<$Res, GroupchatMessage>;
   @useResult
   $Res call(
       {int id,
@@ -49,9 +49,9 @@ abstract class $GroupChatMessageCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GroupChatMessageCopyWithImpl<$Res, $Val extends GroupChatMessage>
-    implements $GroupChatMessageCopyWith<$Res> {
-  _$GroupChatMessageCopyWithImpl(this._value, this._then);
+class _$GroupchatMessageCopyWithImpl<$Res, $Val extends GroupchatMessage>
+    implements $GroupchatMessageCopyWith<$Res> {
+  _$GroupchatMessageCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -98,11 +98,11 @@ class _$GroupChatMessageCopyWithImpl<$Res, $Val extends GroupChatMessage>
 }
 
 /// @nodoc
-abstract class _$$GroupChatMessageImplCopyWith<$Res>
-    implements $GroupChatMessageCopyWith<$Res> {
-  factory _$$GroupChatMessageImplCopyWith(_$GroupChatMessageImpl value,
-          $Res Function(_$GroupChatMessageImpl) then) =
-      __$$GroupChatMessageImplCopyWithImpl<$Res>;
+abstract class _$$GroupchatMessageImplCopyWith<$Res>
+    implements $GroupchatMessageCopyWith<$Res> {
+  factory _$$GroupchatMessageImplCopyWith(_$GroupchatMessageImpl value,
+          $Res Function(_$GroupchatMessageImpl) then) =
+      __$$GroupchatMessageImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,11 +115,11 @@ abstract class _$$GroupChatMessageImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$GroupChatMessageImplCopyWithImpl<$Res>
-    extends _$GroupChatMessageCopyWithImpl<$Res, _$GroupChatMessageImpl>
-    implements _$$GroupChatMessageImplCopyWith<$Res> {
-  __$$GroupChatMessageImplCopyWithImpl(_$GroupChatMessageImpl _value,
-      $Res Function(_$GroupChatMessageImpl) _then)
+class __$$GroupchatMessageImplCopyWithImpl<$Res>
+    extends _$GroupchatMessageCopyWithImpl<$Res, _$GroupchatMessageImpl>
+    implements _$$GroupchatMessageImplCopyWith<$Res> {
+  __$$GroupchatMessageImplCopyWithImpl(_$GroupchatMessageImpl _value,
+      $Res Function(_$GroupchatMessageImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -132,7 +132,7 @@ class __$$GroupChatMessageImplCopyWithImpl<$Res>
     Object? created = null,
     Object? updated = freezed,
   }) {
-    return _then(_$GroupChatMessageImpl(
+    return _then(_$GroupchatMessageImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -163,8 +163,8 @@ class __$$GroupChatMessageImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$GroupChatMessageImpl extends _GroupChatMessage {
-  const _$GroupChatMessageImpl(
+class _$GroupchatMessageImpl extends _GroupchatMessage {
+  const _$GroupchatMessageImpl(
       {required this.id,
       required this.userId,
       required this.shoppingId,
@@ -173,8 +173,8 @@ class _$GroupChatMessageImpl extends _GroupChatMessage {
       this.updated})
       : super._();
 
-  factory _$GroupChatMessageImpl.fromJson(Map<String, dynamic> json) =>
-      _$$GroupChatMessageImplFromJson(json);
+  factory _$GroupchatMessageImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GroupchatMessageImplFromJson(json);
 
   @override
   final int id;
@@ -191,14 +191,14 @@ class _$GroupChatMessageImpl extends _GroupChatMessage {
 
   @override
   String toString() {
-    return 'GroupChatMessage(id: $id, userId: $userId, shoppingId: $shoppingId, message: $message, created: $created, updated: $updated)';
+    return 'GroupchatMessage(id: $id, userId: $userId, shoppingId: $shoppingId, message: $message, created: $created, updated: $updated)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$GroupChatMessageImpl &&
+            other is _$GroupchatMessageImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.shoppingId, shoppingId) ||
@@ -216,30 +216,30 @@ class _$GroupChatMessageImpl extends _GroupChatMessage {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$GroupChatMessageImplCopyWith<_$GroupChatMessageImpl> get copyWith =>
-      __$$GroupChatMessageImplCopyWithImpl<_$GroupChatMessageImpl>(
+  _$$GroupchatMessageImplCopyWith<_$GroupchatMessageImpl> get copyWith =>
+      __$$GroupchatMessageImplCopyWithImpl<_$GroupchatMessageImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GroupChatMessageImplToJson(
+    return _$$GroupchatMessageImplToJson(
       this,
     );
   }
 }
 
-abstract class _GroupChatMessage extends GroupChatMessage {
-  const factory _GroupChatMessage(
+abstract class _GroupchatMessage extends GroupchatMessage {
+  const factory _GroupchatMessage(
       {required final int id,
       required final int userId,
       required final int shoppingId,
       required final String message,
       required final DateTime created,
-      final DateTime? updated}) = _$GroupChatMessageImpl;
-  const _GroupChatMessage._() : super._();
+      final DateTime? updated}) = _$GroupchatMessageImpl;
+  const _GroupchatMessage._() : super._();
 
-  factory _GroupChatMessage.fromJson(Map<String, dynamic> json) =
-      _$GroupChatMessageImpl.fromJson;
+  factory _GroupchatMessage.fromJson(Map<String, dynamic> json) =
+      _$GroupchatMessageImpl.fromJson;
 
   @override
   int get id;
@@ -255,6 +255,6 @@ abstract class _GroupChatMessage extends GroupChatMessage {
   DateTime? get updated;
   @override
   @JsonKey(ignore: true)
-  _$$GroupChatMessageImplCopyWith<_$GroupChatMessageImpl> get copyWith =>
+  _$$GroupchatMessageImplCopyWith<_$GroupchatMessageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -3,8 +3,9 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
-import 'package:split_the_bill/groupchat/models/group_chat_message/group_chat_message.dart';
+import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
 import 'package:split_the_bill/groupchat/widgets/chat_input.dart';
+import 'package:split_the_bill/groupchat/widgets/chat_message.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 const _AUTO_SCROLL_DURATION = Duration(milliseconds: 300);
@@ -57,7 +58,7 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
     );
   }
 
-  Widget _buildMessagesList(List<GroupChatMessage> messages) {
+  Widget _buildMessagesList(List<GroupchatMessageWithAuthor> messages) {
     final messagesReversed = messages.reversed.toList();
     return ListView.builder(
       controller: _scrollController,
@@ -68,7 +69,17 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
         top: STANDARD_PADDING,
       ),
       itemCount: messages.length,
-      itemBuilder: (context, index) => Text(messagesReversed[index].message),
+      itemBuilder: (context, index) {
+        final currentMessage = messagesReversed[index];
+        GroupchatMessageWithAuthor? previousMessage;
+        if (index < messagesReversed.length - 1) {
+          previousMessage = messagesReversed[index + 1];
+        }
+        return ChatMessage(
+          currentMessage: currentMessage,
+          previousMessage: previousMessage,
+        );
+      },
     );
   }
 

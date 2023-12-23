@@ -4,33 +4,53 @@ import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
-import 'package:split_the_bill/groupchat/models/group_chat_message/group_chat_message.dart';
-import 'package:split_the_bill/groupchat/models/post_group_chat_message/post_group_chat_message.dart';
-import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
+import 'package:split_the_bill/groupchat/models/groupchat_message/groupchat_message.dart';
+import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
+import 'package:split_the_bill/groupchat/models/post_groupchat_message/post_groupchat_message.dart';
+import 'package:split_the_bill/groupchat/repositories/groupchat_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 
 const _FAILED_TO_LOAD_CHAT_MESSAGE = "Failed to load messages";
 const _FAILED_TO_SEND_MESSAGE = "Failed to send message";
+const _FAILED_TO_DELETE_MESSAGE = "Failed to delete message";
 
 class GroupchatController with AuthenticatedSocketObserver {
-  final _loadedMessages = BehaviorSubject<List<GroupChatMessage>>.seeded([]);
+  final _loadedMessages = BehaviorSubject<List<GroupchatMessage>>.seeded([]);
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
+
   final ShoppingDetailController _shoppingDetailController;
-  final GroupChatRepositoryBase _groupchatRepository;
+  final ShoppingMembersController _shoppingMembersController;
+  final GroupchatRepositoryBase _groupchatRepository;
   final SnackbarMessangerController _snackbarMessangerController;
 
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
-  Stream<List<GroupChatMessage>> get sortedMessagesStream =>
-      _loadedMessages.stream.map((messages) {
-        final sorted = [...messages];
-        sorted.sort((current, next) => current.created.compareTo(next.created));
-        return sorted;
-      });
+  Stream<List<GroupchatMessageWithAuthor>> get sortedMessagesStream =>
+      Rx.combineLatest2(
+        _loadedMessages.stream,
+        _shoppingMembersController.shoppingMembersStream,
+        (messages, members) {
+          final messagesWithAuthors = messages.map((m) {
+            final authorOfMessage =
+                members.where((u) => u.id == m.userId).firstOrNull;
+            return GroupchatMessageWithAuthor(
+              message: m,
+              author: authorOfMessage,
+            );
+          }).toList();
+          messagesWithAuthors.sort(
+            (curr, next) =>
+                curr.message.created.compareTo(next.message.created),
+          );
+          return messagesWithAuthors;
+        },
+      );
 
   GroupchatController(
     this._shoppingDetailController,
+    this._shoppingMembersController,
     this._groupchatRepository,
     this._snackbarMessangerController,
   ) {
@@ -93,7 +113,7 @@ class GroupchatController with AuthenticatedSocketObserver {
     _isLoading.add(true);
     var success = false;
     try {
-      final messagePost = PostGroupChatMessage(
+      final messagePost = PostGroupchatMessage(
         shoppingId: _shoppingId!,
         message: message,
       );
@@ -109,7 +129,23 @@ class GroupchatController with AuthenticatedSocketObserver {
     return success;
   }
 
-  void _onReceiveNewMessage(GroupChatMessage message) {
+  Future<void> deleteMessage(GroupchatMessage message) async {
+    if (_isLoading.value || _shoppingId == null) {
+      return;
+    }
+    _isLoading.add(true);
+    try {
+      await _groupchatRepository.deleteMessage(message.id);
+    } catch (_) {
+      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
+        message: _FAILED_TO_DELETE_MESSAGE,
+        category: SnackbarMessageCategory.ERROR,
+      ));
+    }
+    _isLoading.add(false);
+  }
+
+  void _onReceiveNewMessage(GroupchatMessage message) {
     final messageAlreadyLoaded =
         _loadedMessages.value.where((m) => m.id == message.id).isNotEmpty;
     if (!messageAlreadyLoaded) {
@@ -118,7 +154,7 @@ class GroupchatController with AuthenticatedSocketObserver {
     }
   }
 
-  void _onMessageDeleted(GroupChatMessage message) {
+  void _onMessageDeleted(GroupchatMessage message) {
     final newMessageList = [..._loadedMessages.value];
     newMessageList.removeWhere((m) => m.id == message.id);
     _loadedMessages.add(newMessageList);
