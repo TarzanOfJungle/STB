@@ -1,10 +1,13 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
+import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
+import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/models/update_shopping/update_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
+import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
 import '../../common/controllers/snackbar_messanger_controller.dart';
 import '../../common/models/snackbar_message/snackbar_message.dart';
@@ -22,6 +25,9 @@ class ShoppingsListController with AuthenticatedSocketObserver {
       BehaviorSubject.seeded(null);
   late final ShoppingsListRepositoryBase _shoppingsListRepository;
   late final SnackbarMessangerController _snackbarController;
+  late final ProductPurchasesRepositoryBase _productPurchasesRepository;
+  late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
+  late final UsersRepositoryBase _usersRepository;
 
   Stream<Iterable<ShoppingWithContext>> get shoppingsListStream =>
       _shoppingsList.stream;
@@ -32,13 +38,43 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   ShoppingsListController(
     this._shoppingsListRepository,
     this._snackbarController,
+    this._usersRepository,
+    this._productPurchasesRepository,
+    this._productAssignmentsRepository,
   ) {
     _listenForShoppingListChanges();
+    _listenForUsersChanges();
+    _listenForPurchaseAndAssignmentChanges();
   }
 
   void _listenForShoppingListChanges() {
     observeSocketEvents(
       eventStream: _shoppingsListRepository.getShoppingChangesStream,
+      onValueChanged: (assignmentEvent) {
+        updateShoppingsList();
+      },
+    );
+  }
+
+  void _listenForUsersChanges() {
+    observeSocketEvents(
+      eventStream: _usersRepository.getUserShoppingAssignmentChangesStream,
+      onValueChanged: (assignmentEvent) {
+        updateShoppingsList();
+      },
+    );
+  }
+
+  void _listenForPurchaseAndAssignmentChanges() {
+    observeSocketEvents(
+      eventStream: _productPurchasesRepository.getPurchaseChangesStream,
+      onValueChanged: (assignmentEvent) {
+        updateShoppingsList();
+      },
+    );
+    observeSocketEvents(
+      eventStream:
+          _productAssignmentsRepository.getProductAssignmentChangesStream,
       onValueChanged: (assignmentEvent) {
         updateShoppingsList();
       },

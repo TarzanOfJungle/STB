@@ -1,17 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/purchases/models/product_assignments_with_purchases/product_assignments_with_purchases.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
+import '../../ioc_container.dart';
 import 'info_item.dart';
 
 class DetailInfoSection extends StatelessWidget {
   final ShoppingWithContext shopping;
   final ProductAssignmentsWithPurchases productAssignments;
 
-  const DetailInfoSection({
+  DetailInfoSection({
     super.key,
     required this.shopping,
     required this.productAssignments,
   });
+
+  final ShoppingDetailController _shoppingDetailController = get<ShoppingDetailController>();
 
   @override
   Widget build(BuildContext context) {
