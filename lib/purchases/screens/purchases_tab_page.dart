@@ -41,6 +41,7 @@ class PurchasesTabPage extends StatelessWidget {
           return SlidableAutoCloseBehavior(
             child: ListView.separated(
               itemCount: data.productAssignments.length,
+              padding: const EdgeInsets.only(bottom: 70),
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
                 final assignment = data.productAssignments[index];

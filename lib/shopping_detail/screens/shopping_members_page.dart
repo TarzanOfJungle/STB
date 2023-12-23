@@ -38,6 +38,7 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
   @override
   void dispose() {
     _membersController.resetUserAssignment();
+    _userTextEditingController.dispose();
     super.dispose();
   }
 
@@ -100,7 +101,7 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
 
   Widget _buildMembersList(BuildContext context) {
     return StreamBuilder(
-        stream: _membersController.currentMembersStream,
+        stream: _membersController.shoppingMembersStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.hasError) {
             return const SizedBox.shrink();

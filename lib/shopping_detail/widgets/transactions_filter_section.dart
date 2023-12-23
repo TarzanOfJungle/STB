@@ -21,17 +21,13 @@ class TransactionsFilterSection extends StatefulWidget {
 }
 
 class _TransactionsFilterSectionState extends State<TransactionsFilterSection> {
-  final TextEditingController _userTextEditingController =
-      TextEditingController();
-  final TextEditingController _transactionDirectionController =
-      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: SMALL_PADDING),
       child: StreamBuilder(
-        stream: widget._shoppingMembersController.currentMembersStream,
+        stream: widget._shoppingMembersController.shoppingMembersStream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(

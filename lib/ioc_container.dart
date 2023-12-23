@@ -9,8 +9,9 @@ import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/controllers/fcm_controller.dart';
-import 'package:split_the_bill/groupchat/repositories/group_chat_repository.dart';
-import 'package:split_the_bill/groupchat/repositories/group_chat_repository_base.dart';
+import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
+import 'package:split_the_bill/groupchat/repositories/groupchat_repository.dart';
+import 'package:split_the_bill/groupchat/repositories/groupchat_repository_base.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
@@ -53,8 +54,8 @@ abstract class IocContainer {
         ProductPurchasesRepository(get<ApiClientBase>()));
     get.registerSingleton<TrasactionsRepositoryBase>(
         TrasactionsRepository(get<ApiClientBase>()));
-    get.registerSingleton<GroupChatRepositoryBase>(
-        GroupChatRepository(get<ApiClientBase>()));
+    get.registerSingleton<GroupchatRepositoryBase>(
+        GroupchatRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductsRepositoryBase>(
         ProductsRepository(get<ApiClientBase>()));
     get.registerSingleton<UsersRepositoryBase>(
@@ -116,6 +117,12 @@ abstract class IocContainer {
       get<AuthController>(),
       get<ShoppingDetailController>(),
       get<UsersRepositoryBase>(),
+      get<SnackbarMessangerController>(),
+    ));
+    get.registerSingleton<GroupchatController>(GroupchatController(
+      get<ShoppingDetailController>(),
+      get<ShoppingMembersController>(),
+      get<GroupchatRepositoryBase>(),
       get<SnackbarMessangerController>(),
     ));
 

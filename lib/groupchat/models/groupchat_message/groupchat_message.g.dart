@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'group_chat_message.dart';
+part of 'groupchat_message.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GroupChatMessageImpl _$$GroupChatMessageImplFromJson(
+_$GroupchatMessageImpl _$$GroupchatMessageImplFromJson(
         Map<String, dynamic> json) =>
-    _$GroupChatMessageImpl(
+    _$GroupchatMessageImpl(
       id: json['id'] as int,
       userId: json['userId'] as int,
       shoppingId: json['shoppingId'] as int,
@@ -19,8 +19,8 @@ _$GroupChatMessageImpl _$$GroupChatMessageImplFromJson(
           : DateTime.parse(json['updated'] as String),
     );
 
-Map<String, dynamic> _$$GroupChatMessageImplToJson(
-        _$GroupChatMessageImpl instance) =>
+Map<String, dynamic> _$$GroupchatMessageImplToJson(
+        _$GroupchatMessageImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

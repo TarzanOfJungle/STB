@@ -24,10 +24,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final _authController = get<AuthController>();
   final _navRouter = get<NavRouter>();
 
-  final _emailController = TextEditingController(text: "");
-  final _usernameController = TextEditingController(text: "");
-  final _passwordController = TextEditingController(text: "");
+  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _registrationFormKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -36,6 +36,12 @@ class _StbTextFieldState extends State<StbTextField> {
   final _focusNode = FocusNode();
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,

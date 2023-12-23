@@ -24,8 +24,8 @@ class _LoginPageState extends State<LoginPage> {
   final _authController = get<AuthController>();
   final _navRouter = get<NavRouter>();
 
-  final _emailController = TextEditingController(text: "");
-  final _passwordController = TextEditingController(text: "");
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _loginFormKey = GlobalKey<FormState>();
 
   @override
@@ -33,6 +33,14 @@ class _LoginPageState extends State<LoginPage> {
     _restorePreviousUser();
     super.initState();
   }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {

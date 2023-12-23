@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'post_group_chat_message.dart';
+part of 'post_groupchat_message.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PostGroupChatMessageImpl _$$PostGroupChatMessageImplFromJson(
+_$PostGroupchatMessageImpl _$$PostGroupchatMessageImplFromJson(
         Map<String, dynamic> json) =>
-    _$PostGroupChatMessageImpl(
+    _$PostGroupchatMessageImpl(
       shoppingId: json['shoppingId'] as int,
       message: json['message'] as String,
     );
 
-Map<String, dynamic> _$$PostGroupChatMessageImplToJson(
-        _$PostGroupChatMessageImpl instance) =>
+Map<String, dynamic> _$$PostGroupchatMessageImplToJson(
+        _$PostGroupchatMessageImpl instance) =>
     <String, dynamic>{
       'shoppingId': instance.shoppingId,
       'message': instance.message,
