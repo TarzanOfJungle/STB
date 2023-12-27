@@ -21,7 +21,6 @@ class TransactionsFilterSection extends StatefulWidget {
 }
 
 class _TransactionsFilterSectionState extends State<TransactionsFilterSection> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -46,30 +45,12 @@ class _TransactionsFilterSectionState extends State<TransactionsFilterSection> {
   }
 
   Widget _buildFilterFields(List<User> users) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        DropdownMenu<User?>(
-          width: _USER_FILTER_MENU_WIDTH,
-          label: const Text("User"),
-          initialSelection: null,
-          dropdownMenuEntries: _buildUserDropdownEntries(users),
-          onSelected: (User? user) =>
-              widget._userFilterController.selectUser(user),
-        ),
-        const SizedBox(
-          width: SMALL_PADDING,
-        ),
-        DropdownMenu<FilterPaymentDirectionOption>(
-          label: const Text("User as"),
-          initialSelection: FilterPaymentDirectionOption.both,
-          dropdownMenuEntries: FilterPaymentDirectionOption.values
-              .map((e) => DropdownMenuEntry(value: e, label: e.name))
-              .toList(),
-          onSelected: (filterOption) => widget._userFilterController
-              .selectPaymentDirection(filterOption!),
-        ),
-      ],
+    return DropdownMenu<User?>(
+      label: const Text("User"),
+      leadingIcon: const Icon(Icons.search),
+      initialSelection: null,
+      dropdownMenuEntries: _buildUserDropdownEntries(users),
+      onSelected: (User? user) => widget._userFilterController.selectUser(user),
     );
   }
 
