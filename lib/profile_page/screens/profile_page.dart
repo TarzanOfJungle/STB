@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/profile_page/widgets/profile_tile.dart';

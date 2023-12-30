@@ -42,7 +42,9 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
             padding: const EdgeInsets.all(SMALL_PADDING),
             child: TextField(
               controller: _searchFieldController,
-              onChanged: (query) => widget._shoppingsListController.updateShoppingsList(searchQuery: query), //TODO search bar
+              onChanged: (query) =>
+                  widget._shoppingsListController.updateShoppingsList(
+                      searchQuery: query), //TODO search bar
               decoration: InputDecoration(
                   labelText: 'Search',
                   prefixIcon: const Icon(Icons.search),
@@ -55,7 +57,8 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
             ),
           ),
           FutureBuilder<bool>(
-            future: widget._shoppingsListController.updateShoppingsList(searchQuery: _searchFieldController.text),
+            future: widget._shoppingsListController.updateShoppingsList(
+                searchQuery: _searchFieldController.text),
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -91,12 +94,16 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
               return const Text(_EMPTY_LIST_MESSAGE);
             }
             return Expanded(
-              child: ListView.separated(
-                itemBuilder: (_, index) => ShoppingTile(
-                  shopping: shoppingsList[index],
+              child: RefreshIndicator(
+                onRefresh: _pullRefresh,
+                child: ListView.separated(
+                  itemBuilder: (_, index) =>
+                      ShoppingTile(
+                        shopping: shoppingsList[index],
+                      ),
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemCount: shoppingsList.length,
                 ),
-                separatorBuilder: (_, __) => const Divider(),
-                itemCount: shoppingsList.length,
               ),
             );
           }
@@ -108,5 +115,10 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
       context: context,
       builder: (context) => const ShoppingParametersDialog(),
     );
+  }
+
+  Future<void> _pullRefresh() async {
+    await widget._shoppingsListController.updateShoppingsList(
+        searchQuery: _searchFieldController.text);
   }
 }
