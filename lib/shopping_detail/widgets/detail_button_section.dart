@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
@@ -18,6 +19,7 @@ class DetailButtonSection extends StatelessWidget {
 
   final _shoppingsListController = get<ShoppingsListController>();
   final _navRouter = get<NavRouter>();
+  final _authController = get<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +30,30 @@ class DetailButtonSection extends StatelessWidget {
           'Members',
           () => _navRouter.toShoppingMembers(),
         ),
+        ..._finalizeAndDeleteButtons(context),
+      ],
+    );
+  }
+
+  List<Widget> _finalizeAndDeleteButtons(BuildContext context) {
+    var loggedInUser = _authController.loggedInUser;
+    if (loggedInUser?.id == shopping.shopping.creatorId) {
+      return [
         _buildButton(
           const Icon(Icons.done),
           'Finalize',
-          () {}, //TODO
+              () {}, //TODO
           color: UiConstants.confirmColor,
         ),
         _buildButton(
           const Icon(CupertinoIcons.trash),
           'Delete',
-          () => _onDeleteButtonPressed(context, shopping),
+              () => _onDeleteButtonPressed(context, shopping),
           color: UiConstants.deleteColor,
         ),
-      ],
-    );
+      ];
+    }
+    return [];
   }
 
   Widget _buildButton(Icon icon, String text, void Function() onPressedCall,
@@ -63,7 +75,7 @@ class DetailButtonSection extends StatelessWidget {
       builder: (context) => ConfirmationDialog(
           label: 'Delete Shopping:\n${shopping.shopping.name}?',
           description:
-              'Are you sure about this?\nYou cannot take back this step.',
+              'Are you sure about this?\nYou cannot take it back',
           onConfirm: _delete),
     );
   }
