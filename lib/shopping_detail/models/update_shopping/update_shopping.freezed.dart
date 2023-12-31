@@ -22,6 +22,7 @@ UpdateShopping _$UpdateShoppingFromJson(Map<String, dynamic> json) {
 mixin _$UpdateShopping {
   int get id => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
+  bool? get finalized => throw _privateConstructorUsedError;
   @JsonKey(name: 'updateDueDateTime')
   bool get updateDue => throw _privateConstructorUsedError;
   @JsonKey(name: 'dueDateTime')
@@ -44,6 +45,7 @@ abstract class $UpdateShoppingCopyWith<$Res> {
   $Res call(
       {int id,
       String? name,
+      bool? finalized,
       @JsonKey(name: 'updateDueDateTime') bool updateDue,
       @JsonKey(name: 'dueDateTime') DateTime? due,
       bool updateDescription,
@@ -65,6 +67,7 @@ class _$UpdateShoppingCopyWithImpl<$Res, $Val extends UpdateShopping>
   $Res call({
     Object? id = null,
     Object? name = freezed,
+    Object? finalized = freezed,
     Object? updateDue = null,
     Object? due = freezed,
     Object? updateDescription = null,
@@ -79,6 +82,10 @@ class _$UpdateShoppingCopyWithImpl<$Res, $Val extends UpdateShopping>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
+      finalized: freezed == finalized
+          ? _value.finalized
+          : finalized // ignore: cast_nullable_to_non_nullable
+              as bool?,
       updateDue: null == updateDue
           ? _value.updateDue
           : updateDue // ignore: cast_nullable_to_non_nullable
@@ -110,6 +117,7 @@ abstract class _$$UpdateShoppingImplCopyWith<$Res>
   $Res call(
       {int id,
       String? name,
+      bool? finalized,
       @JsonKey(name: 'updateDueDateTime') bool updateDue,
       @JsonKey(name: 'dueDateTime') DateTime? due,
       bool updateDescription,
@@ -129,6 +137,7 @@ class __$$UpdateShoppingImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = freezed,
+    Object? finalized = freezed,
     Object? updateDue = null,
     Object? due = freezed,
     Object? updateDescription = null,
@@ -143,6 +152,10 @@ class __$$UpdateShoppingImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
+      finalized: freezed == finalized
+          ? _value.finalized
+          : finalized // ignore: cast_nullable_to_non_nullable
+              as bool?,
       updateDue: null == updateDue
           ? _value.updateDue
           : updateDue // ignore: cast_nullable_to_non_nullable
@@ -169,6 +182,7 @@ class _$UpdateShoppingImpl extends _UpdateShopping {
   const _$UpdateShoppingImpl(
       {required this.id,
       this.name,
+      this.finalized,
       @JsonKey(name: 'updateDueDateTime') this.updateDue = false,
       @JsonKey(name: 'dueDateTime') this.due,
       this.updateDescription = false,
@@ -183,6 +197,8 @@ class _$UpdateShoppingImpl extends _UpdateShopping {
   @override
   final String? name;
   @override
+  final bool? finalized;
+  @override
   @JsonKey(name: 'updateDueDateTime')
   final bool updateDue;
   @override
@@ -196,7 +212,7 @@ class _$UpdateShoppingImpl extends _UpdateShopping {
 
   @override
   String toString() {
-    return 'UpdateShopping(id: $id, name: $name, updateDue: $updateDue, due: $due, updateDescription: $updateDescription, description: $description)';
+    return 'UpdateShopping(id: $id, name: $name, finalized: $finalized, updateDue: $updateDue, due: $due, updateDescription: $updateDescription, description: $description)';
   }
 
   @override
@@ -206,6 +222,8 @@ class _$UpdateShoppingImpl extends _UpdateShopping {
             other is _$UpdateShoppingImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.finalized, finalized) ||
+                other.finalized == finalized) &&
             (identical(other.updateDue, updateDue) ||
                 other.updateDue == updateDue) &&
             (identical(other.due, due) || other.due == due) &&
@@ -217,8 +235,8 @@ class _$UpdateShoppingImpl extends _UpdateShopping {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, name, updateDue, due, updateDescription, description);
+  int get hashCode => Object.hash(runtimeType, id, name, finalized, updateDue,
+      due, updateDescription, description);
 
   @JsonKey(ignore: true)
   @override
@@ -239,6 +257,7 @@ abstract class _UpdateShopping extends UpdateShopping {
   const factory _UpdateShopping(
       {required final int id,
       final String? name,
+      final bool? finalized,
       @JsonKey(name: 'updateDueDateTime') final bool updateDue,
       @JsonKey(name: 'dueDateTime') final DateTime? due,
       final bool updateDescription,
@@ -252,6 +271,8 @@ abstract class _UpdateShopping extends UpdateShopping {
   int get id;
   @override
   String? get name;
+  @override
+  bool? get finalized;
   @override
   @JsonKey(name: 'updateDueDateTime')
   bool get updateDue;

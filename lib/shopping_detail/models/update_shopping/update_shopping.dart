@@ -12,6 +12,7 @@ class UpdateShopping with _$UpdateShopping {
   const factory UpdateShopping({
     required int id,
     String? name,
+    bool? finalized,
     @Default(false) @JsonKey(name: 'updateDueDateTime') bool updateDue,
     @JsonKey(name: 'dueDateTime') DateTime? due,
     @Default(false) bool updateDescription,

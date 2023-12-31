@@ -24,6 +24,7 @@ mixin _$Shopping {
   String get name => throw _privateConstructorUsedError;
   int get creatorId => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  bool get finalized => throw _privateConstructorUsedError;
   @JsonKey(name: 'dueDateTime')
   DateTime? get due => throw _privateConstructorUsedError;
   DateTime? get created => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $ShoppingCopyWith<$Res> {
       String name,
       int creatorId,
       String? description,
+      bool finalized,
       @JsonKey(name: 'dueDateTime') DateTime? due,
       DateTime? created,
       DateTime? updated});
@@ -67,6 +69,7 @@ class _$ShoppingCopyWithImpl<$Res, $Val extends Shopping>
     Object? name = null,
     Object? creatorId = null,
     Object? description = freezed,
+    Object? finalized = null,
     Object? due = freezed,
     Object? created = freezed,
     Object? updated = freezed,
@@ -88,6 +91,10 @@ class _$ShoppingCopyWithImpl<$Res, $Val extends Shopping>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      finalized: null == finalized
+          ? _value.finalized
+          : finalized // ignore: cast_nullable_to_non_nullable
+              as bool,
       due: freezed == due
           ? _value.due
           : due // ignore: cast_nullable_to_non_nullable
@@ -117,6 +124,7 @@ abstract class _$$ShoppingImplCopyWith<$Res>
       String name,
       int creatorId,
       String? description,
+      bool finalized,
       @JsonKey(name: 'dueDateTime') DateTime? due,
       DateTime? created,
       DateTime? updated});
@@ -137,6 +145,7 @@ class __$$ShoppingImplCopyWithImpl<$Res>
     Object? name = null,
     Object? creatorId = null,
     Object? description = freezed,
+    Object? finalized = null,
     Object? due = freezed,
     Object? created = freezed,
     Object? updated = freezed,
@@ -158,6 +167,10 @@ class __$$ShoppingImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      finalized: null == finalized
+          ? _value.finalized
+          : finalized // ignore: cast_nullable_to_non_nullable
+              as bool,
       due: freezed == due
           ? _value.due
           : due // ignore: cast_nullable_to_non_nullable
@@ -182,6 +195,7 @@ class _$ShoppingImpl extends _Shopping {
       required this.name,
       required this.creatorId,
       this.description,
+      required this.finalized,
       @JsonKey(name: 'dueDateTime') this.due,
       this.created,
       this.updated})
@@ -199,6 +213,8 @@ class _$ShoppingImpl extends _Shopping {
   @override
   final String? description;
   @override
+  final bool finalized;
+  @override
   @JsonKey(name: 'dueDateTime')
   final DateTime? due;
   @override
@@ -208,7 +224,7 @@ class _$ShoppingImpl extends _Shopping {
 
   @override
   String toString() {
-    return 'Shopping(id: $id, name: $name, creatorId: $creatorId, description: $description, due: $due, created: $created, updated: $updated)';
+    return 'Shopping(id: $id, name: $name, creatorId: $creatorId, description: $description, finalized: $finalized, due: $due, created: $created, updated: $updated)';
   }
 
   @override
@@ -222,6 +238,8 @@ class _$ShoppingImpl extends _Shopping {
                 other.creatorId == creatorId) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.finalized, finalized) ||
+                other.finalized == finalized) &&
             (identical(other.due, due) || other.due == due) &&
             (identical(other.created, created) || other.created == created) &&
             (identical(other.updated, updated) || other.updated == updated));
@@ -229,8 +247,8 @@ class _$ShoppingImpl extends _Shopping {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, name, creatorId, description, due, created, updated);
+  int get hashCode => Object.hash(runtimeType, id, name, creatorId, description,
+      finalized, due, created, updated);
 
   @JsonKey(ignore: true)
   @override
@@ -252,6 +270,7 @@ abstract class _Shopping extends Shopping {
       required final String name,
       required final int creatorId,
       final String? description,
+      required final bool finalized,
       @JsonKey(name: 'dueDateTime') final DateTime? due,
       final DateTime? created,
       final DateTime? updated}) = _$ShoppingImpl;
@@ -268,6 +287,8 @@ abstract class _Shopping extends Shopping {
   int get creatorId;
   @override
   String? get description;
+  @override
+  bool get finalized;
   @override
   @JsonKey(name: 'dueDateTime')
   DateTime? get due;

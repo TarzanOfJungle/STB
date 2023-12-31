@@ -12,6 +12,7 @@ _$ShoppingImpl _$$ShoppingImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       creatorId: json['creatorId'] as int,
       description: json['description'] as String?,
+      finalized: json['finalized'] as bool,
       due: json['dueDateTime'] == null
           ? null
           : DateTime.parse(json['dueDateTime'] as String),
@@ -29,6 +30,7 @@ Map<String, dynamic> _$$ShoppingImplToJson(_$ShoppingImpl instance) =>
       'name': instance.name,
       'creatorId': instance.creatorId,
       'description': instance.description,
+      'finalized': instance.finalized,
       'dueDateTime': instance.due?.toIso8601String(),
       'created': instance.created?.toIso8601String(),
       'updated': instance.updated?.toIso8601String(),

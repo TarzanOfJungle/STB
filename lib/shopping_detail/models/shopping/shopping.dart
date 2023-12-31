@@ -10,13 +10,14 @@ class Shopping with _$Shopping {
     required String name,
     required int creatorId,
     String? description,
+    required bool finalized,
     @JsonKey(name: 'dueDateTime') DateTime? due,
     DateTime? created,
-    DateTime? updated
+    DateTime? updated,
   }) = _Shopping;
 
   const Shopping._();
-  
-  factory Shopping.fromJson(Map<String, Object?> json)
-      => _$ShoppingFromJson(json);
+
+  factory Shopping.fromJson(Map<String, Object?> json) =>
+      _$ShoppingFromJson(json);
 }
