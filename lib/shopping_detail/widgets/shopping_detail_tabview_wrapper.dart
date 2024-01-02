@@ -30,30 +30,31 @@ class _ShoppingDetailTabviewWrapperState
     super.initState();
     _tabViewItems = [
       TabViewItem(
-          textTab: const Tab(
-            text: 'Items',
-          ),
-          tab: Tab(
-            child: PurchasesTabPage(),
-          )),
+        tab: const Tab(
+          text: 'Items',
+        ),
+        page: PurchasesTabPage(),
+      ),
       TabViewItem(
-        textTab: const Tab(
+        tab: const Tab(
           text: 'Detail',
         ),
-        tab: Tab(
-          child: DetailTabPage(),
-        ),
+        page: DetailTabPage(),
       ),
       const TabViewItem(
-        textTab: Tab(
+        tab: Tab(
           text: 'Chat',
         ),
-        tab: Tab(
-          child: GroupchatTabPage(),
-        ),
+        page: GroupchatTabPage(),
       ),
     ];
     _tabController = TabController(length: _tabViewItems.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,12 +89,12 @@ class _ShoppingDetailTabviewWrapperState
             ],
             bottom: TabBar(
               controller: _tabController,
-              tabs: _tabViewItems.map((item) => item.textTab).toList(),
+              tabs: _tabViewItems.map((item) => item.tab).toList(),
             ),
           ),
           body: TabBarView(
             controller: _tabController,
-            children: _tabViewItems.map((item) => item.tab.child!).toList(),
+            children: _tabViewItems.map((item) => item.page).toList(),
           ),
         );
       },

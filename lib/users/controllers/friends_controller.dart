@@ -18,7 +18,9 @@ import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 const _FRIENDSHIP_REQUEST_STATUS_UPDATE_FAILED =
     "Failed to update friendship request status";
 const _SENDING_FRIENDSHIP_REQUEST_FAILED = "Failed to request friendship";
-const _CANCELLING_FRIENDSHIP_REQUEST_FAILED = "Failed to cancel friendship request";
+const _CANCELLING_FRIENDSHIP_REQUEST_FAILED =
+    "Failed to cancel friendship request";
+const _REMOVING_FRIEND_FAILED = "Failed to remove friend";
 
 class FriendsController with AuthenticatedSocketObserver {
   final BehaviorSubject<List<User>> _friends = BehaviorSubject.seeded([]);
@@ -158,6 +160,18 @@ class FriendsController with AuthenticatedSocketObserver {
     } catch (_) {
       _snackbarController.showSnackbarMessage(SnackbarMessage(
         message: _FRIENDSHIP_REQUEST_STATUS_UPDATE_FAILED,
+        category: SnackbarMessageCategory.ERROR,
+      ));
+    }
+  }
+
+  Future<void> removeFriend(int friendUserId) async {
+    try {
+      await _friendshipManagementRepository
+          .deleteExistingFriendship(friendUserId);
+    } catch (_) {
+      _snackbarController.showSnackbarMessage(SnackbarMessage(
+        message: _REMOVING_FRIEND_FAILED,
         category: SnackbarMessageCategory.ERROR,
       ));
     }

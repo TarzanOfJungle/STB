@@ -85,7 +85,8 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
       if (query == null) {
         return;
       }
-      final result = await _usersRepository.getUsers(searchQuery: query);
+      final result =
+          await _usersRepository.getUsers(searchQuery: query, friends: true);
       _usersLookup.add(result);
     });
   }

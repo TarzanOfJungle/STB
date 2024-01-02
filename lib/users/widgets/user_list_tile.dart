@@ -11,7 +11,7 @@ import 'package:split_the_bill/users/models/user/user.dart';
 class UserListTile extends StatelessWidget {
   final User user;
   final FriendshipRequest? relatedFriendshipRequest;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   final _authController = get<AuthController>();
   final _friendsController = get<FriendsController>();
