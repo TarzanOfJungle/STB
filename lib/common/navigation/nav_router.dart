@@ -17,6 +17,8 @@ import 'package:split_the_bill/shopping_detail/screens/summary_page.dart';
 import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
+import 'package:split_the_bill/users/screens/friends_page.dart';
+import 'package:split_the_bill/users/screens/search_users_page.dart';
 
 class NavRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
@@ -92,6 +94,19 @@ class NavRouter {
                   ])
             ],
           ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                  path: NavRoute.friends.path,
+                  builder: (context, state) => FriendsPage(),
+                  routes: [
+                    GoRoute(
+                      path: NavRoute.searchUsers.path,
+                      builder: (context, state) => const SearchUsersPage(),
+                    ),
+                  ])
+            ],
+          ),
         ],
       ),
     ],
@@ -155,6 +170,11 @@ class NavRouter {
   void toShoppingMembers() {
     final fullPath =
         "${NavRoute.shoppingList.path}/${NavRoute.shoppingDetail.path}/${NavRoute.shoppingMembers.path}";
+    _router.go(fullPath);
+  }
+
+  void toUsersSearch() {
+    final fullPath = "${NavRoute.friends.path}/${NavRoute.searchUsers.path}";
     _router.go(fullPath);
   }
 }

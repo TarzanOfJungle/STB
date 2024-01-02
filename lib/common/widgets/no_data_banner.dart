@@ -14,17 +14,22 @@ class NoDataBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        LottieBuilder.asset(
-          AnimationAsset.NO_DATA.url,
-          height: _NO_DATA_BANNER_HEIGHT,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            LottieBuilder.asset(
+              AnimationAsset.NO_DATA.url,
+              height: _NO_DATA_BANNER_HEIGHT,
+            ),
+            if (text != null) _buildTextDescription(text!)
+          ],
         ),
-        if (text != null) _buildTextDescription(text!)
-      ],
+      ),
     );
   }
 

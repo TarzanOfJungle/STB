@@ -3,7 +3,7 @@ import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
 import 'package:split_the_bill/groupchat/widgets/chat_message_text_bubble.dart';
-import 'package:split_the_bill/groupchat/widgets/user_text_avatar.dart';
+import 'package:split_the_bill/common/widgets/components/user_text_avatar.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 const _CHAT_MESSAGE_VERTICAL_MARGIN = 1.0;

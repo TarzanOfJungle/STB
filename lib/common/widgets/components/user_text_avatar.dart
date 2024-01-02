@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/users/models/user/user.dart';
 
-const _AVATAR_LETTER_SIZE = 15.0;
-const _AVATAR_INNER_PADDING = 10.0;
+const _AVATAR_LETTER_DEFAULT_SIZE = 15.0;
 
 class UserTextAvatar extends StatelessWidget {
   final User? user;
+  final Color? backgroundColor;
+  final double letterSize;
 
   String get _avatarLetter {
     if (user == null || user!.username.isEmpty) {
@@ -14,23 +15,27 @@ class UserTextAvatar extends StatelessWidget {
     return user!.username.substring(0, 1).toUpperCase();
   }
 
+  double get _avatarInnerPadding => letterSize * 0.75;
+
   const UserTextAvatar({
     super.key,
     required this.user,
+    this.backgroundColor,
+    this.letterSize = _AVATAR_LETTER_DEFAULT_SIZE,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: backgroundColor ?? Theme.of(context).colorScheme.surface,
         shape: BoxShape.circle,
       ),
-      padding: const EdgeInsets.all(_AVATAR_INNER_PADDING),
+      padding: EdgeInsets.all(_avatarInnerPadding),
       child: Text(
         _avatarLetter,
         style: TextStyle(
-          fontSize: _AVATAR_LETTER_SIZE,
+          fontSize: letterSize,
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ),

@@ -22,11 +22,9 @@ UpdateShopping _$UpdateShoppingFromJson(Map<String, dynamic> json) {
 mixin _$UpdateShopping {
   int get id => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
-  bool? get finalized =>
-      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  bool? get finalized => throw _privateConstructorUsedError;
   @JsonKey(name: 'updateDueDateTime')
-  bool get updateDue =>
-      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  bool get updateDue => throw _privateConstructorUsedError;
   @JsonKey(name: 'dueDateTime')
   DateTime? get due => throw _privateConstructorUsedError;
   bool get updateDescription => throw _privateConstructorUsedError;
@@ -200,11 +198,9 @@ class _$UpdateShoppingImpl extends _UpdateShopping {
   final String? name;
   @override
   final bool? finalized;
-// ignore: invalid_annotation_target
   @override
   @JsonKey(name: 'updateDueDateTime')
   final bool updateDue;
-// ignore: invalid_annotation_target
   @override
   @JsonKey(name: 'dueDateTime')
   final DateTime? due;
@@ -277,10 +273,10 @@ abstract class _UpdateShopping extends UpdateShopping {
   String? get name;
   @override
   bool? get finalized;
-  @override // ignore: invalid_annotation_target
+  @override
   @JsonKey(name: 'updateDueDateTime')
   bool get updateDue;
-  @override // ignore: invalid_annotation_target
+  @override
   @JsonKey(name: 'dueDateTime')
   DateTime? get due;
   @override

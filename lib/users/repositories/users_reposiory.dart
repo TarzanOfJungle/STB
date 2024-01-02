@@ -19,7 +19,7 @@ class UsersRepository implements UsersRepositoryBase {
     String? searchQuery,
     int? shoppingId,
     bool? friends,
-    bool includeSelf = false,
+    bool includeSelf = true,
   }) {
     final Map<String, String> queryParameters = {
       "includeSelf": includeSelf.toString()
