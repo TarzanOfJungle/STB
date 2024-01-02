@@ -13,7 +13,9 @@ class UpdateShopping with _$UpdateShopping {
     required int id,
     String? name,
     bool? finalized,
+    // ignore: invalid_annotation_target
     @Default(false) @JsonKey(name: 'updateDueDateTime') bool updateDue,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'dueDateTime') DateTime? due,
     @Default(false) bool updateDescription,
     String? description,

@@ -15,7 +15,12 @@ enum WebsocketEvent {
   shoppingDeleted("ReceiveShoppingDeleted"),
 
   userAssigned("ReceiveUserAssigned"),
-  userUnassigned("ReceiveUserUnassigned");
+  userUnassigned("ReceiveUserUnassigned"),
+
+  friendshipRequestCreated("ReceiveFriendshipRequestCreated"),
+  friendshipRequestStatusUpdated("ReceiveFriendshipRequestStatusUpdated"),
+  friendshipRequestDeleted("ReceiveFriendshipRequestDeleted"),
+  friendshipDeleted("ReceiveFriendshipDeleted");
 
   final String messageName;
   const WebsocketEvent(this.messageName);

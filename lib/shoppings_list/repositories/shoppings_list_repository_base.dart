@@ -4,7 +4,7 @@ import 'package:split_the_bill/shoppings_list/models/post_shopping/post_shopping
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
 abstract class ShoppingsListRepositoryBase {
-  Future<Iterable<ShoppingWithContext>> getShoppings({String? searchQuery});
+  Future<Iterable<ShoppingWithContext>> getShoppings({String? searchQuery, bool? finalized});
   Future<ShoppingWithContext> addShopping({required PostShopping postShopping});
   Future<ShoppingWithContext> shoppingById({required int shoppingId});
   Future<bool> deleteShopping({required int shoppingId});

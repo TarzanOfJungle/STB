@@ -41,6 +41,10 @@ abstract class ApiConstants {
   static const String userToShoppingAssignment = "$versionPathPrefix/user-shopping-assignments";
   static const String updateUserNotificationToken = "$versionPathPrefix/users";
 
+  // Friendship management
+  static const String friendshipRequests = "$versionPathPrefix/friendship-requests";
+  static const String friendships = "$versionPathPrefix/friendship-requests/friendships";
+
   // Socket paths
   static const String shoppingMessagesStream =
       "$versionPathPrefix/live-group-chat";
@@ -52,4 +56,6 @@ abstract class ApiConstants {
       "$versionPathPrefix/live-shoppings";
   static const String userShoppingAssignmentChangesStream =
       "$versionPathPrefix/live-users-shoppings";
+      static const String friendshipManagementChangesStream =
+      "$versionPathPrefix/live-friendship-management";
 }

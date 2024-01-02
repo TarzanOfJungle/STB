@@ -35,10 +35,16 @@ class MockShoppingsRepository implements ShoppingsListRepositoryBase {
   ];
 
   @override
-  Future<Iterable<ShoppingWithContext>> getShoppings({String? searchQuery}) {
+  Future<Iterable<ShoppingWithContext>> getShoppings(
+      {String? searchQuery, bool? finalized}) {
     return Future.delayed(const Duration(seconds: 1), () {
-      return _mockShoppings.where(
+      var filteredShoppings = _mockShoppings.where(
           (shopping) => shopping.shopping.name.contains(searchQuery ?? ''));
+      if (finalized != null) {
+        filteredShoppings = filteredShoppings
+            .where((shopping) => shopping.shopping.finalized == finalized);
+      }
+      return filteredShoppings;
     });
   }
 
