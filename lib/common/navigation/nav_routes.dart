@@ -3,9 +3,11 @@ enum NavRoute {
   login("/login"),
   registration("/registration"),
   home("/home"),
+
   shoppingList("/shoppings"),
 
   // Nested routes
+  profile("profile"),
   shoppingDetail("shopping-detail"),
   purchaseDetail("purchase-detail"),
   memberPurchases("member-purchases"),

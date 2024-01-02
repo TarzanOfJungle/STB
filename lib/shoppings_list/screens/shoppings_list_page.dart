@@ -13,10 +13,17 @@ import '../../ioc_container.dart';
 const String _EMPTY_LIST_MESSAGE = "No shoppings yet";
 const String _LOADING_LIST_ERROR_MESSAGE = "Unable to load list of shoppings";
 
-class ShoppingsListPage extends StatelessWidget {
+class ShoppingsListPage extends StatefulWidget {
   ShoppingsListPage({super.key});
 
   final _shoppingsListController = get<ShoppingsListController>();
+
+  @override
+  State<ShoppingsListPage> createState() => _ShoppingsListPageState();
+}
+
+class _ShoppingsListPageState extends State<ShoppingsListPage> {
+  final _searchFieldController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,34 +31,55 @@ class ShoppingsListPage extends StatelessWidget {
       label: 'Shoppings',
       actions: [
         AppBarButton(
-          label: 'New',
-          onPressed: () => _onNewButtonPressed(context), //TODO
-        ),
+            label: 'New', onPressed: () => _onNewButtonPressed(context)),
         const SizedBox(
           width: STANDARD_PADDING,
         ),
       ],
-      child: FutureBuilder<bool>(
-        future: _shoppingsListController.updateShoppingsList(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData) {
-            return const Center(child: LoadingIndicator());
-          } else {
-            if (!snapshot.data!) {
-              return const Text(_LOADING_LIST_ERROR_MESSAGE);
-            }
-            return _showList();
-          }
-        },
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(SMALL_PADDING),
+            child: TextField(
+              controller: _searchFieldController,
+              onChanged: (query) =>
+                  widget._shoppingsListController.updateShoppingsList(
+                      searchQuery: query), //TODO search bar
+              decoration: InputDecoration(
+                  labelText: 'Search',
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        _searchFieldController.clear();
+                        widget._shoppingsListController.updateShoppingsList();
+                      },
+                      icon: const Icon(Icons.clear))),
+            ),
+          ),
+          FutureBuilder<bool>(
+            future: widget._shoppingsListController.updateShoppingsList(
+                searchQuery: _searchFieldController.text),
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData) {
+                return const Center(child: LoadingIndicator());
+              } else {
+                if (!snapshot.data!) {
+                  return const Text(_LOADING_LIST_ERROR_MESSAGE);
+                }
+                return _showList();
+              }
+            },
+          ),
+        ],
       ),
     );
   }
 
   Widget _showList() {
     return StreamBuilder<Iterable<ShoppingWithContext>>(
-        stream: _shoppingsListController.shoppingsListStream,
+        stream: widget._shoppingsListController.shoppingsListStream,
         builder: (BuildContext context,
             AsyncSnapshot<Iterable<ShoppingWithContext>> snapshot) {
           if (snapshot.hasError) {
@@ -65,13 +93,18 @@ class ShoppingsListPage extends StatelessWidget {
             if (shoppingsList.isEmpty) {
               return const Text(_EMPTY_LIST_MESSAGE);
             }
-            return ListView.separated(
-              itemBuilder: (_, index) =>
-                  ShoppingTile(
-                    shopping: shoppingsList[index],
-                  ),
-              separatorBuilder: (_, __) => const Divider(),
-              itemCount: shoppingsList.length,
+            return Expanded(
+              child: RefreshIndicator(
+                onRefresh: _pullRefresh,
+                child: ListView.separated(
+                  itemBuilder: (_, index) =>
+                      ShoppingTile(
+                        shopping: shoppingsList[index],
+                      ),
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemCount: shoppingsList.length,
+                ),
+              ),
             );
           }
         });
@@ -82,5 +115,10 @@ class ShoppingsListPage extends StatelessWidget {
       context: context,
       builder: (context) => const ShoppingParametersDialog(),
     );
+  }
+
+  Future<void> _pullRefresh() async {
+    await widget._shoppingsListController.updateShoppingsList(
+        searchQuery: _searchFieldController.text);
   }
 }

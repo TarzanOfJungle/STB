@@ -21,8 +21,10 @@ const String _DEFAULT_EXCEPTION_MESSAGE = "Something went wrong";
 class ShoppingsListController with AuthenticatedSocketObserver {
   final BehaviorSubject<Iterable<ShoppingWithContext>> _shoppingsList =
       BehaviorSubject.seeded([]);
+
   final BehaviorSubject<ShoppingWithContext?> _lastUpdatedShopping =
       BehaviorSubject.seeded(null);
+
   late final ShoppingsListRepositoryBase _shoppingsListRepository;
   late final SnackbarMessangerController _snackbarController;
   late final ProductPurchasesRepositoryBase _productPurchasesRepository;

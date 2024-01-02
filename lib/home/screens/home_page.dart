@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
+import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
+import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 class HomePage extends StatelessWidget {
   final _authController = get<AuthController>();
   final _navRouter = get<NavRouter>();
+
   HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await _authController.logout();
-            _navRouter.toLogin();
-          },
-          child: const Text("logout"),
+    return PageTemplate(
+      label: 'Home',
+      actions: [
+        IconButton.outlined(
+          onPressed: () => _navRouter.toProfile(),
+          icon: const Icon(Icons.person),
         ),
+        const SizedBox(
+          width: STANDARD_PADDING,
+        )
+      ],
+      child: const Center(
+        child: Text('home page TBD'),
       ),
     );
   }

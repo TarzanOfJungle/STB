@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -25,6 +26,7 @@ class _ShoppingDetailTabviewWrapperState
   late final List<TabViewItem> _tabViewItems;
   late final TabController _tabController;
   final _shoppingDetailController = get<ShoppingDetailController>();
+  final _authController = get<AuthController>();
   @override
   void initState() {
     super.initState();
@@ -69,6 +71,7 @@ class _ShoppingDetailTabviewWrapperState
           return const LoadingIndicator();
         }
         var shopping = snapshot.data!;
+        var loggedInUser = _authController.loggedInUser;
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -77,15 +80,7 @@ class _ShoppingDetailTabviewWrapperState
                 fontWeight: FontWeight.bold,
               ),
             ),
-            actions: [
-              AppBarButton(
-                label: 'Edit',
-                onPressed: () => _onEditButtonPressed(context, shopping),
-              ),
-              const SizedBox(
-                width: STANDARD_PADDING,
-              ),
-            ],
+            actions: shopping.shopping.creatorId == loggedInUser!.id ? _actions(shopping) : [],
             bottom: TabBar(
               controller: _tabController,
               tabs: _tabViewItems.map((item) => item.textTab).toList(),
@@ -107,5 +102,17 @@ class _ShoppingDetailTabviewWrapperState
         shopping: shopping,
       ),
     );
+  }
+
+  List<Widget> _actions(ShoppingWithContext shopping) {
+    return [
+      AppBarButton(
+        label: 'Edit',
+        onPressed: () => _onEditButtonPressed(context, shopping),
+      ),
+      const SizedBox(
+        width: STANDARD_PADDING,
+      ),
+    ];
   }
 }

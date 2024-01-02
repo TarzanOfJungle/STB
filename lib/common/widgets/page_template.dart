@@ -20,15 +20,18 @@ class PageTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(label),
-        actions: actions,
-        leading: _buildBackButton(),
-      ),
-      body: SafeArea(
-        child: child,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(label),
+          actions: actions,
+          leading: _buildBackButton(),
+        ),
+        body: SafeArea(
+          child: child,
+        ),
       ),
     );
   }

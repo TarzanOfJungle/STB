@@ -5,6 +5,7 @@ import 'package:split_the_bill/auth/screens/registration_page.dart';
 import 'package:split_the_bill/common/navigation/nav_routes.dart';
 import 'package:split_the_bill/common/widgets/wrappers/bottom_nav_bar_wrapper.dart';
 import 'package:split_the_bill/home/screens/home_page.dart';
+import 'package:split_the_bill/profile_page/screens/profile_page.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';
@@ -53,9 +54,14 @@ class NavRouter {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: NavRoute.home.path,
-                builder: (context, state) => HomePage(),
-              )
+                  path: NavRoute.home.path,
+                  builder: (context, state) => HomePage(),
+                  routes: [
+                    GoRoute(
+                      path: NavRoute.profile.path,
+                      builder: (context, state) => ProfilePage(),
+                    )
+                  ])
             ],
           ),
           StatefulShellBranch(
@@ -111,6 +117,10 @@ class NavRouter {
 
   void toHome() {
     _router.go(NavRoute.home.path);
+  }
+
+  void toProfile() {
+    _router.go("${NavRoute.home.path}/${NavRoute.profile.path}");
   }
 
   void toShoppingList() {
