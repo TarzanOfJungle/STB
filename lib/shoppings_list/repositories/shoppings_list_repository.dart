@@ -15,11 +15,21 @@ class ShoppingsListRepository implements ShoppingsListRepositoryBase {
   const ShoppingsListRepository(this._apiClient);
 
   @override
-  Future<List<ShoppingWithContext>> getShoppings({String? searchQuery}) async {
+  Future<List<ShoppingWithContext>> getShoppings({
+    String? searchQuery,
+    bool? finalized,
+  }) async {
+    final Map<String, String> queryParams = {};
+    if (searchQuery != null) {
+      queryParams["search"] = searchQuery;
+    }
+    if (finalized != null) {
+      queryParams["finalized"] = finalized.toString();
+    }
     final shoppingsList = await _apiClient.sendDataRequest(
       path: ApiConstants.shoppingsList,
       method: HttpMethod.get,
-      queryParams: searchQuery == null ? null : {'search': searchQuery},
+      queryParams: queryParams.isEmpty ? null : queryParams,
       processBody: (rawBody) {
         final listJson = rawBody.asJsonObjectArray();
         return listJson.map((e) => ShoppingWithContext.fromJson(e)).toList();

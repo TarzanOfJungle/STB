@@ -13,6 +13,7 @@ class MockShoppingsRepository implements ShoppingsListRepositoryBase {
         name: 'Shopping 1',
         creatorId: 007,
         description: 'This is description.',
+        finalized: false,
       ),
       numberOfItems: 5,
       ammountSpent: 73791,
@@ -25,6 +26,7 @@ class MockShoppingsRepository implements ShoppingsListRepositoryBase {
         creatorId: 69,
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+        finalized: false,
       ),
       numberOfItems: 12,
       ammountSpent: 0,
@@ -33,15 +35,22 @@ class MockShoppingsRepository implements ShoppingsListRepositoryBase {
   ];
 
   @override
-  Future<Iterable<ShoppingWithContext>> getShoppings({String? searchQuery}) {
+  Future<Iterable<ShoppingWithContext>> getShoppings(
+      {String? searchQuery, bool? finalized}) {
     return Future.delayed(const Duration(seconds: 1), () {
-      return _mockShoppings
-          .where((shopping) => shopping.shopping.name.contains(searchQuery ?? ''));
+      var filteredShoppings = _mockShoppings.where(
+          (shopping) => shopping.shopping.name.contains(searchQuery ?? ''));
+      if (finalized != null) {
+        filteredShoppings = filteredShoppings
+            .where((shopping) => shopping.shopping.finalized == finalized);
+      }
+      return filteredShoppings;
     });
   }
 
   @override
-  Future<ShoppingWithContext> addShopping({required PostShopping postShopping}) {
+  Future<ShoppingWithContext> addShopping(
+      {required PostShopping postShopping}) {
     // TODO: implement addShopping
     throw UnimplementedError();
   }
@@ -59,13 +68,15 @@ class MockShoppingsRepository implements ShoppingsListRepositoryBase {
   }
 
   @override
-  Future<ShoppingWithContext> updateShopping({required UpdateShopping updateShopping}) {
+  Future<ShoppingWithContext> updateShopping(
+      {required UpdateShopping updateShopping}) {
     // TODO: implement updateShopping
     throw UnimplementedError();
   }
 
   @override
-  Stream<WebsocketEventWithData<ShoppingWithContext>> getShoppingChangesStream() {
+  Stream<WebsocketEventWithData<ShoppingWithContext>>
+      getShoppingChangesStream() {
     // TODO: implement getShoppingChangesStream
     throw UnimplementedError();
   }

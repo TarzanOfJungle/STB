@@ -5,6 +5,7 @@ import 'package:split_the_bill/ioc_container.dart';
 class PageTemplate extends StatelessWidget {
   final String label;
   final Widget child;
+  final Widget? floatingActionButton;
   final bool showBackButton;
   final List<Widget>? actions;
 
@@ -14,6 +15,7 @@ class PageTemplate extends StatelessWidget {
     super.key,
     required this.label,
     required this.child,
+    this.floatingActionButton,
     this.showBackButton = false,
     this.actions,
   });
@@ -29,6 +31,7 @@ class PageTemplate extends StatelessWidget {
           actions: actions,
           leading: _buildBackButton(),
         ),
+        floatingActionButton: floatingActionButton,
         body: SafeArea(
           child: child,
         ),

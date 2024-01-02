@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TabViewItem {
-  final Tab textTab;
   final Tab tab;
+  final Widget page;
 
   const TabViewItem({
-    required this.textTab,
     required this.tab,
+    required this.page,
   });
 }

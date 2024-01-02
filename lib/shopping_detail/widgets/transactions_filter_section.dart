@@ -3,7 +3,6 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/user_filter_controller.dart';
-import 'package:split_the_bill/shopping_detail/models/filter_payment_direction_option.dart';
 import '../../ioc_container.dart';
 import '../../users/models/user/user.dart';
 

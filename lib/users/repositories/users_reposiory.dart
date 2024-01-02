@@ -18,6 +18,7 @@ class UsersRepository implements UsersRepositoryBase {
   Future<List<User>> getUsers({
     String? searchQuery,
     int? shoppingId,
+    bool? friends,
     bool includeSelf = true,
   }) {
     final Map<String, String> queryParameters = {
@@ -28,6 +29,9 @@ class UsersRepository implements UsersRepositoryBase {
     }
     if (shoppingId != null) {
       queryParameters["shoppingId"] = shoppingId.toString();
+    }
+    if (friends != null) {
+      queryParameters["friends"] = friends.toString();
     }
 
     return _apiClient.sendDataRequest(

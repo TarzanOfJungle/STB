@@ -1,5 +1,6 @@
 abstract class ApiConstants {
   static const Duration timeout = Duration(seconds: 5);
+  static const searchDebounce = Duration(milliseconds: 500);
   static const String httpProtocol = "http";
   static const String webSocketProtocol = "ws";
   static const String host = "vps-d123f020.vps.ovh.net";
@@ -38,8 +39,15 @@ abstract class ApiConstants {
 
   // Users
   static const String users = "$versionPathPrefix/users";
-  static const String userToShoppingAssignment = "$versionPathPrefix/user-shopping-assignments";
+  static const String userToShoppingAssignment =
+      "$versionPathPrefix/user-shopping-assignments";
   static const String updateUserNotificationToken = "$versionPathPrefix/users";
+
+  // Friendship management
+  static const String friendshipRequests =
+      "$versionPathPrefix/friendship-requests";
+  static const String friendships =
+      "$versionPathPrefix/friendship-requests/friendships";
 
   // Socket paths
   static const String shoppingMessagesStream =
@@ -52,4 +60,6 @@ abstract class ApiConstants {
       "$versionPathPrefix/live-shoppings";
   static const String userShoppingAssignmentChangesStream =
       "$versionPathPrefix/live-users-shoppings";
+  static const String friendshipManagementChangesStream =
+      "$versionPathPrefix/live-friendship-management";
 }

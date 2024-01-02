@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
+import 'package:split_the_bill/common/constants/api_constants.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
@@ -10,7 +11,6 @@ import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_contr
 import 'package:split_the_bill/users/models/user/user.dart';
 import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
-const _SEARCH_QUERY_DEBOUNCE_MILLIS = 500;
 const _USERS_ASSIGNED_MESSAGE = "Users assigned";
 const _FAILED_TO_ASSIGN_USERS_MESSAGE =
     "Failed to assign some of the selected users";
@@ -80,13 +80,13 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
 
   void _listenForUsersSearchQuery() {
     _usersSearchQuery.stream
-        .debounceTime(
-            const Duration(milliseconds: _SEARCH_QUERY_DEBOUNCE_MILLIS))
+        .debounceTime(ApiConstants.searchDebounce)
         .listen((query) async {
       if (query == null) {
         return;
       }
-      final result = await _usersRepository.getUsers(searchQuery: query);
+      final result =
+          await _usersRepository.getUsers(searchQuery: query, friends: true);
       _usersLookup.add(result);
     });
   }

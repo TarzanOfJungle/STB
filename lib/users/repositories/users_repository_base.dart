@@ -7,6 +7,7 @@ abstract class UsersRepositoryBase {
   Future<List<User>> getUsers({
     String? searchQuery,
     int? shoppingId,
+    bool? friends,
     bool includeSelf = true,
   });
 

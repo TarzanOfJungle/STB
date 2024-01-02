@@ -30,6 +30,9 @@ import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controll
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
+import 'package:split_the_bill/users/controllers/friends_controller.dart';
+import 'package:split_the_bill/users/repositories/friendship_management_repository.dart';
+import 'package:split_the_bill/users/repositories/friendship_management_repository_base.dart';
 import 'package:split_the_bill/users/repositories/users_reposiory.dart';
 import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
@@ -60,6 +63,8 @@ abstract class IocContainer {
         ProductsRepository(get<ApiClientBase>()));
     get.registerSingleton<UsersRepositoryBase>(
         UsersRepository(get<ApiClientBase>()));
+    get.registerSingleton<FriendshipManagementRepositoryBase>(
+        FriendshipManagementRepository(get<ApiClientBase>()));
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
@@ -125,6 +130,11 @@ abstract class IocContainer {
       get<GroupchatRepositoryBase>(),
       get<SnackbarMessangerController>(),
     ));
+    get.registerSingleton<FriendsController>(FriendsController(
+        get<AuthController>(),
+        get<UsersRepositoryBase>(),
+        get<FriendshipManagementRepositoryBase>(),
+        get<SnackbarMessangerController>()));
 
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),

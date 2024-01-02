@@ -10,6 +10,7 @@ _$UpdateShoppingImpl _$$UpdateShoppingImplFromJson(Map<String, dynamic> json) =>
     _$UpdateShoppingImpl(
       id: json['id'] as int,
       name: json['name'] as String?,
+      finalized: json['finalized'] as bool?,
       updateDue: json['updateDueDateTime'] as bool? ?? false,
       due: json['dueDateTime'] == null
           ? null
@@ -23,6 +24,7 @@ Map<String, dynamic> _$$UpdateShoppingImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'finalized': instance.finalized,
       'updateDueDateTime': instance.updateDue,
       'dueDateTime': instance.due?.toIso8601String(),
       'updateDescription': instance.updateDescription,
