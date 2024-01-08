@@ -3,6 +3,7 @@ import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/profile_page/dialogs/username_edit_dialog.dart';
 import 'package:split_the_bill/profile_page/widgets/profile_tile.dart';
 
 import '../../auth/controllers/auth_controller.dart';
@@ -51,7 +52,7 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(
                     height: SMALL_PADDING,
                   ),
-                  _buildUsernameTile(user),
+                  _buildUsernameTile(context, user),
                   const SizedBox(
                     height: SMALL_PADDING,
                   ),
@@ -65,11 +66,11 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildUsernameTile(AuthenticatedUser user) {
+  Widget _buildUsernameTile(BuildContext context, AuthenticatedUser user) {
     return ProfileTile(
       label: 'Username',
       displayedValue: user.username,
-      onEdit: () {}, // TODO
+      onEdit: () => _onEditButtonPressed(context, user),
     );
   }
 
@@ -102,5 +103,14 @@ class ProfilePage extends StatelessWidget {
   Future<void> _logout() async {
     await _authController.logout();
     _navRouter.toLogin();
+  }
+
+  void _onEditButtonPressed(context, AuthenticatedUser user) {
+    showDialog(
+      context: context,
+      builder: (context) => UsernameEditDialog(
+        user: user,
+      ),
+    );
   }
 }

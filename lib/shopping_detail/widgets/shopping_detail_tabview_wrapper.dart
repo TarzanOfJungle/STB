@@ -107,8 +107,8 @@ class _ShoppingDetailTabviewWrapperState
 
   List<Widget> _actions(ShoppingWithContext shopping) {
     return [
-      AppBarButton(
-        label: 'Edit',
+      IconButton(
+        icon: const Icon(Icons.edit),
         onPressed: () => _onEditButtonPressed(context, shopping),
       ),
       const SizedBox(
