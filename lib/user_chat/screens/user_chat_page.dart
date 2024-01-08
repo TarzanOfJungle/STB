@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
-import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
-import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
 import 'package:split_the_bill/common/widgets/components/chat_input.dart';
-import 'package:split_the_bill/groupchat/widgets/groupchat_message.dart';
+import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
+import 'package:split_the_bill/user_chat/controllers/user_chat_controller.dart';
+import 'package:split_the_bill/user_chat/models/user_chat_message_with_users.dart';
+import 'package:split_the_bill/user_chat/widgets/user_chat_message.dart';
 
-class GroupchatTabPage extends StatefulWidget {
-  const GroupchatTabPage({super.key});
+class UserChatPage extends StatefulWidget {
+  const UserChatPage({super.key});
 
   @override
-  State<GroupchatTabPage> createState() => _GroupchatTabPageState();
+  State<UserChatPage> createState() => _UserChatPageState();
 }
 
-class _GroupchatTabPageState extends State<GroupchatTabPage> {
+class _UserChatPageState extends State<UserChatPage> {
   final _messageInputController = TextEditingController();
   final _scrollController = ScrollController();
-  final _groupchatController = get<GroupchatController>();
+  final _userChatController = get<UserChatController>();
 
   @override
   void dispose() {
@@ -29,33 +30,38 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _groupchatController.sortedMessagesStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner();
-        }
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final messages = snapshot.data!;
-        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    return PageTemplate(
+      label: _userChatController.otherUser?.username ?? "Chat",
+      showBackButton: true,
+      child: StreamBuilder(
+        stream: _userChatController.sortedMessagesWithUsersStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const ErrorBanner();
+          }
+          if (!snapshot.hasData) {
+            return const LoadingIndicator();
+          }
+          final messages = snapshot.data!;
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => _scrollToBottom());
 
-        return Scaffold(
-          body: Column(
-            children: [
-              Expanded(
-                child: _buildMessagesList(messages),
-              ),
-              _buildMessageInput(),
-            ],
-          ),
-        );
-      },
+          return Scaffold(
+            body: Column(
+              children: [
+                Expanded(
+                  child: _buildUserChatMessages(messages),
+                ),
+                _buildMessageInput(),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildMessagesList(List<GroupchatMessageWithAuthor> messages) {
+  Widget _buildUserChatMessages(List<UserChatMessageWithUsers> messages) {
     final messagesReversed = messages.reversed.toList();
     return ListView.builder(
       controller: _scrollController,
@@ -68,14 +74,7 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
       itemCount: messages.length,
       itemBuilder: (context, index) {
         final currentMessage = messagesReversed[index];
-        GroupchatMessageWithAuthor? previousMessage;
-        if (index < messagesReversed.length - 1) {
-          previousMessage = messagesReversed[index + 1];
-        }
-        return GroupchatMessage(
-          currentMessage: currentMessage,
-          previousMessage: previousMessage,
-        );
+        return UserChatMessage(messageWithUsers: currentMessage);
       },
     );
   }
@@ -101,7 +100,7 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
   Future<void> _sendMessage() async {
     final messageToSend = _messageInputController.text;
     _messageInputController.clear();
-    final success = await _groupchatController.postNewMessage(messageToSend);
+    final success = await _userChatController.postNewMessage(messageToSend);
     if (!success) {
       _messageInputController.text = messageToSend;
     }

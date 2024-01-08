@@ -76,7 +76,7 @@ class ApiClient implements ApiClientBase {
       additionalHeaders: additionalHeaders,
     );
 
-    http.Response? res;
+    final http.Response res;
     try {
       final streamed =
           await _httpRestClient.send(request).timeout(ApiConstants.timeout);

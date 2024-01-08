@@ -1,31 +1,31 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
-import 'package:split_the_bill/groupchat/models/chat_message_notification/chat_message_notification.dart';
 import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
 class FcmController {
   final UsersRepositoryBase _usersRepository;
   final InternetConnectivityService _internetConnectivityService;
-  final _groupMessageNotifications =
-      BehaviorSubject<ChatMessageNotification?>.seeded(null);
+  // final _groupMessageNotifications =
+  //     BehaviorSubject<ChatMessageNotification?>.seeded(null);
 
   FirebaseMessaging get _firebaseMessaging => FirebaseMessaging.instance;
-  Stream<ChatMessageNotification?> get groupMessageNotificationsStream =>
-      _groupMessageNotifications.stream;
+  // Stream<ChatMessageNotification?> get groupMessageNotificationsStream =>
+  //     _groupMessageNotifications.stream;
 
-  FcmController(this._usersRepository, this._internetConnectivityService) {
-    FirebaseMessaging.onMessage.listen((remoteMessage) {
-      if (remoteMessage.notification == null) {
-        return;
-      }
-      try {
-        final groupMessageData =
-            ChatMessageNotification.fromJson(remoteMessage.data);
-        _groupMessageNotifications.add(groupMessageData);
-      } catch (_) {}
-    });
-  }
+  FcmController(this._usersRepository, this._internetConnectivityService);
+
+  // void _listenForRemoteMessages() {
+  //   FirebaseMessaging.onMessage.listen((remoteMessage) {
+  //     if (remoteMessage.notification == null) {
+  //       return;
+  //     }
+  //     try {
+  //       final groupMessageData =
+  //           ChatMessageNotification.fromJson(remoteMessage.data);
+  //       _groupMessageNotifications.add(groupMessageData);
+  //     } catch (_) {}
+  //   });
+  // }
 
   Future<String?> _getNotificationToken() async {
     return await _firebaseMessaging.getToken();

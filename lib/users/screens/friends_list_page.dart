@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -14,6 +15,7 @@ const _NO_FRIENDS_MESSAGE =
     "You don't have any friends yet. Add some by clicking the button below.";
 
 class FriendsListPage extends StatelessWidget {
+  final _navRouter = get<NavRouter>();
   final _friendsController = get<FriendsController>();
 
   FriendsListPage({super.key});
@@ -52,7 +54,7 @@ class FriendsListPage extends StatelessWidget {
               ),
               child: UserListTile(
                 user: friends[index],
-                onTap: () => print("user clicked"),
+                onTap: () => _navRouter.toUserChatPage(friends[index]),
               ),
             ),
           ),

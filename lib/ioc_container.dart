@@ -30,6 +30,9 @@ import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controll
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
+import 'package:split_the_bill/user_chat/controllers/user_chat_controller.dart';
+import 'package:split_the_bill/user_chat/repositories/user_chat_repository.dart';
+import 'package:split_the_bill/user_chat/repositories/user_chat_repository_base.dart';
 import 'package:split_the_bill/users/controllers/friends_controller.dart';
 import 'package:split_the_bill/users/repositories/friendship_management_repository.dart';
 import 'package:split_the_bill/users/repositories/friendship_management_repository_base.dart';
@@ -65,6 +68,8 @@ abstract class IocContainer {
         UsersRepository(get<ApiClientBase>()));
     get.registerSingleton<FriendshipManagementRepositoryBase>(
         FriendshipManagementRepository(get<ApiClientBase>()));
+    get.registerSingleton<UserChatRepositoryBase>(
+        UserChatRepository(get<ApiClientBase>()));
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
@@ -135,6 +140,12 @@ abstract class IocContainer {
         get<UsersRepositoryBase>(),
         get<FriendshipManagementRepositoryBase>(),
         get<SnackbarMessangerController>()));
+    get.registerSingleton<UserChatController>(UserChatController(
+      get<AuthController>(),
+      get<UserChatRepositoryBase>(),
+      get<SnackbarMessangerController>(),
+      get<FriendsController>(),
+    ));
 
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
@@ -146,8 +157,9 @@ abstract class IocContainer {
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(
-      singlePurchaseController: get<SinglePurchaseController>(),
-      shoppingDetailController: get<ShoppingDetailController>(),
+      get<SinglePurchaseController>(),
+      get<ShoppingDetailController>(),
+      get<UserChatController>(),
     ));
   }
 }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
+import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
-import 'package:split_the_bill/groupchat/widgets/chat_message_text_bubble.dart';
+import 'package:split_the_bill/common/widgets/components/chat_message_text_bubble.dart';
 import 'package:split_the_bill/common/widgets/components/user_text_avatar.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
-const _CHAT_MESSAGE_VERTICAL_MARGIN = 1.0;
-
-class ChatMessage extends StatelessWidget {
+class GroupchatMessage extends StatelessWidget {
   final GroupchatMessageWithAuthor currentMessage;
   final GroupchatMessageWithAuthor? previousMessage;
   final _authController = get<AuthController>();
@@ -23,7 +22,7 @@ class ChatMessage extends StatelessWidget {
   MainAxisAlignment get _mainAxisAlignment =>
       _isLoggedInUsersMessage ? MainAxisAlignment.end : MainAxisAlignment.start;
 
-  ChatMessage({
+  GroupchatMessage({
     super.key,
     required this.currentMessage,
     required this.previousMessage,
@@ -36,7 +35,7 @@ class ChatMessage extends StatelessWidget {
         _buildUserLabel(context),
         Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: _CHAT_MESSAGE_VERTICAL_MARGIN,
+            vertical: UiConstants.chatMessageVerticalMargin,
           ),
           child: Column(
             children: [
