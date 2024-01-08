@@ -146,7 +146,9 @@ abstract class IocContainer {
     get.registerSingleton<UserFilterController>(UserFilterController());
 
     get.registerSingleton<ProfileController>(ProfileController(
-        get<UsersRepositoryBase>(), get<SnackbarMessangerController>()));
+        get<UsersRepositoryBase>(),
+        get<AuthController>(),
+        get<SnackbarMessangerController>()));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(

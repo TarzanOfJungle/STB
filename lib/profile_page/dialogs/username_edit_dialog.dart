@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
+import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 import 'package:split_the_bill/users/models/update_user/put_user.dart';
 
@@ -9,11 +11,12 @@ import '../../common/navigation/nav_router.dart';
 import '../../common/widgets/components/stb_elevated_button.dart';
 import '../../common/widgets/components/stb_text_field.dart';
 import '../../ioc_container.dart';
+import '../../users/models/user/user.dart';
 
 const String _TITLE = "Edit username";
 
 class UsernameEditDialog extends StatefulWidget {
-  final AuthenticatedUser user;
+  final User user;
 
   const UsernameEditDialog({
     super.key,
@@ -26,23 +29,32 @@ class UsernameEditDialog extends StatefulWidget {
 
 class _UsernameEditDialogState extends State<UsernameEditDialog> {
   final _navRouter = get<NavRouter>();
-
   final _profileController = get<ProfileController>();
   final _usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    _usernameController.text = widget.user.username;
-
     return StbDialog(
       title: _TITLE,
       titleIcon: Icons.edit,
       body: Column(
         children: [
-          StbTextField(
-            controller: _usernameController,
-            label: "New username",
-            maxLength: 500,
+          StreamBuilder(
+            stream: _profileController.userInformationsStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text(snapshot.error.toString(),),);
+              } else if (!snapshot.hasData) {
+                return const Center(child: LoadingIndicator(),);
+              } else {
+                _usernameController.text = snapshot.data!.username;
+                return StbTextField(
+                  controller: _usernameController,
+                  label: "New username",
+                  maxLength: 500,
+                );
+              }
+            }
           ),
           const SizedBox(
             height: 20.0,
