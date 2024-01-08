@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/auth/controllers/auth_controller.dart';
-import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
@@ -51,7 +49,6 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
                 return StbTextField(
                   controller: _usernameController,
                   label: "New username",
-                  maxLength: 500,
                 );
               }
             }

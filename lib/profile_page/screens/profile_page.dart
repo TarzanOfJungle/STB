@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
+import 'package:split_the_bill/profile_page/dialogs/password_change_dialog.dart';
 import 'package:split_the_bill/profile_page/dialogs/username_edit_dialog.dart';
 import 'package:split_the_bill/profile_page/widgets/profile_tile.dart';
 
@@ -66,7 +66,7 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(
                 height: SMALL_PADDING,
               ),
-              _buildPasswordTile(user),
+              _buildPasswordTile(context, user),
             ],
           );
         }
@@ -91,10 +91,10 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordTile(User user) {
+  Widget _buildPasswordTile(BuildContext context, User user) {
     return ProfileTile(
       label: 'Password',
-      onEdit: () {},
+      onEdit: () => _onChangePasswordPressed(context, user),
       buttonLabel: 'Change password',
     );
   }
@@ -117,6 +117,15 @@ class ProfilePage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => UsernameEditDialog(
+        user: user,
+      ),
+    );
+  }
+
+  void _onChangePasswordPressed(context, User user) {
+    showDialog(
+      context: context,
+      builder: (context) => PasswordChangeDialog(
         user: user,
       ),
     );
