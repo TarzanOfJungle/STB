@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/users/models/user/user.dart';
+
+import '../../ioc_container.dart';
 
 const _ROW_PADDING = 4.0;
 const _LEADING_PADDING = 3.0;
@@ -17,15 +20,19 @@ class ShoppingMemberListTile extends StatelessWidget {
   bool get _isCurrentUser => currentUserId == user.id;
   bool get _showDeleteButton => onDelete != null && currentUserId != user.id;
 
-  const ShoppingMemberListTile({
+  ShoppingMemberListTile({
     super.key,
     this.onDelete,
     required this.user,
     required this.currentUserId,
   });
 
+  final _shoppingDetailController = get<ShoppingDetailController>();
+
   @override
   Widget build(BuildContext context) {
+    var ownerId =
+        _shoppingDetailController.currentShoppingState?.shopping.creatorId;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: _ROW_PADDING),
       child: Row(
@@ -35,6 +42,7 @@ class ShoppingMemberListTile extends StatelessWidget {
           const SizedBox(width: STANDARD_PADDING),
           _buildText(context),
           const SizedBox(width: STANDARD_PADDING),
+          if (ownerId == user.id) _buildOwnerLabel(),
           if (_showDeleteButton) _buildDeleteButton(),
         ],
       ),
@@ -75,6 +83,10 @@ class ShoppingMemberListTile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildOwnerLabel() {
+    return const Icon(Icons.star);
   }
 
   Widget _buildDeleteButton() {

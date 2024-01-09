@@ -12,7 +12,7 @@ class ConfirmationDialog extends StatelessWidget {
   final String cancelText;
   final Color confirmColor;
   final Color cancelColor;
-  late final Future<void> Function() onConfirm;
+  final Future<void> Function() onConfirm;
 
   ConfirmationDialog({
     required this.label,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/groupchat/screens/groupchat_tab_page.dart';
 import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
@@ -107,8 +106,8 @@ class _ShoppingDetailTabviewWrapperState
 
   List<Widget> _actions(ShoppingWithContext shopping) {
     return [
-      AppBarButton(
-        label: 'Edit',
+      IconButton(
+        icon: const Icon(Icons.edit),
         onPressed: () => _onEditButtonPressed(context, shopping),
       ),
       const SizedBox(

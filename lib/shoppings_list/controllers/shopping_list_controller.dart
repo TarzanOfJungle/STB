@@ -25,11 +25,11 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   final BehaviorSubject<ShoppingWithContext?> _lastUpdatedShopping =
       BehaviorSubject.seeded(null);
 
-  late final ShoppingsListRepositoryBase _shoppingsListRepository;
-  late final SnackbarMessangerController _snackbarController;
-  late final ProductPurchasesRepositoryBase _productPurchasesRepository;
-  late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
-  late final UsersRepositoryBase _usersRepository;
+  final ShoppingsListRepositoryBase _shoppingsListRepository;
+  final SnackbarMessangerController _snackbarController;
+  final ProductPurchasesRepositoryBase _productPurchasesRepository;
+  final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
+  final UsersRepositoryBase _usersRepository;
 
   Stream<Iterable<ShoppingWithContext>> get shoppingsListStream =>
       _shoppingsList.stream;

@@ -30,8 +30,11 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
     return PageTemplate(
       label: 'Shoppings',
       actions: [
-        AppBarButton(
-            label: 'New', onPressed: () => _onNewButtonPressed(context)),
+        IconButton.outlined(
+          iconSize: 30.0,
+          icon: const Icon(Icons.add),
+          onPressed: () => _onNewButtonPressed(context),
+        ),
         const SizedBox(
           width: STANDARD_PADDING,
         ),
@@ -42,9 +45,8 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
             padding: const EdgeInsets.all(SMALL_PADDING),
             child: TextField(
               controller: _searchFieldController,
-              onChanged: (query) =>
-                  widget._shoppingsListController.updateShoppingsList(
-                      searchQuery: query), //TODO search bar
+              onChanged: (query) => widget._shoppingsListController
+                  .updateShoppingsList(searchQuery: query), //TODO search bar
               decoration: InputDecoration(
                   labelText: 'Search',
                   prefixIcon: const Icon(Icons.search),
@@ -57,8 +59,8 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
             ),
           ),
           FutureBuilder<bool>(
-            future: widget._shoppingsListController.updateShoppingsList(
-                searchQuery: _searchFieldController.text),
+            future: widget._shoppingsListController
+                .updateShoppingsList(searchQuery: _searchFieldController.text),
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -97,10 +99,9 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
               child: RefreshIndicator(
                 onRefresh: _pullRefresh,
                 child: ListView.separated(
-                  itemBuilder: (_, index) =>
-                      ShoppingTile(
-                        shopping: shoppingsList[index],
-                      ),
+                  itemBuilder: (_, index) => ShoppingTile(
+                    shopping: shoppingsList[index],
+                  ),
                   separatorBuilder: (_, __) => const Divider(),
                   itemCount: shoppingsList.length,
                 ),
@@ -118,7 +119,7 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
   }
 
   Future<void> _pullRefresh() async {
-    await widget._shoppingsListController.updateShoppingsList(
-        searchQuery: _searchFieldController.text);
+    await widget._shoppingsListController
+        .updateShoppingsList(searchQuery: _searchFieldController.text);
   }
 }

@@ -14,6 +14,7 @@ import 'package:split_the_bill/groupchat/repositories/groupchat_repository.dart'
 import 'package:split_the_bill/groupchat/repositories/groupchat_repository_base.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
+import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
@@ -143,6 +144,11 @@ abstract class IocContainer {
     ));
 
     get.registerSingleton<UserFilterController>(UserFilterController());
+
+    get.registerSingleton<ProfileController>(ProfileController(
+        get<UsersRepositoryBase>(),
+        get<AuthController>(),
+        get<SnackbarMessangerController>()));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(
