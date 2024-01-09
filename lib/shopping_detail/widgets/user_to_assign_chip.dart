@@ -32,6 +32,9 @@ class UserToAssignChip extends StatelessWidget {
               Text(
                 user.username,
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ],
           ),

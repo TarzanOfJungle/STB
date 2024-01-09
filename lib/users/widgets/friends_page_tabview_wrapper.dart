@@ -50,10 +50,7 @@ class _FriendsPageTabviewWrapperState extends State<FriendsPageTabviewWrapper>
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text(
-          "Friends",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Friends"),
         bottom: TabBar(
           controller: _tabController,
           tabs: _TABVIEW_ITEMS.map((item) => item.tab).toList(),
