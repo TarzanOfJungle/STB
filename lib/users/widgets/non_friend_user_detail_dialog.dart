@@ -49,6 +49,7 @@ class NonFriendUserDetailDialog extends StatelessWidget {
           UserTextAvatar(
             user: user,
             backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             letterSize: 35,
           ),
           Text(

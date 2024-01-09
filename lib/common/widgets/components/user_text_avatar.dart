@@ -6,6 +6,7 @@ const _AVATAR_LETTER_DEFAULT_SIZE = 15.0;
 class UserTextAvatar extends StatelessWidget {
   final User? user;
   final Color? backgroundColor;
+  final Color? foregroundColor;
   final double letterSize;
 
   String get _avatarLetter {
@@ -21,6 +22,7 @@ class UserTextAvatar extends StatelessWidget {
     super.key,
     required this.user,
     this.backgroundColor,
+    this.foregroundColor,
     this.letterSize = _AVATAR_LETTER_DEFAULT_SIZE,
   });
 
@@ -36,7 +38,7 @@ class UserTextAvatar extends StatelessWidget {
         _avatarLetter,
         style: TextStyle(
           fontSize: letterSize,
-          color: Theme.of(context).colorScheme.onSurface,
+          color: foregroundColor ?? Theme.of(context).colorScheme.onSurface,
         ),
       ),
     );

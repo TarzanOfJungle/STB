@@ -12,6 +12,7 @@ class StbColors {
   final Color shadow;
   final Color error;
   final Color onError;
+  final Color bottomNavBar;
 
   const StbColors({
     required this.brightness,
@@ -25,33 +26,36 @@ class StbColors {
     required this.shadow,
     required this.error,
     required this.onError,
+    required this.bottomNavBar,
   });
 
   static const lightColors = StbColors(
     brightness: Brightness.light,
-    primary: Color(0xFF47B891),
+    primary: Color(0xFFA78057),
     onPrimary: Color(0xFFEDEDED),
-    accent: Color(0xFFFF7A00),
+    accent: Color(0xFFA78057),
     onAccent: Color(0xFFEDEDED),
     background: Color(0xFFEDEDED),
     backgroundVariant: Color(0xFFE4E4E4),
     text: Color(0xFF212121),
     shadow: Color(0xFF858585),
-    error: Color(0xFFE30000),
+    error: Color(0xFFD2453A),
     onError: Color(0xFFEDEDED),
+    bottomNavBar: Color(0xFFFBFBFB),
   );
 
   static const darkColors = StbColors(
     brightness: Brightness.dark,
-    primary: Color(0xFF28936E),
-    onPrimary: Color(0xFFEDEDED),
-    accent: Color(0xFFFF5722),
-    onAccent: Color(0xFFEDEDED),
+    primary: Color(0xFFEFC291),
+    onPrimary: Color(0xFF2B2B2B),
+    accent: Color(0xFFEFC291),
+    onAccent: Color(0xFF2B2B2B),
     background: Color(0xFF2B2B2B),
-    backgroundVariant: Color(0xFF313131),
+    backgroundVariant: Color(0xFF262626),
     text: Color(0xFFEDEDED),
     shadow: Color(0xFF444444),
-    error: Color.fromARGB(255, 255, 62, 62),
+    error: Color(0xFFD2453A),
     onError: Color(0xFFEDEDED),
+    bottomNavBar: Color(0xFF1F1F1F),
   );
 }

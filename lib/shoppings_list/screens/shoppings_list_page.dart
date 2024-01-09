@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/widgets/components/app_bar_button.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';

@@ -49,6 +49,7 @@ class UserListTile extends StatelessWidget {
             UserTextAvatar(
               user: user,
               backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
             ),
             const SizedBox(width: 15),
             Expanded(child: _buildUserIdentification(context)),
