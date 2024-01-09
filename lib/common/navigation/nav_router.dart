@@ -18,23 +18,25 @@ import 'package:split_the_bill/shopping_detail/screens/summary_page.dart';
 import 'package:split_the_bill/shopping_detail/widgets/shopping_detail_tabview_wrapper.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/screens/shoppings_list_page.dart';
+import 'package:split_the_bill/user_chat/controllers/user_chat_controller.dart';
+import 'package:split_the_bill/user_chat/screens/user_chat_page.dart';
+import 'package:split_the_bill/users/models/user/user.dart';
 import 'package:split_the_bill/users/screens/search_users_page.dart';
 import 'package:split_the_bill/users/widgets/friends_page_tabview_wrapper.dart';
 
 class NavRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  late final SinglePurchaseController _singlePurchaseController;
-  late final ShoppingDetailController _shoppingDetailController;
+  final SinglePurchaseController _singlePurchaseController;
+  final ShoppingDetailController _shoppingDetailController;
+  final UserChatController _userChatController;
 
   RouterConfig<Object> get router => _router;
 
-  NavRouter({
-    required SinglePurchaseController singlePurchaseController,
-    required ShoppingDetailController shoppingDetailController,
-  }) {
-    _singlePurchaseController = singlePurchaseController;
-    _shoppingDetailController = shoppingDetailController;
-  }
+  NavRouter(
+    this._singlePurchaseController,
+    this._shoppingDetailController,
+    this._userChatController,
+  );
 
   late final _router = GoRouter(
     navigatorKey: _navigatorKey,
@@ -104,11 +106,16 @@ class NavRouter {
             routes: [
               GoRoute(
                   path: NavRoute.friends.path,
-                  builder: (context, state) => const FriendsPageTabviewWrapper(),
+                  builder: (context, state) =>
+                      const FriendsPageTabviewWrapper(),
                   routes: [
                     GoRoute(
                       path: NavRoute.searchUsers.path,
                       builder: (context, state) => const SearchUsersPage(),
+                    ),
+                    GoRoute(
+                      path: NavRoute.userChat.path,
+                      builder: (context, state) => const UserChatPage(),
                     ),
                   ])
             ],
@@ -185,6 +192,12 @@ class NavRouter {
 
   void toUsersSearch() {
     final fullPath = "${NavRoute.friends.path}/${NavRoute.searchUsers.path}";
+    _router.go(fullPath);
+  }
+
+  void toUserChatPage(User chatUser) {
+    _userChatController.loadChatMessagesWithUser(chatUser);
+    final fullPath = "${NavRoute.friends.path}/${NavRoute.userChat.path}";
     _router.go(fullPath);
   }
 }

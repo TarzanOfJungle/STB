@@ -49,6 +49,9 @@ abstract class ApiConstants {
   static const String friendships =
       "$versionPathPrefix/friendship-requests/friendships";
 
+  // User chat messages
+  static const String userChatMessages = "$versionPathPrefix/user-messages";
+
   // Socket paths
   static const String shoppingMessagesStream =
       "$versionPathPrefix/live-group-chat";
@@ -62,4 +65,6 @@ abstract class ApiConstants {
       "$versionPathPrefix/live-users-shoppings";
   static const String friendshipManagementChangesStream =
       "$versionPathPrefix/live-friendship-management";
+  static const String userChatMessageChangesStream =
+      "$versionPathPrefix/live-user-messages";
 }

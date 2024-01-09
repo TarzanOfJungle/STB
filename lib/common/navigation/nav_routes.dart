@@ -14,7 +14,8 @@ enum NavRoute {
   memberPurchases("member-purchases"),
   shoppingSummary("shopping-summary"),
   shoppingMembers("shopping-members"),
-  searchUsers("users-search");
+  searchUsers("users-search"),
+  userChat("user-chat");
 
   final String path;
   const NavRoute(this.path);

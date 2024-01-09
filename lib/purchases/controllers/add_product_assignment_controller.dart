@@ -6,8 +6,10 @@ import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.d
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
 import 'package:split_the_bill/products/models/product/product.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
+import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
 import 'package:split_the_bill/purchases/models/post_product_shopping_assignment/post_product_shopping_assignment.dart';
+import 'package:split_the_bill/purchases/models/product_assignments_with_purchases/product_assignments_with_purchases.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
@@ -29,18 +31,24 @@ class AddProductAssignmentController {
   AddProductAssignmentState get addProductAssignmentState =>
       _addProductAssignmentState.value;
 
-  Stream<List<Product>> get productLookup => _productLookup.stream;
+  Stream<List<Product>> get productLookup => Rx.combineLatest2(
+      _productLookup.stream,
+      _purchasesController.productAssignmentsWithPurchasesStream,
+      (lookup, existingAssignments) =>
+          _filterProductLookup(lookup, existingAssignments));
 
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
   final ShoppingDetailController _shoppingDetailController;
+  final PurchasesController _purchasesController;
   final SnackbarMessangerController _snackbarMessangerController;
   final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   final ProductsRepositoryBase _productsRepository;
 
   AddProductAssignmentController(
     this._shoppingDetailController,
+    this._purchasesController,
     this._snackbarMessangerController,
     this._productAssignmentsRepository,
     this._productsRepository,
@@ -117,5 +125,19 @@ class AddProductAssignmentController {
       );
       return false;
     }
+  }
+
+  List<Product> _filterProductLookup(
+    List<Product> fullLookup,
+    ProductAssignmentsWithPurchases? existingAssignments,
+  ) {
+    if (existingAssignments == null) {
+      return fullLookup;
+    }
+    return fullLookup
+        .where((product) => existingAssignments.productAssignments
+            .where((assignment) => assignment.product.id == product.id)
+            .isEmpty)
+        .toList();
   }
 }

@@ -20,7 +20,10 @@ enum WebsocketEvent {
   friendshipRequestCreated("ReceiveFriendshipRequestCreated"),
   friendshipRequestStatusUpdated("ReceiveFriendshipRequestStatusUpdated"),
   friendshipRequestDeleted("ReceiveFriendshipRequestDeleted"),
-  friendshipDeleted("ReceiveFriendshipDeleted");
+  friendshipDeleted("ReceiveFriendshipDeleted"),
+
+  userChatMessageReceived("ReceiveUserMessage"),
+  userChatMessageDeleted("ReceiveUserMessageDeleted");
 
   final String messageName;
   const WebsocketEvent(this.messageName);
