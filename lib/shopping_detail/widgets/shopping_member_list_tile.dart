@@ -31,7 +31,8 @@ class ShoppingMemberListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ownerId = _shoppingDetailController.currentShoppingState?.shopping.creatorId;
+    var ownerId =
+        _shoppingDetailController.currentShoppingState?.shopping.creatorId;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: _ROW_PADDING),
       child: Row(
