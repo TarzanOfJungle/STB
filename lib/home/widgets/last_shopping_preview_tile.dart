@@ -36,7 +36,7 @@ class LastShoppingPreviewTile extends StatelessWidget {
               onTap: () => _navRouter.toShoppingDetail(shopping.shopping.id),
               child: _buildTileContainer(
                 context,
-                _buildContainerBody(shopping),
+                _buildContainerBody(context, shopping),
               ));
         });
   }
@@ -55,14 +55,17 @@ class LastShoppingPreviewTile extends StatelessWidget {
     );
   }
 
-  Widget _buildContainerBody(ShoppingWithContext shopping) {
+  Widget _buildContainerBody(BuildContext context, ShoppingWithContext shopping) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           shopping.shopping.name,
           textAlign: TextAlign.left,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         _buildInfoLine(shopping),
         const SizedBox(
