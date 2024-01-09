@@ -12,6 +12,7 @@ import 'package:split_the_bill/common/controllers/fcm_controller.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/repositories/groupchat_repository.dart';
 import 'package:split_the_bill/groupchat/repositories/groupchat_repository_base.dart';
+import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
@@ -97,7 +98,7 @@ abstract class IocContainer {
       ),
     );
     get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
-      get<ShoppingsListController>(),
+      get<ShoppingsListRepositoryBase>(),
       get<TrasactionsRepositoryBase>(),
       get<SnackbarMessangerController>(),
       get<ShoppingsListRepositoryBase>(),
@@ -148,19 +149,21 @@ abstract class IocContainer {
       get<SnackbarMessangerController>(),
       get<FriendsController>(),
     ));
-
+    get.registerSingleton<UserFilterController>(UserFilterController());
+    get.registerSingleton<ProfileController>(ProfileController(
+        get<UsersRepositoryBase>(),
+        get<AuthController>(),
+        get<SnackbarMessangerController>()));
+    get.registerSingleton<LastVisitedShoppingController>(LastVisitedShoppingController(
+      get<AuthController>(),
+      get<ShoppingDetailController>(),
+      get<ShoppingsListRepositoryBase>(),
+    ));
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
       apiClient: get<ApiClientBase>(),
       authRepository: get<AuthRepositoryBase>(),
     ));
-
-    get.registerSingleton<UserFilterController>(UserFilterController());
-
-    get.registerSingleton<ProfileController>(ProfileController(
-        get<UsersRepositoryBase>(),
-        get<AuthController>(),
-        get<SnackbarMessangerController>()));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(

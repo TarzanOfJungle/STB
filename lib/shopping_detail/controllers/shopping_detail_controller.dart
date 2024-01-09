@@ -1,20 +1,20 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
+import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
+import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
+import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
+import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/models/transaction/transaction.dart';
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
-import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-
-import '../../common/controllers/snackbar_messanger_controller.dart';
-import '../../common/models/snackbar_message/snackbar_message.dart';
-import '../../common/models/snackbar_message/snackbar_message_category.dart';
-import '../../purchases/repositories/product_assignments/product_assignments_repository_base.dart';
-import '../../purchases/repositories/product_purchases/product_purchases_repository_base.dart';
-import '../../shoppings_list/repositories/shoppings_list_repository_base.dart';
-import '../../users/repositories/users_repository_base.dart';
+import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
+import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
 const String _FETCH_TRANSACTIONS_ERROR_MESSAGE =
     'Unable to update transactions';
+const String _FAILED_TO_LOAD_SHOPPING_MESSAGE =
+    "Failed to load shopping detail";
 
 class ShoppingDetailController with AuthenticatedSocketObserver {
   final BehaviorSubject<ShoppingWithContext?> _shopping =
@@ -23,13 +23,13 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   final BehaviorSubject<List<Transaction>> _transactions =
       BehaviorSubject.seeded([]);
 
-  late final ShoppingsListController _shoppingListController;
-  late final TrasactionsRepositoryBase _transactionsRepository;
-  late final SnackbarMessangerController _snackbarController;
-  late final ShoppingsListRepositoryBase _shoppingsListRepository;
-  late final ProductPurchasesRepositoryBase _productPurchasesRepository;
-  late final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
-  late final UsersRepositoryBase _usersRepository;
+  final ShoppingsListRepositoryBase shoppingListRepository;
+  final TrasactionsRepositoryBase _transactionsRepository;
+  final SnackbarMessangerController _snackbarController;
+  final ShoppingsListRepositoryBase _shoppingsListRepository;
+  final ProductPurchasesRepositoryBase _productPurchasesRepository;
+  final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
+  final UsersRepositoryBase _usersRepository;
 
   Stream<ShoppingWithContext?> get shopping => _shopping.stream;
 
@@ -40,7 +40,7 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   List<Transaction> get transactions => _transactions.value;
 
   ShoppingDetailController(
-    this._shoppingListController,
+    this.shoppingListRepository,
     this._transactionsRepository,
     this._snackbarController,
     this._shoppingsListRepository,
@@ -103,14 +103,21 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   }
 
   Future<bool> putShopping(int shoppingId) async {
-    var wasSuccess = false;
-    final shopping =
-        await _shoppingListController.shoppingById(shoppingId: shoppingId);
-    if (shopping != null) {
-      _shopping.add(shopping);
-      wasSuccess = true;
+    try {
+      var foundShopping =
+          await _shoppingsListRepository.shoppingById(shoppingId: shoppingId);
+      _shopping.add(foundShopping);
+      return true;
+    } catch (_) {
+      _showError(_FAILED_TO_LOAD_SHOPPING_MESSAGE);
+      _shopping.add(null);
+      return false;
     }
-    return wasSuccess;
+  }
+
+  Future<ShoppingWithContext?> shoppingById({required int shoppingId}) async {
+    try {} catch (_) {}
+    return null;
   }
 
   Future<bool> fetchTransactions() async {

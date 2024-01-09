@@ -72,7 +72,7 @@ abstract class StbTheme {
           ),
         ),
         dividerTheme: DividerThemeData(
-          color: colors.shadow,
+          color: colors.text.withOpacity(0.1),
           space: 0,
           thickness: 1.5,
         ));
