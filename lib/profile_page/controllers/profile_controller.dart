@@ -9,7 +9,7 @@ import '../../common/models/snackbar_message/snackbar_message.dart';
 import '../../common/models/snackbar_message/snackbar_message_category.dart';
 import '../../users/models/user/user.dart';
 
-const String _UPDATE_FAILED_MESSAGE =
+const _UPDATE_FAILED_MESSAGE =
     "Unable to update parameters, try again later.";
 
 const _USER_LOADING_ERROR_MESSAGE = "Unable to load user informations";
