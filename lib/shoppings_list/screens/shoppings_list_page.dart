@@ -29,7 +29,7 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
     return PageTemplate(
       label: 'Shoppings',
       actions: [
-        IconButton.outlined(
+        IconButton(
           iconSize: 30.0,
           icon: const Icon(Icons.add),
           onPressed: () => _onNewButtonPressed(context),

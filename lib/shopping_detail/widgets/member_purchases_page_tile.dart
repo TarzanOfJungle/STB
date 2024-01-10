@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/purchases/models/product_with_purchase_context/product_with_purchase_context.dart';
 
-const _TILE_HEIGHT = 115.0;
+const _TILE_HEIGHT = 90.0;
 
 class MemberPurchasesPageTile extends StatelessWidget {
   final ProductWithPurchaseContext purchase;
@@ -32,7 +32,7 @@ class MemberPurchasesPageTile extends StatelessWidget {
                   const SizedBox(
                     height: SMALL_PADDING,
                   ),
-                  Text(purchase.product.description ?? ''),
+                  // Text(purchase.product.description ?? ''),
                 ],
               ),
             ),
@@ -66,7 +66,7 @@ class MemberPurchasesPageTile extends StatelessWidget {
     required double value,
   }) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
           'Total price',

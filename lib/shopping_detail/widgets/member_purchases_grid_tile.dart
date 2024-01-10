@@ -33,7 +33,7 @@ class MemberPurchasesGridTile extends StatelessWidget {
         height: 300.0,
         width: 300.0,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
         ),
         child: Padding(

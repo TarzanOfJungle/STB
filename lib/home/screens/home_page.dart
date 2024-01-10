@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
     return PageTemplate(
       label: 'Home',
       actions: [
-        IconButton.outlined(
+        IconButton(
           onPressed: () => _navRouter.toProfile(),
           icon: const Icon(Icons.person),
         ),

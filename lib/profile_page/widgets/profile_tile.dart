@@ -22,11 +22,11 @@ class ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).highlightColor,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(SMALL_PADDING),
+        padding: const EdgeInsets.all(STANDARD_PADDING),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
