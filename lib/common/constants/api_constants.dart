@@ -52,6 +52,9 @@ abstract class ApiConstants {
   // User chat messages
   static const String userChatMessages = "$versionPathPrefix/user-messages";
 
+  // Statistics
+  static const String statistics = "$versionPathPrefix/statistics";
+
   // Socket paths
   static const String shoppingMessagesStream =
       "$versionPathPrefix/live-group-chat";
