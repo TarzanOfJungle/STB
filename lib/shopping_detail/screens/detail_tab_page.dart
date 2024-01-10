@@ -38,27 +38,34 @@ class DetailTabPage extends StatelessWidget {
           return const ErrorBanner();
         }
         return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(STANDARD_PADDING),
-            child: Column(
-              children: [
-                Text(shopping.shopping.description ?? ''),
-                const SizedBox(height: STANDARD_PADDING),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: STANDARD_PADDING),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    DetailInfoSection(
-                      shopping: shopping,
-                      productAssignments: productAssignments,
+                    const SizedBox(height: STANDARD_PADDING),
+                    Text(shopping.shopping.description ?? ''),
+                    const SizedBox(height: STANDARD_PADDING),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DetailInfoSection(
+                          shopping: shopping,
+                          productAssignments: productAssignments,
+                        ),
+                        DetailButtonSection(shopping: shopping),
+                      ],
                     ),
-                    DetailButtonSection(shopping: shopping),
+                    const SizedBox(height: STANDARD_PADDING),
+                    ShowSummaryButton(shopping: shopping),
+                    const SizedBox(height: STANDARD_PADDING),
+                    MemberPurchasesSection(),
+                    const SizedBox(height: STANDARD_PADDING),
                   ],
                 ),
-                const SizedBox(height: STANDARD_PADDING),
-                ShowSummaryButton(shopping: shopping),
-                const SizedBox(height: STANDARD_PADDING),
-                MemberPurchasesSection(),
-              ],
+              ),
             ),
           ),
         );

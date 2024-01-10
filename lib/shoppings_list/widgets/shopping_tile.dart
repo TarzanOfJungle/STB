@@ -28,11 +28,14 @@ class ShoppingTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        shopping.shopping.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: Text(
+                          shopping.shopping.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Text('Amount spent: ${shopping.ammountSpent}'),
+                      _buildAmountDisplay(),
                     ],
                   ),
                   Row(
@@ -45,5 +48,15 @@ class ShoppingTile extends StatelessWidget {
                 ]),
           ),
         ));
+  }
+
+  Widget _buildAmountDisplay() {
+    return Row(
+      children: [
+        const Icon(UiConstants.ammountIcon),
+        const SizedBox(width: SMALL_PADDING,),
+        Text('${shopping.ammountSpent}'),
+      ],
+    );
   }
 }

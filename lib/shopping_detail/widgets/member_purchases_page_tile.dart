@@ -68,11 +68,13 @@ class MemberPurchasesPageTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
-          'Total price',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.titleMedium,
+        Flexible(
+          child: Text(
+            'Total price',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
