@@ -167,6 +167,7 @@ abstract class IocContainer {
       get<ShoppingsListRepositoryBase>(),
     ));
     get.registerSingleton<StatisticsController>(StatisticsController(
+      get<AuthController>(),
       get<StatisticsRepositoryBase>(),
       get<ShoppingsListRepositoryBase>(),
     ));
