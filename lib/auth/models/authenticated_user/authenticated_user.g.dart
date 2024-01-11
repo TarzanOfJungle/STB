@@ -21,8 +21,8 @@ class AuthenticatedUserAdapter extends TypeAdapter<AuthenticatedUser> {
       email: fields[2] as String,
       username: fields[3] as String,
       token: fields[4] as String,
-      created: fields[5] as DateTime?,
-      updated: fields[6] as DateTime?,
+      created: fields[5] as DateTime,
+      updated: fields[6] as DateTime,
     );
   }
 
@@ -66,12 +66,8 @@ _$AuthenticatedUserImpl _$$AuthenticatedUserImplFromJson(
       email: json['email'] as String,
       username: json['username'] as String,
       token: json['token'] as String,
-      created: json['created'] == null
-          ? null
-          : DateTime.parse(json['created'] as String),
-      updated: json['updated'] == null
-          ? null
-          : DateTime.parse(json['updated'] as String),
+      created: DateTime.parse(json['created'] as String),
+      updated: DateTime.parse(json['updated'] as String),
     );
 
 Map<String, dynamic> _$$AuthenticatedUserImplToJson(
@@ -81,6 +77,6 @@ Map<String, dynamic> _$$AuthenticatedUserImplToJson(
       'email': instance.email,
       'username': instance.username,
       'token': instance.token,
-      'created': instance.created?.toIso8601String(),
-      'updated': instance.updated?.toIso8601String(),
+      'created': instance.created.toIso8601String(),
+      'updated': instance.updated.toIso8601String(),
     };

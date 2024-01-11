@@ -58,10 +58,7 @@ class _FriendsPageTabviewWrapperState extends State<FriendsPageTabviewWrapper>
           const SizedBox(width: STANDARD_PADDING,),
         ],
         centerTitle: false,
-        title: const Text(
-          "Friends",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text("Friends"),
         bottom: TabBar(
           controller: _tabController,
           tabs: _TABVIEW_ITEMS.map((item) => item.tab).toList(),

@@ -37,6 +37,9 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   Stream<ShoppingWithContext?> get lastUpdatedShopping =>
       _lastUpdatedShopping.stream;
 
+  Iterable<ShoppingWithContext> get currentShoppingsList =>
+      _shoppingsList.value;
+
   ShoppingsListController(
     this._shoppingsListRepository,
     this._snackbarController,
@@ -109,17 +112,6 @@ class ShoppingsListController with AuthenticatedSocketObserver {
       _showError(_ADDING_SHOPPING_ERROR_MESSAGE);
     }
     return wasSuccess;
-  }
-
-  Future<ShoppingWithContext?> shoppingById({required int shoppingId}) async {
-    try {
-      var shopping =
-          await _shoppingsListRepository.shoppingById(shoppingId: shoppingId);
-      return shopping;
-    } catch (_) {
-      _showError(_DEFAULT_EXCEPTION_MESSAGE);
-    }
-    return null;
   }
 
   Future<bool> deleteShopping({required int shoppingId}) async {

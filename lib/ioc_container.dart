@@ -12,6 +12,9 @@ import 'package:split_the_bill/common/controllers/fcm_controller.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/repositories/groupchat_repository.dart';
 import 'package:split_the_bill/groupchat/repositories/groupchat_repository_base.dart';
+import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
+import 'package:split_the_bill/home/controllers/statistics_controller.dart';
+import 'package:split_the_bill/home/repositories/statistics_repository_base.dart';
 import 'package:split_the_bill/products/repositories/products_repository.dart';
 import 'package:split_the_bill/products/repositories/products_repository_base.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
@@ -39,6 +42,8 @@ import 'package:split_the_bill/users/repositories/friendship_management_reposito
 import 'package:split_the_bill/users/repositories/friendship_management_repository_base.dart';
 import 'package:split_the_bill/users/repositories/users_reposiory.dart';
 import 'package:split_the_bill/users/repositories/users_repository_base.dart';
+
+import 'home/repositories/statistics_repository.dart';
 
 final get = GetIt.instance;
 
@@ -71,6 +76,8 @@ abstract class IocContainer {
         FriendshipManagementRepository(get<ApiClientBase>()));
     get.registerSingleton<UserChatRepositoryBase>(
         UserChatRepository(get<ApiClientBase>()));
+    get.registerSingleton<StatisticsRepositoryBase>(
+        StatisticsRepository(get<ApiClientBase>()));
 
     // Controllers and services
     get.registerSingleton<SnackbarMessangerController>(
@@ -97,7 +104,7 @@ abstract class IocContainer {
       ),
     );
     get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
-      get<ShoppingsListController>(),
+      get<ShoppingsListRepositoryBase>(),
       get<TrasactionsRepositoryBase>(),
       get<SnackbarMessangerController>(),
       get<ShoppingsListRepositoryBase>(),
@@ -148,19 +155,29 @@ abstract class IocContainer {
       get<SnackbarMessangerController>(),
       get<FriendsController>(),
     ));
-
+    get.registerSingleton<ProfileController>(ProfileController(
+        get<UsersRepositoryBase>(),
+        get<AuthController>(),
+        get<SnackbarMessangerController>()));
+    get.registerSingleton<LastVisitedShoppingController>(
+        LastVisitedShoppingController(
+      get<AuthController>(),
+      get<ShoppingDetailController>(),
+      get<ShoppingsListRepositoryBase>(),
+    ));
+    get.registerSingleton<StatisticsController>(StatisticsController(
+      get<AuthController>(),
+      get<StatisticsRepositoryBase>(),
+      get<ShoppingsListRepositoryBase>(),
+      get<ProductPurchasesRepositoryBase>(),
+    ));
+    get.registerSingleton<UserTransactionsDisplayController>(
+        UserTransactionsDisplayController());
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
       apiClient: get<ApiClientBase>(),
       authRepository: get<AuthRepositoryBase>(),
     ));
-
-    get.registerSingleton<UserTransactionsDisplayController>(UserTransactionsDisplayController());
-
-    get.registerSingleton<ProfileController>(ProfileController(
-        get<UsersRepositoryBase>(),
-        get<AuthController>(),
-        get<SnackbarMessangerController>()));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(

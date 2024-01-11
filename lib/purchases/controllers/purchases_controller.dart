@@ -151,7 +151,7 @@ class PurchasesController with AuthenticatedSocketObserver {
     var filtered = ProductAssignmentsWithPurchases(
       productAssignments: _productAssignmentsWithPurchases
           .value!.productAssignments
-          .where((e) => e.product.name.contains(query))
+          .where((e) => e.product.name.toLowerCase().contains(query.toLowerCase()))
           .toList(),
       productPurchases: data.productPurchases,
     );

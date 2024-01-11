@@ -43,6 +43,7 @@ class LookupListTile extends StatelessWidget {
               child: Icon(
                 icon,
                 size: iconSize ?? _DEFAULT_ICON_SIZE,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             const SizedBox(width: STANDARD_PADDING),

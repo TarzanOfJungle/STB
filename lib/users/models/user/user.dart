@@ -11,8 +11,8 @@ class User with _$User {
     required int id,
     required String email,
     required String username,
-    DateTime? created,
-    DateTime? updated
+    required DateTime created,
+    required DateTime updated
   }) = _User;
 
   const User._();

@@ -12,6 +12,8 @@ const _USER_ICON = Icons.person_rounded;
 const _DELETE_ICON = Icons.remove_rounded;
 const _DELETE_BUTTON_SCALE = 0.7;
 
+const _MIN_TRAILING_WIDTH = 50.0;
+
 class ShoppingMemberListTile extends StatelessWidget {
   final User user;
   final int currentUserId;
@@ -19,6 +21,8 @@ class ShoppingMemberListTile extends StatelessWidget {
 
   bool get _isCurrentUser => currentUserId == user.id;
   bool get _showDeleteButton => onDelete != null && currentUserId != user.id;
+  int? get _ownerId =>
+      _shoppingDetailController.currentShoppingState?.shopping.creatorId;
 
   ShoppingMemberListTile({
     super.key,
@@ -31,8 +35,6 @@ class ShoppingMemberListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ownerId =
-        _shoppingDetailController.currentShoppingState?.shopping.creatorId;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: _ROW_PADDING),
       child: Row(
@@ -42,8 +44,10 @@ class ShoppingMemberListTile extends StatelessWidget {
           const SizedBox(width: STANDARD_PADDING),
           _buildText(context),
           const SizedBox(width: STANDARD_PADDING),
-          if (ownerId == user.id) _buildOwnerLabel(),
-          if (_showDeleteButton) _buildDeleteButton(),
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: _MIN_TRAILING_WIDTH),
+            child: Center(child: _buildTrailing(context)),
+          ),
         ],
       ),
     );
@@ -54,11 +58,16 @@ class ShoppingMemberListTile extends StatelessWidget {
       padding: const EdgeInsets.all(_LEADING_PADDING),
       decoration: BoxDecoration(
         color: _isCurrentUser
-            ? Theme.of(context).colorScheme.secondary
-            : Theme.of(context).colorScheme.primary,
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.surface,
         shape: BoxShape.circle,
       ),
-      child: const Icon(_USER_ICON),
+      child: Icon(
+        _USER_ICON,
+        color: _isCurrentUser
+            ? Theme.of(context).colorScheme.surface
+            : Theme.of(context).colorScheme.primary,
+      ),
     );
   }
 
@@ -85,16 +94,25 @@ class ShoppingMemberListTile extends StatelessWidget {
     );
   }
 
+  Widget _buildTrailing(BuildContext context) {
+    if (_showDeleteButton) {
+      return _buildDeleteButton(context);
+    } else if (_ownerId == user.id) {
+      return _buildOwnerLabel();
+    }
+    return const SizedBox.shrink();
+  }
+
   Widget _buildOwnerLabel() {
     return const Icon(Icons.star);
   }
 
-  Widget _buildDeleteButton() {
+  Widget _buildDeleteButton(BuildContext context) {
     return IconButtonWithBackground(
       onTap: () => onDelete?.call(),
       icon: _DELETE_ICON,
       scale: _DELETE_BUTTON_SCALE,
-      backgroundColor: UiConstants.infoColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       iconColor: UiConstants.deleteColor,
     );
   }
