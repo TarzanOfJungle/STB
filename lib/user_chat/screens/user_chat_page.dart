@@ -74,7 +74,11 @@ class _UserChatPageState extends State<UserChatPage> {
       itemCount: messages.length,
       itemBuilder: (context, index) {
         final currentMessage = messagesReversed[index];
-        return UserChatMessage(messageWithUsers: currentMessage);
+        final previousMessage = messagesReversed.elementAtOrNull(index + 1);
+        return UserChatMessage(
+          currentMessage: currentMessage,
+          previousMessage: previousMessage,
+        );
       },
     );
   }

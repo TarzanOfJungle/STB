@@ -68,10 +68,7 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
       itemCount: messages.length,
       itemBuilder: (context, index) {
         final currentMessage = messagesReversed[index];
-        GroupchatMessageWithAuthor? previousMessage;
-        if (index < messagesReversed.length - 1) {
-          previousMessage = messagesReversed[index + 1];
-        }
+        final previousMessage = messagesReversed.elementAtOrNull(index + 1);
         return GroupchatMessage(
           currentMessage: currentMessage,
           previousMessage: previousMessage,

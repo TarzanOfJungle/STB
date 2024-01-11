@@ -23,8 +23,8 @@ class StatisticsController with AuthenticatedSocketObserver {
 
   List<int> get activeYears => _getLoggedInUserActiveYears();
 
-  Stream<Map<int, double>> get userMonthlySpending =>
-      _rawStatistics.map((statistics) => _getUserMonthlyStatistics(statistics));
+  Stream<Map<int, double>> get userMonthlySpending => _rawStatistics
+      .map((statistics) => _getUserMonthlySpendingStatistics(statistics));
 
   Stream<Map<int, double>> get _userSpendingPerShoppingId => _rawStatistics
       .map((statistics) => _getUserSpendingPerShoppingId(statistics));
@@ -121,7 +121,7 @@ class StatisticsController with AuthenticatedSocketObserver {
     } catch (_) {}
   }
 
-  Map<int, double> _getUserMonthlyStatistics(
+  Map<int, double> _getUserMonthlySpendingStatistics(
     List<StatShoppingPurchases> rawStatistics,
   ) {
     if (_loggedInUser == null) {
@@ -131,6 +131,13 @@ class StatisticsController with AuthenticatedSocketObserver {
     final userRawStatistics = rawStatistics
         .expand((shoppingStatistic) => shoppingStatistic.userPurchases)
         .where((userPurchase) => userPurchase.userId == _loggedInUser!.id);
+
+    final totalSpent = userRawStatistics.fold(
+        0.0, (prev, userStat) => prev + userStat.totalAmmountSpentByUser);
+
+    if (totalSpent <= 0) {
+      return {};
+    }
 
     final productPurchases = userRawStatistics
         .expand((userStatistic) => userStatistic.productPurchases)

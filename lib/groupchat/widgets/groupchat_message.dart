@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/extensions/datetime_convert_extension.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
 import 'package:split_the_bill/common/widgets/components/chat_message_text_bubble.dart';
@@ -32,7 +33,7 @@ class GroupchatMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildUserLabel(context),
+        _buildLabel(context),
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: UiConstants.chatMessageVerticalMargin,
@@ -59,13 +60,12 @@ class GroupchatMessage extends StatelessWidget {
     );
   }
 
-  Widget _buildUserLabel(BuildContext context) {
+  Widget _buildLabel(BuildContext context) {
     if (!_isFirstMessageInGroup || currentMessage.author == null) {
       return const SizedBox.shrink();
     }
-    final labelStart = currentMessage.author!.username;
-    final labelEnd =
-        _isLoggedInUsersMessage ? "you" : currentMessage.author!.email;
+    final username = currentMessage.author!.username;
+    final timeStamp = currentMessage.message.created.toDateTimeString();
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -73,11 +73,11 @@ class GroupchatMessage extends StatelessWidget {
         bottom: 3,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: _mainAxisAlignment,
         children: [
           Flexible(
             child: Text(
-              "$labelStart ($labelEnd)",
+              "$username ($timeStamp)",
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

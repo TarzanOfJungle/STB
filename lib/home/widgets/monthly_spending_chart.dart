@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/home/widgets/home_page_chart_container.dart';
 
 const _TITLE = "Your monthly spending";
-const _MAX_HEIGHT = 150.0;
 
 class MonthlySpendingChart extends StatelessWidget {
   final Map<int, double> monthlySpending;
@@ -25,36 +25,10 @@ class MonthlySpendingChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(
-        top: 15,
-        bottom: 20,
-        left: 15,
-        right: 30,
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
-          color: Theme.of(context).colorScheme.surface),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _TITLE,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 25),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: _MAX_HEIGHT),
-            child: LineChart(
-              _getChartData(context),
-            ),
-          ),
-        ],
+    return HomePageChartContainer(
+      title: _TITLE,
+      chart: LineChart(
+        _getChartData(context),
       ),
     );
   }
@@ -63,7 +37,7 @@ class MonthlySpendingChart extends StatelessWidget {
     BuildContext context,
   ) {
     final lineColor = Theme.of(context).colorScheme.secondary;
-    final fillColor = lineColor.withOpacity(0.2);
+    final fillColor = lineColor.withOpacity(0.3);
     return LineChartData(
       gridData: FlGridData(
         show: true,
@@ -94,7 +68,7 @@ class MonthlySpendingChart extends StatelessWidget {
         leftTitles: const AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 42,
+            reservedSize: 48,
           ),
         ),
       ),

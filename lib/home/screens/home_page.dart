@@ -13,6 +13,7 @@ import 'package:split_the_bill/home/widgets/per_shopping_spending_chart.dart';
 import 'package:split_the_bill/home/widgets/year_filter_chip.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
+const _NO_DATA_ICON_SIZE = 100.0;
 const _NO_DATA_MESSAGE =
     "Start participating in shoppings in the Shoppings tab.";
 
@@ -92,15 +93,28 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNoData() {
     return const Center(
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              _NO_DATA_MESSAGE,
-              textAlign: TextAlign.center,
+      child: Padding(
+        padding: EdgeInsets.all(STANDARD_PADDING),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.add_shopping_cart_rounded,
+              size: _NO_DATA_ICON_SIZE,
             ),
-          ),
-        ],
+            SizedBox(height: STANDARD_PADDING),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _NO_DATA_MESSAGE,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
