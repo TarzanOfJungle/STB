@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
+import 'package:split_the_bill/common/utils/validator.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 import 'package:split_the_bill/users/models/update_user/put_user.dart';
 
+import '../../common/models/snackbar_message/snackbar_message.dart';
+import '../../common/models/snackbar_message/snackbar_message_category.dart';
 import '../../common/navigation/nav_router.dart';
 import '../../common/widgets/components/stb_elevated_button.dart';
 import '../../common/widgets/components/stb_text_field.dart';
 import '../../ioc_container.dart';
 import '../../users/models/user/user.dart';
 
-const String _TITLE = "Edit username";
+const _TITLE = "Edit username";
+const _USERNAME_EDIT_ERROR_MESSAGE = "Cannot change username";
 
 class UsernameEditDialog extends StatefulWidget {
   final User user;
@@ -28,7 +33,9 @@ class UsernameEditDialog extends StatefulWidget {
 class _UsernameEditDialogState extends State<UsernameEditDialog> {
   final _navRouter = get<NavRouter>();
   final _profileController = get<ProfileController>();
+  final _snackbarController = get<SnackbarMessangerController>();
   final _usernameController = TextEditingController();
+  final _registrationFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +53,13 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
                 return const Center(child: LoadingIndicator(),);
               } else {
                 _usernameController.text = snapshot.data!.username;
-                return StbTextField(
-                  controller: _usernameController,
-                  label: "New username",
+                return Form(
+                  key: _registrationFormKey,
+                  child: StbTextField(
+                    controller: _usernameController,
+                    label: "New username",
+                    validator: (value) => Validator.validateUsername(value),
+                  ),
                 );
               }
             }
@@ -75,9 +86,11 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
         StbElevatedButton(
           text: 'Confirm',
           stretch: true,
-          onTap: () {
-            _onConfirm();
-            _navRouter.returnBack();
+          onTap: () async {
+            var wasChanged = await _onConfirm();
+            if (wasChanged) {
+              _navRouter.returnBack();
+            }
           },
           color: UiConstants.confirmColor,
         )
@@ -85,18 +98,26 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
     );
   }
 
-  Future<void> _onConfirm() async {
-    if (_usernameController.text.isNotEmpty &&
-        _usernameController.text.trim() != "") {
-      var wasSuccess = false;
+  Future<bool> _onConfirm() async {
+    var wasSuccess = false;
+    if (_registrationFormKey.currentState!.validate()) {
       var post = PutUser(
         id: widget.user.id,
         username: _usernameController.text,
       );
       wasSuccess = await _profileController.updateUser(post);
       if (!wasSuccess) {
-        // TODO do something
+        _showMessage(_USERNAME_EDIT_ERROR_MESSAGE, SnackbarMessageCategory.ERROR);
       }
     }
+    return wasSuccess;
+  }
+
+  void _showMessage(String errorMessage, SnackbarMessageCategory category) {
+    final message = SnackbarMessage(
+      message: errorMessage,
+      category: SnackbarMessageCategory.WARNING,
+    );
+    _snackbarController.showSnackbarMessage(message);
   }
 }

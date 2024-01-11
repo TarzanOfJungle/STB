@@ -45,7 +45,7 @@ class LastShoppingPreviewTile extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
       ),
       child: Padding(

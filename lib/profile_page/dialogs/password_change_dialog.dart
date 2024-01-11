@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
+import 'package:split_the_bill/common/utils/validator.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 
 import '../../common/models/snackbar_message/snackbar_message.dart';
@@ -19,6 +20,7 @@ const _CHANGE_FAILED_MASSEGE = "Unable to change password";
 
 class PasswordChangeDialog extends StatefulWidget {
   final User user;
+
   const PasswordChangeDialog({super.key, required this.user});
 
   @override
@@ -31,32 +33,38 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
   final _snackbarController = get<SnackbarMessangerController>();
   final _passwordController = TextEditingController();
   final _confirmationController = TextEditingController();
+  final _registrationFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return StbDialog(
       title: _TITLE,
       titleIcon: Icons.edit,
-      body: Column(
-        children: [
-          StbTextField(
-            controller: _passwordController,
-            label: 'New password',
-            obscureText: true,
-          ),
-          const SizedBox(
-            height: STANDARD_PADDING,
-          ),
-          StbTextField(
-            controller: _confirmationController,
-            label: 'Confirm Password',
-            obscureText: true,
-          ),
-          const SizedBox(
-            height: STANDARD_PADDING,
-          ),
-          _buildButtons(),
-        ],
+      body: Form(
+        key: _registrationFormKey,
+        child: Column(
+          children: [
+            StbTextField(
+              controller: _passwordController,
+              label: 'New password',
+              obscureText: true,
+              validator: (value) => Validator.validatePassword(value),
+            ),
+            const SizedBox(
+              height: STANDARD_PADDING,
+            ),
+            StbTextField(
+              controller: _confirmationController,
+              label: 'Confirm Password',
+              obscureText: true,
+              validator: (value) => Validator.validatePassword(value),
+            ),
+            const SizedBox(
+              height: STANDARD_PADDING,
+            ),
+            _buildButtons(),
+          ],
+        ),
       ),
     );
   }
@@ -89,8 +97,7 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
 
   Future<bool> _onConfirm() async {
     var wasSuccess = false;
-    if (_passwordController.text.isNotEmpty &&
-        _passwordController.text.trim() != "") {
+    if (_registrationFormKey.currentState!.validate()) {
       if (_passwordController.text != _confirmationController.text) {
         _showMessage('Password must match', SnackbarMessageCategory.WARNING);
         _confirmationController.clear();

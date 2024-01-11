@@ -14,8 +14,7 @@ class MemberPurchasesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: StreamBuilder<List<UserPurchases>>(
+      return StreamBuilder<List<UserPurchases>>(
           stream: _purchasesController.usersWithPurchasesStream,
           builder: (BuildContext context, AsyncSnapshot<List<UserPurchases>> snapshot) {
             if (snapshot.hasError) {
@@ -29,19 +28,23 @@ class MemberPurchasesSection extends StatelessWidget {
               if (usersPurchases.isEmpty) {
                 return const Center(child: NoDataBanner(),);
               }
-              return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300.0,
-                  crossAxisSpacing: STANDARD_PADDING,
-                  mainAxisSpacing: STANDARD_PADDING,
+              return SizedBox(
+                // height: 650.0,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 300.0,
+                    crossAxisSpacing: STANDARD_PADDING,
+                    mainAxisSpacing: STANDARD_PADDING,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return MemberPurchasesGridTile(userPurchases: usersPurchases[index],);
+                  },
+                  itemCount: usersPurchases.length,
                 ),
-                itemBuilder: (BuildContext context, int index) {
-                  return MemberPurchasesGridTile(userPurchases: usersPurchases[index],);
-                },
-                itemCount: usersPurchases.length,
               );
             }
-          }),
-    );
+          });
   }
 }

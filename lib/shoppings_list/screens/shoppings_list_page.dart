@@ -29,7 +29,7 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
     return PageTemplate(
       label: 'Shoppings',
       actions: [
-        IconButton.outlined(
+        IconButton(
           iconSize: 30.0,
           icon: const Icon(Icons.add),
           onPressed: () => _onNewButtonPressed(context),
@@ -45,7 +45,7 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
             child: TextField(
               controller: _searchFieldController,
               onChanged: (query) => widget._shoppingsListController
-                  .updateShoppingsList(searchQuery: query), //TODO search bar
+                  .updateShoppingsList(searchQuery: query),
               decoration: InputDecoration(
                   labelText: 'Search',
                   prefixIcon: const Icon(Icons.search),
@@ -53,6 +53,7 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
                       onPressed: () {
                         _searchFieldController.clear();
                         widget._shoppingsListController.updateShoppingsList();
+                        FocusScope.of(context).unfocus();
                       },
                       icon: const Icon(Icons.clear))),
             ),

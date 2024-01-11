@@ -24,7 +24,7 @@ import 'package:split_the_bill/purchases/repositories/product_purchases/product_
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
-import 'package:split_the_bill/shopping_detail/controllers/user_filter_controller.dart';
+import 'package:split_the_bill/shopping_detail/controllers/user_transactions_display_controller.dart';
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository.dart';
 import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
@@ -155,7 +155,7 @@ abstract class IocContainer {
       authRepository: get<AuthRepositoryBase>(),
     ));
 
-    get.registerSingleton<UserFilterController>(UserFilterController());
+    get.registerSingleton<UserTransactionsDisplayController>(UserTransactionsDisplayController());
 
     get.registerSingleton<ProfileController>(ProfileController(
         get<UsersRepositoryBase>(),

@@ -44,7 +44,7 @@ class UsersBalanceCarousel extends StatelessWidget {
                   var users = snapshot.data!;
                   var currentUserId = _authController.loggedInUser!.id;
                   return Swiper(
-                    index: users.indexWhere((e) => e.id == currentUserId), // TODO current user
+                    index: users.indexWhere((e) => e.id == currentUserId),
                     itemBuilder: (BuildContext context, int itemIndex) {
                       return _buildCarouselItem(
                         context,
@@ -55,7 +55,7 @@ class UsersBalanceCarousel extends StatelessWidget {
                     itemCount: shopping.numberOfParticipants,
                     pagination: SwiperPagination(
                       builder: DotSwiperPaginationBuilder(
-                        activeColor: Theme.of(context).iconTheme.color,
+                        activeColor: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   );
@@ -79,7 +79,7 @@ class UsersBalanceCarousel extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).focusColor,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: const BorderRadius.all(
                   Radius.circular(STANDARD_BORDER_RADIUS)),
             ),

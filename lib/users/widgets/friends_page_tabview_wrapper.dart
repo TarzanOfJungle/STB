@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shopping_detail/models/tab_view_item.dart';
@@ -49,6 +50,13 @@ class _FriendsPageTabviewWrapperState extends State<FriendsPageTabviewWrapper>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () => _navRouter.toUsersSearch(),
+            icon: const Icon(Icons.person_add_rounded),
+          ),
+          const SizedBox(width: STANDARD_PADDING,),
+        ],
         centerTitle: false,
         title: const Text(
           "Friends",
@@ -58,10 +66,6 @@ class _FriendsPageTabviewWrapperState extends State<FriendsPageTabviewWrapper>
           controller: _tabController,
           tabs: _TABVIEW_ITEMS.map((item) => item.tab).toList(),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.person_add_rounded),
-        onPressed: () => _navRouter.toUsersSearch(),
       ),
       body: TabBarView(
         controller: _tabController,

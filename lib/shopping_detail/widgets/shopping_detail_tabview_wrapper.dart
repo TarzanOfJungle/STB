@@ -72,23 +72,26 @@ class _ShoppingDetailTabviewWrapperState
         }
         var shopping = snapshot.data!;
         var loggedInUser = _authController.loggedInUser;
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              shopping.shopping.name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                shopping.shopping.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              actions: shopping.shopping.creatorId == loggedInUser!.id ? _actions(shopping) : [],
+              bottom: TabBar(
+                controller: _tabController,
+                tabs: _tabViewItems.map((item) => item.tab).toList(),
               ),
             ),
-            actions: shopping.shopping.creatorId == loggedInUser!.id ? _actions(shopping) : [],
-            bottom: TabBar(
+            body: TabBarView(
               controller: _tabController,
-              tabs: _tabViewItems.map((item) => item.tab).toList(),
+              children: _tabViewItems.map((item) => item.page).toList(),
             ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: _tabViewItems.map((item) => item.page).toList(),
           ),
         );
       },
