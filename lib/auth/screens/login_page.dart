@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/post_login/post_login.dart';
 import 'package:split_the_bill/auth/widgets/auth_button/auth_button.dart';
@@ -31,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _restorePreviousUser();
+    // FlutterNativeSplash.remove();
     super.initState();
   }
 

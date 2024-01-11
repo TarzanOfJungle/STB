@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
-import 'package:split_the_bill/shopping_detail/controllers/user_filter_controller.dart';
+import 'package:split_the_bill/shopping_detail/controllers/user_transactions_display_controller.dart';
 import '../../ioc_container.dart';
 import '../../users/models/user/user.dart';
 
@@ -12,7 +12,7 @@ class TransactionsFilterSection extends StatefulWidget {
   TransactionsFilterSection({super.key});
 
   final _shoppingMembersController = get<ShoppingMembersController>();
-  final _userFilterController = get<UserFilterController>();
+  final _userFilterController = get<UserTransactionsDisplayController>();
 
   @override
   State<TransactionsFilterSection> createState() =>

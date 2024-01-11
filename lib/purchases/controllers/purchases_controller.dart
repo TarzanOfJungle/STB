@@ -19,6 +19,9 @@ class PurchasesController with AuthenticatedSocketObserver {
 
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
 
+  final BehaviorSubject<ProductAssignmentsWithPurchases?>
+      _filteredProductAssignmentsWithPurchases = BehaviorSubject.seeded(null);
+
   Stream<ProductAssignmentsWithPurchases?>
       get productAssignmentsWithPurchasesStream =>
           _productAssignmentsWithPurchases.stream;
@@ -32,6 +35,9 @@ class PurchasesController with AuthenticatedSocketObserver {
       _productAssignmentsWithPurchases.value;
 
   bool get isLoading => _isLoading.value;
+
+  Stream<ProductAssignmentsWithPurchases?> get filteredAssignmentsStream =>
+      _filteredProductAssignmentsWithPurchases.stream;
 
   int? get shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
@@ -126,10 +132,35 @@ class PurchasesController with AuthenticatedSocketObserver {
       productPurchases: productPurchases,
     );
     _productAssignmentsWithPurchases.add(assignmentsWithPurchases);
+    clearFilter();
 
     final usersWithPurchases = await _productPurchasesRepository
         .getUserPurchasesOfShopping(shoppingId);
     _usersWithPurchases.add(usersWithPurchases);
+  }
+
+  void filterAssignments(String? query) {
+    if (query == null) {
+      clearFilter();
+      return;
+    }
+    var data = _productAssignmentsWithPurchases.value;
+    if (data == null) {
+      return;
+    }
+    var filtered = ProductAssignmentsWithPurchases(
+      productAssignments: _productAssignmentsWithPurchases
+          .value!.productAssignments
+          .where((e) => e.product.name.contains(query))
+          .toList(),
+      productPurchases: data.productPurchases,
+    );
+    _filteredProductAssignmentsWithPurchases.add(filtered);
+  }
+
+  void clearFilter() {
+    var data = _productAssignmentsWithPurchases.value;
+    _filteredProductAssignmentsWithPurchases.add(data);
   }
 
   Future<void> deleteProductAssignemnt(String productName) async {

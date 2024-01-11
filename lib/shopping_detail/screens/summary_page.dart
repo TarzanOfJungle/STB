@@ -6,8 +6,7 @@ import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
-import 'package:split_the_bill/shopping_detail/controllers/user_filter_controller.dart';
-import 'package:split_the_bill/shopping_detail/models/filter_payment_direction_option.dart';
+import 'package:split_the_bill/shopping_detail/controllers/user_transactions_display_controller.dart';
 import 'package:split_the_bill/shopping_detail/widgets/info_item.dart';
 import 'package:split_the_bill/shopping_detail/widgets/users_balance_carousel.dart';
 
@@ -28,10 +27,12 @@ class SummaryPage extends StatelessWidget {
   final _shoppingDetailController = get<ShoppingDetailController>();
   final _shoppingMembersController = get<ShoppingMembersController>();
 
-  final _userFilterController = get<UserFilterController>();
+  final _userTransactionsDisplayController =
+      get<UserTransactionsDisplayController>();
 
   @override
   Widget build(BuildContext context) {
+    _userTransactionsDisplayController.forceLoading();
     return PageTemplate(
       showBackButton: true,
       label: 'Shopping Summary',
@@ -39,7 +40,7 @@ class SummaryPage extends StatelessWidget {
           padding: const EdgeInsets.all(STANDARD_PADDING),
           child: FutureBuilder(
             future: _shoppingDetailController.fetchTransactions(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(
                   child: Text('${snapshot.error}'),
@@ -47,7 +48,7 @@ class SummaryPage extends StatelessWidget {
               } else if (!snapshot.hasData) {
                 //TODO page loading
                 return const LoadingIndicator();
-              } else if (!snapshot.data) {
+              } else if (!snapshot.data!) {
                 // TODO something went wrong
                 return const Center(
                   child: Text(_LOADING_ERROR_MESSAGE),
@@ -70,23 +71,19 @@ class SummaryPage extends StatelessWidget {
         Expanded(
           child: StreamBuilder(
             stream: Rx.combineLatest2(
-                _userFilterController.selectedUsersStream,
-                _userFilterController.paymentDirectionStream,
-                (a, b) => (user: a, paymentDirection: b)),
+              _userTransactionsDisplayController.selectedUsersStream,
+              _userTransactionsDisplayController.isLoadingStream,
+              (user, isLoading) => CombinedData(user, isLoading),
+            ),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(child: Text("${snapshot.error}"));
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(
-                  child: LoadingIndicator(),
-                );
               } else {
-                var selectedUser = snapshot.data?.user;
-                var paymentDirection = snapshot.data!.paymentDirection;
+                var selectedUser = snapshot.hasData ? snapshot.data!.user : null;
                 var allTransactions = _shoppingDetailController.transactions;
 
-                var transactions = _getFilteredTransactions(
-                    selectedUser, paymentDirection, allTransactions);
+                var transactions =
+                    _getFilteredTransactions(selectedUser, allTransactions);
                 return ListView.separated(
                   itemCount: transactions.length,
                   itemBuilder: (context, index) {
@@ -130,7 +127,7 @@ class SummaryPage extends StatelessWidget {
     return Container(
       height: _TRANSACTION_TILE_HEIGHT,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondaryContainer,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
       ),
       child: Row(
@@ -152,7 +149,7 @@ class SummaryPage extends StatelessWidget {
         if (snapshot.hasError) {
           return Text('Id: $userId, ERROR');
         } else if (!snapshot.hasData) {
-          return const LoadingIndicator();
+          return const Center(child: LoadingIndicator());
         } else {
           if (snapshot.data == null) {
             return Text('Id: $userId, ERROR');
@@ -174,30 +171,27 @@ class SummaryPage extends StatelessWidget {
         Text(
           '${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 1)},-',
         ),
-        const Icon(CupertinoIcons.arrow_right), //TODO long arrow
+        const Icon(CupertinoIcons.arrow_right),
       ],
     );
   }
 
   List<Transaction> _getFilteredTransactions(
-      User? selectedUser,
-      FilterPaymentDirectionOption paymentDirection,
-      List<Transaction> allTransactions) {
+      User? selectedUser, List<Transaction> allTransactions) {
     if (selectedUser == null) {
       return allTransactions;
-    } else if (paymentDirection == FilterPaymentDirectionOption.both) {
-      return allTransactions
-          .where((t) =>
-              t.payingUserId == selectedUser.id ||
-              t.payedUserId == selectedUser.id)
-          .toList();
-    } else if (paymentDirection == FilterPaymentDirectionOption.payed) {
-      return allTransactions
-          .where((t) => t.payedUserId == selectedUser.id)
-          .toList();
     }
     return allTransactions
-        .where((t) => t.payingUserId == selectedUser.id)
+        .where((t) =>
+            t.payingUserId == selectedUser.id ||
+            t.payedUserId == selectedUser.id)
         .toList();
   }
+}
+
+class CombinedData {
+  final User? user;
+  final bool item;
+
+  CombinedData(this.user, this.item);
 }
