@@ -2,21 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 
-// const Map<int, double> _DUMMY_DATA = {
-//   1: 5436.2,
-//   2: 516.189584,
-//   3: 9847.514,
-//   4: 0,
-//   5: 5110.5145487498746516,
-//   6: 1120,
-//   7: 112.58,
-//   8: 0,
-//   9: 148,
-//   10: 356.183,
-//   11: 125.36,
-//   12: 432.2,
-// };
-
 const _TITLE = "Your monthly spending";
 const _MAX_HEIGHT = 150.0;
 
@@ -33,14 +18,6 @@ class MonthlySpendingChart extends StatelessWidget {
   List<FlSpot> get _chartSpots {
     final sortedEntries = monthlySpending.entries.toList()
       ..sort((prev, next) => prev.key.compareTo(next.key));
-
-    // final lastIndex = sortedEntries.length - 1;
-    // for (var i = lastIndex; i >= 0; i--) {
-    //   if (sortedEntries[i].value != 0) {
-    //     break;
-    //   }
-    //   sortedEntries.removeAt(i);
-    // }
     return sortedEntries
         .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
         .toList();
@@ -173,10 +150,10 @@ class MonthlySpendingChart extends StatelessWidget {
 
   List<LineTooltipItem?> _getTooltipLabels(
       BuildContext context, List<LineBarSpot> spots) {
-    final textStyle = TextStyle(color: Theme.of(context).colorScheme.surface);
+    final textStyle = TextStyle(color: Theme.of(context).colorScheme.onPrimary);
     return spots.map((chartSpot) {
       final text =
-          "${_getMonthShortcut(chartSpot.x.toInt())}: ${chartSpot.y.toStringAsFixed(1)}";
+          "${_getMonthShortcut(chartSpot.x.toInt())}: ${chartSpot.y.toStringAsFixed(1)},-";
 
       return LineTooltipItem(text, textStyle);
     }).toList();

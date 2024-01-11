@@ -6,8 +6,10 @@ import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
 import 'package:split_the_bill/home/controllers/statistics_controller.dart';
+import 'package:split_the_bill/home/models/shopping_with_spending.dart';
 import 'package:split_the_bill/home/widgets/last_shopping_preview_tile.dart';
 import 'package:split_the_bill/home/widgets/monthly_spending_chart.dart';
+import 'package:split_the_bill/home/widgets/per_shopping_spending_chart.dart';
 import 'package:split_the_bill/home/widgets/year_filter_chip.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
@@ -38,7 +40,7 @@ class HomePage extends StatelessWidget {
         stream: Rx.combineLatest3(
             _lastVisitedShoppingController.lastVisitedShoppingStream,
             _statisticsController.userMonthlySpending,
-            _statisticsController.userSpendingPerShopping,
+            _statisticsController.perShoppingSpending,
             (visited, monthly, perShopping) => (
                   lastVisited: visited,
                   monthlySpending: monthly,
@@ -79,6 +81,7 @@ class HomePage extends StatelessWidget {
               _buildStatistics(
                 context: context,
                 userMonthlySpending: userMonthlySpending,
+                perShoppingSpending: userSpendingPerShopping,
               ),
             ],
           );
@@ -105,6 +108,7 @@ class HomePage extends StatelessWidget {
   Widget _buildStatistics({
     required BuildContext context,
     required Map<int, double> userMonthlySpending,
+    required List<ShoppingWithSpending> perShoppingSpending,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,6 +119,7 @@ class HomePage extends StatelessWidget {
         ),
         _buildYearFilter(),
         _buildMonthlySpendingChart(userMonthlySpending),
+        _buildPerShoppingSpendingChart(perShoppingSpending),
       ],
     );
   }
@@ -152,6 +157,23 @@ class HomePage extends StatelessWidget {
       children: [
         const SizedBox(height: STANDARD_PADDING),
         MonthlySpendingChart(monthlySpending: userMonthlySpending),
+      ],
+    );
+  }
+
+  Widget _buildPerShoppingSpendingChart(
+    List<ShoppingWithSpending> perShoppingSpending,
+  ) {
+    if (perShoppingSpending.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      children: [
+        const SizedBox(height: STANDARD_PADDING),
+        PerShoppingSpendingChart(
+          perShoppingSpending: perShoppingSpending,
+        ),
       ],
     );
   }

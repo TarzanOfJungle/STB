@@ -2,6 +2,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
+import 'package:split_the_bill/home/models/shopping_with_spending.dart';
 import 'package:split_the_bill/home/models/stat_shopping_purchases/stat_shopping_purchases.dart';
 import 'package:split_the_bill/home/repositories/statistics_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
@@ -25,8 +26,16 @@ class StatisticsController with AuthenticatedSocketObserver {
   Stream<Map<int, double>> get userMonthlySpending =>
       _rawStatistics.map((statistics) => _getUserMonthlyStatistics(statistics));
 
-  Stream<Map<int, double>> get userSpendingPerShopping => _rawStatistics
+  Stream<Map<int, double>> get _userSpendingPerShoppingId => _rawStatistics
       .map((statistics) => _getUserSpendingPerShoppingId(statistics));
+
+  Stream<List<ShoppingWithSpending>> get perShoppingSpending =>
+      Rx.combineLatest2(
+        _allUserShoppings.stream,
+        _userSpendingPerShoppingId,
+        (shoppings, spendings) =>
+            _getPerShoppingSpendings(spendings, shoppings),
+      );
 
   AuthenticatedUser? get _loggedInUser => _authController.loggedInUser;
 
@@ -144,21 +153,40 @@ class StatisticsController with AuthenticatedSocketObserver {
     if (_loggedInUser == null) {
       return {};
     }
-
-    final spendingEntries = rawStatistics.map(
-      (shoppingStatistic) {
-        return MapEntry(
-          shoppingStatistic.shoppingId,
-          shoppingStatistic.userPurchases
-              .where((userPurchase) => userPurchase.userId == _loggedInUser!.id)
-              .fold(
-                  0.0,
-                  (prev, userPurchase) =>
-                      prev + userPurchase.totalAmmountSpentByUser),
-        );
-      },
-    ).toList();
+    final spendingEntries = rawStatistics
+        .map(
+          (shoppingStatistic) {
+            return MapEntry(
+              shoppingStatistic.shoppingId,
+              shoppingStatistic.userPurchases
+                  .where((userPurchase) =>
+                      userPurchase.userId == _loggedInUser!.id)
+                  .fold(
+                      0.0,
+                      (prev, userPurchase) =>
+                          prev + userPurchase.totalAmmountSpentByUser),
+            );
+          },
+        )
+        .toList()
+        .where((entry) => entry.value > 0);
 
     return Map.fromEntries(spendingEntries);
+  }
+
+  List<ShoppingWithSpending> _getPerShoppingSpendings(
+    Map<int, double> spendingsPerShoppingId,
+    List<ShoppingWithContext> shoppings,
+  ) {
+    final List<ShoppingWithSpending> perShoppingSpendings = [];
+    spendingsPerShoppingId.forEach((shoppingId, spent) {
+      final shopping =
+          shoppings.where((s) => s.shopping.id == shoppingId).firstOrNull;
+      if (shopping != null) {
+        perShoppingSpendings
+            .add(ShoppingWithSpending(shopping: shopping, spending: spent));
+      }
+    });
+    return perShoppingSpendings;
   }
 }
