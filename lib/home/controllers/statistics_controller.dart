@@ -1,16 +1,26 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/models/authenticated_user/authenticated_user.dart';
+import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/home/models/stat_shopping_purchases/stat_shopping_purchases.dart';
 import 'package:split_the_bill/home/repositories/statistics_repository_base.dart';
+import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
+import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 
-class StatisticsController {
+class StatisticsController with AuthenticatedSocketObserver {
   final BehaviorSubject<int> _selectedYear =
       BehaviorSubject.seeded(DateTime.now().year);
 
+  final BehaviorSubject<List<ShoppingWithContext>> _allUserShoppings =
+      BehaviorSubject.seeded([]);
+
   Stream<List<StatShoppingPurchases>> get _rawStatistics => _selectedYear
       .asyncMap((selectedYear) => _getRawYearlyStatistics(selectedYear));
+
+  int get selectedYear => _selectedYear.value;
+
+  List<int> get activeYears => _getLoggedInUserActiveYears();
 
   Stream<Map<int, double>> get userMonthlySpending =>
       _rawStatistics.map((statistics) => _getUserMonthlyStatistics(statistics));
@@ -23,12 +33,66 @@ class StatisticsController {
   final AuthController _authController;
   final StatisticsRepositoryBase _statisticsRepository;
   final ShoppingsListRepositoryBase _shoppingsRepository;
+  final ProductPurchasesRepositoryBase _productPurchasesRepository;
 
   StatisticsController(
     this._authController,
     this._statisticsRepository,
     this._shoppingsRepository,
-  );
+    this._productPurchasesRepository,
+  ) {
+    _listenForLoggedInUserChanges();
+    _listenForStatisticsDataUpdates();
+  }
+
+  void _listenForLoggedInUserChanges() {
+    _authController.loggedInUserStream.listen((loggedInUser) {
+      if (loggedInUser != null) {
+        _updateStatistics();
+        _loadShoppings();
+      }
+    });
+  }
+
+  void _listenForStatisticsDataUpdates() {
+    cancelAllSubscribtions();
+    observeSocketEvents(
+      eventStream: _shoppingsRepository.getShoppingChangesStream,
+      onValueChanged: (assignmentEvent) {
+        _loadShoppings();
+      },
+    );
+    observeSocketEvents(
+      eventStream: _productPurchasesRepository.getPurchaseChangesStream,
+      onValueChanged: (assignmentEvent) {
+        _updateStatistics();
+      },
+    );
+  }
+
+  void setSelectedYear(int year) {
+    _selectedYear.add(year);
+  }
+
+  List<int> _getLoggedInUserActiveYears() {
+    if (_authController.loggedInUser == null) {
+      return [];
+    }
+    final currentYear = DateTime.now().year;
+    final firstUserYear = _authController.loggedInUser!.created.year;
+    final numberOfUserYears = (currentYear - firstUserYear) + 1;
+    final List<int> activeUserYears = [];
+    for (var i = 0; i < numberOfUserYears; i++) {
+      final yearToAdd = currentYear - i;
+      activeUserYears.add(yearToAdd);
+    }
+    return activeUserYears;
+  }
+
+  void _updateStatistics() {
+    final year = _selectedYear.value;
+    _selectedYear.add(year);
+  }
 
   Future<List<StatShoppingPurchases>> _getRawYearlyStatistics(int year) async {
     try {
@@ -39,6 +103,13 @@ class StatisticsController {
     } catch (_) {
       return [];
     }
+  }
+
+  Future<void> _loadShoppings() async {
+    try {
+      final shoppings = await _shoppingsRepository.getShoppings();
+      _allUserShoppings.add(shoppings.toList());
+    } catch (_) {}
   }
 
   Map<int, double> _getUserMonthlyStatistics(

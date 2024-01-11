@@ -23,8 +23,8 @@ mixin _$User {
   int get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
-  DateTime? get created => throw _privateConstructorUsedError;
-  DateTime? get updated => throw _privateConstructorUsedError;
+  DateTime get created => throw _privateConstructorUsedError;
+  DateTime get updated => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,8 +40,8 @@ abstract class $UserCopyWith<$Res> {
       {int id,
       String email,
       String username,
-      DateTime? created,
-      DateTime? updated});
+      DateTime created,
+      DateTime updated});
 }
 
 /// @nodoc
@@ -60,8 +60,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? id = null,
     Object? email = null,
     Object? username = null,
-    Object? created = freezed,
-    Object? updated = freezed,
+    Object? created = null,
+    Object? updated = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -76,14 +76,14 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      created: freezed == created
+      created: null == created
           ? _value.created
           : created // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updated: freezed == updated
+              as DateTime,
+      updated: null == updated
           ? _value.updated
           : updated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
     ) as $Val);
   }
 }
@@ -99,8 +99,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       {int id,
       String email,
       String username,
-      DateTime? created,
-      DateTime? updated});
+      DateTime created,
+      DateTime updated});
 }
 
 /// @nodoc
@@ -116,8 +116,8 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? id = null,
     Object? email = null,
     Object? username = null,
-    Object? created = freezed,
-    Object? updated = freezed,
+    Object? created = null,
+    Object? updated = null,
   }) {
     return _then(_$UserImpl(
       id: null == id
@@ -132,14 +132,14 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      created: freezed == created
+      created: null == created
           ? _value.created
           : created // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updated: freezed == updated
+              as DateTime,
+      updated: null == updated
           ? _value.updated
           : updated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as DateTime,
     ));
   }
 }
@@ -151,8 +151,8 @@ class _$UserImpl extends _User {
       {required this.id,
       required this.email,
       required this.username,
-      this.created,
-      this.updated})
+      required this.created,
+      required this.updated})
       : super._();
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
@@ -165,9 +165,9 @@ class _$UserImpl extends _User {
   @override
   final String username;
   @override
-  final DateTime? created;
+  final DateTime created;
   @override
-  final DateTime? updated;
+  final DateTime updated;
 
   @override
   String toString() {
@@ -211,8 +211,8 @@ abstract class _User extends User {
       {required final int id,
       required final String email,
       required final String username,
-      final DateTime? created,
-      final DateTime? updated}) = _$UserImpl;
+      required final DateTime created,
+      required final DateTime updated}) = _$UserImpl;
   const _User._() : super._();
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
@@ -224,9 +224,9 @@ abstract class _User extends User {
   @override
   String get username;
   @override
-  DateTime? get created;
+  DateTime get created;
   @override
-  DateTime? get updated;
+  DateTime get updated;
   @override
   @JsonKey(ignore: true)
   _$$UserImplCopyWith<_$UserImpl> get copyWith =>

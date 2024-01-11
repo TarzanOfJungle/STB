@@ -33,6 +33,14 @@ class MonthlySpendingChart extends StatelessWidget {
   List<FlSpot> get _chartSpots {
     final sortedEntries = monthlySpending.entries.toList()
       ..sort((prev, next) => prev.key.compareTo(next.key));
+
+    // final lastIndex = sortedEntries.length - 1;
+    // for (var i = lastIndex; i >= 0; i--) {
+    //   if (sortedEntries[i].value != 0) {
+    //     break;
+    //   }
+    //   sortedEntries.removeAt(i);
+    // }
     return sortedEntries
         .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
         .toList();
@@ -89,12 +97,12 @@ class MonthlySpendingChart extends StatelessWidget {
           strokeWidth: 1,
         ),
       ),
-      titlesData: const FlTitlesData(
+      titlesData: FlTitlesData(
         show: true,
-        rightTitles: AxisTitles(
+        rightTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        topTitles: AxisTitles(
+        topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
         bottomTitles: AxisTitles(
@@ -102,14 +110,13 @@ class MonthlySpendingChart extends StatelessWidget {
             showTitles: true,
             reservedSize: 30,
             interval: 1,
-            // getTitlesWidget: bottomTitleWidgets,
+            getTitlesWidget: (value, _) =>
+                _getBottomTitleWidgets(value.toInt(), context),
           ),
         ),
-        leftTitles: AxisTitles(
+        leftTitles: const AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            // interval: 1,
-            // getTitlesWidget: leftTitleWidgets,
             reservedSize: 42,
           ),
         ),
@@ -121,6 +128,16 @@ class MonthlySpendingChart extends StatelessWidget {
       maxX: monthlySpending.length.toDouble(),
       minY: 0,
       maxY: _highestMonthlySpending.value,
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: lineColor,
+          tooltipRoundedRadius: STANDARD_BORDER_RADIUS,
+          getTooltipItems: (touchedSpots) => _getTooltipLabels(
+            context,
+            touchedSpots,
+          ),
+        ),
+      ),
       lineBarsData: [
         LineChartBarData(
           spots: _chartSpots,
@@ -139,5 +156,60 @@ class MonthlySpendingChart extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _getBottomTitleWidgets(int monthNumber, BuildContext context) {
+    if (monthNumber != 1 && monthNumber % 4 != 0) {
+      return const SizedBox.shrink();
+    }
+    final textStyle = Theme.of(context).textTheme.labelSmall;
+    final text = _getMonthShortcut(monthNumber);
+
+    return SideTitleWidget(
+      axisSide: AxisSide.bottom,
+      child: Text(text, style: textStyle),
+    );
+  }
+
+  List<LineTooltipItem?> _getTooltipLabels(
+      BuildContext context, List<LineBarSpot> spots) {
+    final textStyle = TextStyle(color: Theme.of(context).colorScheme.surface);
+    return spots.map((chartSpot) {
+      final text =
+          "${_getMonthShortcut(chartSpot.x.toInt())}: ${chartSpot.y.toStringAsFixed(1)}";
+
+      return LineTooltipItem(text, textStyle);
+    }).toList();
+  }
+
+  String _getMonthShortcut(int month) {
+    switch (month) {
+      case 1:
+        return "Jan";
+      case 2:
+        return "Feb";
+      case 3:
+        return "Mar";
+      case 4:
+        return "Apr";
+      case 5:
+        return "May";
+      case 6:
+        return "Jun";
+      case 7:
+        return "Jul";
+      case 8:
+        return "Aug";
+      case 9:
+        return "Sep";
+      case 10:
+        return "Oct";
+      case 11:
+        return "Nov";
+      case 12:
+        return "Dec";
+      default:
+        return "";
+    }
   }
 }

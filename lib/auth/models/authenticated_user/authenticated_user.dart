@@ -14,8 +14,8 @@ class AuthenticatedUser with _$AuthenticatedUser {
     @HiveField(2) required String email,
     @HiveField(3) required String username,
     @HiveField(4) required String token,
-    @HiveField(5) DateTime? created,
-    @HiveField(6) DateTime? updated,
+    @HiveField(5) required DateTime created,
+    @HiveField(6) required DateTime updated,
   }) = _AuthenticatedUser;
 
   const AuthenticatedUser._();

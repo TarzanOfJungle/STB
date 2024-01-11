@@ -170,6 +170,7 @@ abstract class IocContainer {
       get<AuthController>(),
       get<StatisticsRepositoryBase>(),
       get<ShoppingsListRepositoryBase>(),
+      get<ProductPurchasesRepositoryBase>(),
     ));
     get.registerSingleton<TokenValidationService>(TokenValidationService(
       authController: get<AuthController>(),
