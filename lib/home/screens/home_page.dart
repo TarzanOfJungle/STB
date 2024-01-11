@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
+import 'package:split_the_bill/home/controllers/statistics_controller.dart';
 import 'package:split_the_bill/home/widgets/last_shopping_preview_tile.dart';
+import 'package:split_the_bill/home/widgets/monthly_spending_chart.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 const _NO_DATA_MESSAGE =
@@ -13,6 +16,7 @@ const _NO_DATA_MESSAGE =
 class HomePage extends StatelessWidget {
   final _navRouter = get<NavRouter>();
   final _lastVisitedShoppingController = get<LastVisitedShoppingController>();
+  final _statisticsController = get<StatisticsController>();
 
   HomePage({super.key});
 
@@ -30,7 +34,15 @@ class HomePage extends StatelessWidget {
         )
       ],
       child: StreamBuilder(
-        stream: _lastVisitedShoppingController.lastVisitedShoppingStream,
+        stream: Rx.combineLatest3(
+            _lastVisitedShoppingController.lastVisitedShoppingStream,
+            _statisticsController.userMonthlySpending,
+            _statisticsController.userSpendingPerShopping,
+            (visited, monthly, perShopping) => (
+                  lastVisited: visited,
+                  monthlySpending: monthly,
+                  perShoppingSpending: perShopping,
+                )),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -40,7 +52,17 @@ class HomePage extends StatelessWidget {
           if (!snapshot.hasData) {
             return _buildNoData();
           }
-          final lastVisitedShopping = snapshot.data;
+          final lastVisitedShopping = snapshot.data!.lastVisited;
+          final userMonthlySpending = snapshot.data!.monthlySpending;
+          final userSpendingPerShopping = snapshot.data!.perShoppingSpending;
+
+          final noUsableData = lastVisitedShopping == null &&
+              userMonthlySpending.isEmpty &&
+              userSpendingPerShopping.isEmpty;
+
+          if (noUsableData) {
+            return _buildNoData();
+          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(STANDARD_PADDING),
@@ -48,6 +70,7 @@ class HomePage extends StatelessWidget {
               children: [
                 if (lastVisitedShopping != null)
                   LastShoppingPreviewTile(shopping: lastVisitedShopping),
+                _buildMonthlySpendingChart(userMonthlySpending),
               ],
             ),
           );
@@ -68,6 +91,18 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMonthlySpendingChart(Map<int, double> userMonthlySpending) {
+    if (userMonthlySpending.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: STANDARD_PADDING),
+        MonthlySpendingChart(monthlySpending: userMonthlySpending),
+      ],
     );
   }
 }

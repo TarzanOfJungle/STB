@@ -10,7 +10,7 @@ class StatisticsController {
       BehaviorSubject.seeded(DateTime.now().year);
 
   Stream<List<StatShoppingPurchases>> get _rawStatistics => _selectedYear
-      .asyncMap((selectedYear) => _getYearlyStatistics(selectedYear));
+      .asyncMap((selectedYear) => _getRawYearlyStatistics(selectedYear));
 
   Stream<Map<int, double>> get userMonthlySpending =>
       _rawStatistics.map((statistics) => _getUserMonthlyStatistics(statistics));
@@ -30,7 +30,7 @@ class StatisticsController {
     this._shoppingsRepository,
   );
 
-  Future<List<StatShoppingPurchases>> _getYearlyStatistics(int year) async {
+  Future<List<StatShoppingPurchases>> _getRawYearlyStatistics(int year) async {
     try {
       final start = DateTime(year, 1, 1);
       final end = DateTime(year, 12, 31);
