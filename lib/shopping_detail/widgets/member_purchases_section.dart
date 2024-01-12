@@ -14,37 +14,35 @@ class MemberPurchasesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return StreamBuilder<List<UserPurchases>>(
-          stream: _purchasesController.usersWithPurchasesStream,
-          builder: (BuildContext context, AsyncSnapshot<List<UserPurchases>> snapshot) {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.data == null) {
-              return const Center(child: Text("Nothing yet"));
-            } else {
-              final usersPurchases = snapshot.data!.toList();
-              if (usersPurchases.isEmpty) {
-                return const Center(child: NoDataBanner(),);
-              }
-              return SizedBox(
-                // height: 650.0,
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 300.0,
-                    crossAxisSpacing: STANDARD_PADDING,
-                    mainAxisSpacing: STANDARD_PADDING,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return MemberPurchasesGridTile(userPurchases: usersPurchases[index],);
-                  },
-                  itemCount: usersPurchases.length,
-                ),
-              );
+    return StreamBuilder<List<UserPurchases>>(
+        stream: _purchasesController.usersWithPurchasesStream,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<UserPurchases>> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            final usersPurchases = snapshot.data!.toList();
+            if (usersPurchases.isEmpty) {
+              return const SizedBox.shrink();
             }
-          });
+            return GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 300.0,
+                crossAxisSpacing: STANDARD_PADDING,
+                mainAxisSpacing: STANDARD_PADDING,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return MemberPurchasesGridTile(
+                  userPurchases: usersPurchases[index],
+                );
+              },
+              itemCount: usersPurchases.length,
+            );
+          }
+        });
   }
 }

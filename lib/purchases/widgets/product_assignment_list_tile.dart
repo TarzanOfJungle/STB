@@ -11,6 +11,7 @@ const _PRODUCT_ASSIGNMENT_COUNT_SIZE = 55.0;
 
 class ProductAssignmentListTile extends StatelessWidget {
   final ProductShoppingAssignment productAssignment;
+  final bool enableSwipeToDelete;
   final ProductPurchase? productPurchase;
   final VoidCallback onTap;
 
@@ -20,24 +21,15 @@ class ProductAssignmentListTile extends StatelessWidget {
     super.key,
     required this.onTap,
     required this.productAssignment,
+    required this.enableSwipeToDelete,
     this.productPurchase,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: [
-          SlidableAction(
-            backgroundColor: UiConstants.deleteColor,
-            icon: Icons.delete_rounded,
-            label: "Delete",
-            onPressed: (_) => _showDeleteAssignmentDialog(context),
-          )
-        ],
-      ),
-      child: InkWell(
+    return _buildWithSwipeGesture(
+      context,
+      InkWell(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -59,6 +51,26 @@ class ProductAssignmentListTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildWithSwipeGesture(BuildContext context, Widget child) {
+    if (!enableSwipeToDelete) {
+      return child;
+    }
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        children: [
+          SlidableAction(
+            backgroundColor: UiConstants.deleteColor,
+            icon: Icons.delete_rounded,
+            label: "Delete",
+            onPressed: (_) => _showDeleteAssignmentDialog(context),
+          )
+        ],
+      ),
+      child: child,
     );
   }
 

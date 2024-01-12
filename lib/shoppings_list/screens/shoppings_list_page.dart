@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/widgets/components/search_field.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
@@ -34,28 +35,17 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
           icon: const Icon(Icons.add),
           onPressed: () => _onNewButtonPressed(context),
         ),
-        const SizedBox(
-          width: STANDARD_PADDING,
-        ),
       ],
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(SMALL_PADDING),
-            child: TextField(
+            child: SearchField(
               controller: _searchFieldController,
-              onChanged: (query) => widget._shoppingsListController
+              onValueChanged: (query) => widget._shoppingsListController
                   .updateShoppingsList(searchQuery: query),
-              decoration: InputDecoration(
-                  labelText: 'Search',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _searchFieldController.clear();
-                        widget._shoppingsListController.updateShoppingsList();
-                        FocusScope.of(context).unfocus();
-                      },
-                      icon: const Icon(Icons.clear))),
+              onSearchCleared: () =>
+                  widget._shoppingsListController.updateShoppingsList(),
             ),
           ),
           FutureBuilder<bool>(

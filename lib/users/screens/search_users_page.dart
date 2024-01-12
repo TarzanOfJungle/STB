@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/components/search_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
@@ -62,7 +63,16 @@ class _SearchUsersPageState extends State<SearchUsersPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildUserSearch(),
+              Padding(
+                padding: const EdgeInsets.all(STANDARD_PADDING),
+                child: SearchField(
+                  controller: _userTextSearchController,
+                  onValueChanged: (value) => _friendsController
+                      .searchNonFriendUsers(value.isEmpty ? null : value),
+                  onSearchCleared: () =>
+                      _friendsController.searchNonFriendUsers(null),
+                ),
+              ),
               Expanded(
                 child: _buildUserList(
                   nonFriendUsers,
@@ -72,20 +82,6 @@ class _SearchUsersPageState extends State<SearchUsersPage> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildUserSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(STANDARD_PADDING),
-      child: StbTextField(
-        controller: _userTextSearchController,
-        label: "Search",
-        maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
-        onChanged: (value) => _friendsController
-            .searchNonFriendUsers(value.isEmpty ? null : value),
       ),
     );
   }

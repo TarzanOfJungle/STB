@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/animated_lookup_list.dart';
+import 'package:split_the_bill/common/widgets/components/search_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 import 'package:split_the_bill/shopping_detail/widgets/shopping_member_list_tile.dart';
 import 'package:split_the_bill/shopping_detail/widgets/user_to_assign_chip.dart';
@@ -28,6 +30,9 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
 
   final _authController = get<AuthController>();
   final _membersController = get<ShoppingMembersController>();
+  final _shoppingDetailController = get<ShoppingDetailController>();
+
+  bool get _editingEnabled => !_shoppingDetailController.shoppingIsFinalized;
 
   @override
   void initState() {
@@ -54,7 +59,6 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
         child: Column(
           children: [
             _buildAssignNewUsersSection(context),
-            const SizedBox(height: 30.0),
             _buildMembersList(context),
           ],
         ),
@@ -63,6 +67,9 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
   }
 
   Widget _buildAssignNewUsersSection(BuildContext context) {
+    if (!_editingEnabled) {
+      return const SizedBox.shrink();
+    }
     return StreamBuilder(
       stream: _membersController.usersToAddStream,
       builder: (context, snapshot) {
@@ -82,17 +89,18 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
             const SizedBox(height: SMALL_PADDING),
             _buildUsersToAddList(usersToAdd),
             const SizedBox(height: SMALL_PADDING),
-            StbTextField(
+            SearchField(
               controller: _userTextEditingController,
               label: "User",
-              enableSuggestions: true,
-              onChanged: (value) {
-                _membersController.setUsersSearchQuery(value);
-              },
+              onValueChanged: (value) =>
+                  _membersController.setUsersSearchQuery(value),
+              onSearchCleared: () =>
+                  _membersController.setUsersSearchQuery(null),
             ),
             _buildUsersLookup(),
             const SizedBox(height: STANDARD_PADDING),
             _buildAssignButton(usersToAdd),
+            const SizedBox(height: 30.0),
           ],
         );
       },
@@ -108,8 +116,7 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
           }
           final currentUserId = _authController.loggedInUser!.id;
           final currentMembers = snapshot.data!;
-          final currentUserIsCreator =
-              currentUserId == _membersController.shoppingCreatorId;
+          final currentUserIsCreator = _shoppingDetailController.userIsCreator;
           return Column(
             children: [
               _buildHeadline(
@@ -121,7 +128,7 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
               ...currentMembers.map((user) => ShoppingMemberListTile(
                     user: user,
                     currentUserId: currentUserId,
-                    onDelete: currentUserIsCreator
+                    onDelete: currentUserIsCreator && _editingEnabled
                         ? () => _showUnassignUserDialog(user)
                         : null,
                   ))

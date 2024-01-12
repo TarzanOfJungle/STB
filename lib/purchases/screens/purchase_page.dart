@@ -11,11 +11,15 @@ import 'package:split_the_bill/purchases/widgets/dialogs/update_product_assignme
 import 'package:split_the_bill/purchases/widgets/general_info_label.dart';
 import 'package:split_the_bill/purchases/widgets/purchase_editing_section.dart';
 import 'package:split_the_bill/purchases/widgets/user_purchase_list_tile.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
 class PurchasePage extends StatelessWidget {
   final _purchaseController = get<SinglePurchaseController>();
+  final _shoppingDetailController = get<ShoppingDetailController>();
 
   PurchasePage({super.key});
+
+  bool get _editingEnabled => !_shoppingDetailController.shoppingIsFinalized;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class PurchasePage extends StatelessWidget {
             children: [
               const SizedBox(height: STANDARD_PADDING),
               _buildGeneralInfo(context, state),
-              PurchaseEditingSection(purchaseState: state),
+              if (_editingEnabled) PurchaseEditingSection(purchaseState: state),
               const Divider(height: 30),
               ..._buildUserPurchasesList(context, state),
             ],
@@ -57,10 +61,12 @@ class PurchasePage extends StatelessWidget {
           value:
               "${state.totalPurchasedQuantity}/${state.totalQuantityToBePurchased}",
           label: "Total Qty.",
-          trailingButton: IconButtonWithBackground(
-            onTap: () => _showEditTotalQuantityDialog(context, state),
-            icon: Icons.edit,
-          ),
+          trailingButton: _editingEnabled
+              ? IconButtonWithBackground(
+                  onTap: () => _showEditTotalQuantityDialog(context, state),
+                  icon: Icons.edit,
+                )
+              : null,
         ),
         GeneralInfoLabel(
           icon: UiConstants.ammountIcon,

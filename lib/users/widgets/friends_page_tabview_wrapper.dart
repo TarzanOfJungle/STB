@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shopping_detail/models/tab_view_item.dart';
 import 'package:split_the_bill/users/screens/friends_list_page.dart';
@@ -48,23 +48,19 @@ class _FriendsPageTabviewWrapperState extends State<FriendsPageTabviewWrapper>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () => _navRouter.toUsersSearch(),
-            icon: const Icon(Icons.person_add_rounded),
-          ),
-          const SizedBox(width: STANDARD_PADDING,),
-        ],
-        centerTitle: false,
-        title: const Text("Friends"),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: _TABVIEW_ITEMS.map((item) => item.tab).toList(),
+    return PageTemplate(
+      label: "Friends",
+      actions: [
+        IconButton(
+          onPressed: () => _navRouter.toUsersSearch(),
+          icon: const Icon(Icons.person_add_rounded),
         ),
+      ],
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: _TABVIEW_ITEMS.map((item) => item.tab).toList(),
       ),
-      body: TabBarView(
+      child: TabBarView(
         controller: _tabController,
         children: _TABVIEW_ITEMS.map((item) => item.page).toList(),
       ),

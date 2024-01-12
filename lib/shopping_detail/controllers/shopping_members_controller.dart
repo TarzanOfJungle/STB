@@ -40,8 +40,6 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
-  int? get shoppingCreatorId =>
-      _shoppingDetailController.currentShoppingState?.shopping.creatorId;
 
   final AuthController _authController;
   final ShoppingDetailController _shoppingDetailController;

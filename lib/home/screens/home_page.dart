@@ -33,9 +33,6 @@ class HomePage extends StatelessWidget {
           onPressed: () => _navRouter.toProfile(),
           icon: const Icon(Icons.person),
         ),
-        const SizedBox(
-          width: STANDARD_PADDING,
-        )
       ],
       child: StreamBuilder(
         stream: Rx.combineLatest3(

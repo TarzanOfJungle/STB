@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/auth/controllers/auth_controller.dart';
-import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/groupchat/screens/groupchat_tab_page.dart';
 import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
@@ -25,13 +24,12 @@ class _ShoppingDetailTabviewWrapperState
   late final List<TabViewItem> _tabViewItems;
   late final TabController _tabController;
   final _shoppingDetailController = get<ShoppingDetailController>();
-  final _authController = get<AuthController>();
   @override
   void initState() {
     super.initState();
     _tabViewItems = [
-      TabViewItem(
-        tab: const Tab(
+      const TabViewItem(
+        tab: Tab(
           text: 'Items',
         ),
         page: PurchasesTabPage(),
@@ -62,36 +60,28 @@ class _ShoppingDetailTabviewWrapperState
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _shoppingDetailController.shopping,
-      builder:
-          (BuildContext context, AsyncSnapshot<ShoppingWithContext?> snapshot) {
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<ShoppingWithContext?> snapshot,
+      ) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData) {
-          //TODO page loading
           return const LoadingIndicator();
         }
-        var shopping = snapshot.data!;
-        var loggedInUser = _authController.loggedInUser;
-        return GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(
-                shopping.shopping.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              actions: shopping.shopping.creatorId == loggedInUser!.id ? _actions(shopping) : [],
-              bottom: TabBar(
-                controller: _tabController,
-                tabs: _tabViewItems.map((item) => item.tab).toList(),
-              ),
-            ),
-            body: TabBarView(
-              controller: _tabController,
-              children: _tabViewItems.map((item) => item.page).toList(),
-            ),
+        final shopping = snapshot.data!;
+
+        return PageTemplate(
+          label: shopping.shopping.name,
+          showBackButton: true,
+          actions: _actions(shopping),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: _tabViewItems.map((item) => item.tab).toList(),
+          ),
+          child: TabBarView(
+            controller: _tabController,
+            children: _tabViewItems.map((item) => item.page).toList(),
           ),
         );
       },
@@ -108,14 +98,15 @@ class _ShoppingDetailTabviewWrapperState
   }
 
   List<Widget> _actions(ShoppingWithContext shopping) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.edit),
-        onPressed: () => _onEditButtonPressed(context, shopping),
-      ),
-      const SizedBox(
-        width: STANDARD_PADDING,
-      ),
-    ];
+    if (_shoppingDetailController.userIsCreator &&
+        !_shoppingDetailController.shoppingIsFinalized) {
+      return [
+        IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () => _onEditButtonPressed(context, shopping),
+        ),
+      ];
+    }
+    return [];
   }
 }

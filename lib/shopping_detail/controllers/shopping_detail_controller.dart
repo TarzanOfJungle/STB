@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
@@ -23,7 +24,9 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   final BehaviorSubject<List<Transaction>> _transactions =
       BehaviorSubject.seeded([]);
 
-  final ShoppingsListRepositoryBase shoppingListRepository;
+  int? get _shoppingId => currentShoppingState?.shopping.id;
+
+  final AuthController _authController;
   final TrasactionsRepositoryBase _transactionsRepository;
   final SnackbarMessangerController _snackbarController;
   final ShoppingsListRepositoryBase _shoppingsListRepository;
@@ -39,8 +42,15 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
 
   List<Transaction> get transactions => _transactions.value;
 
+  bool get userIsCreator =>
+      currentShoppingState?.shopping.creatorId ==
+      _authController.loggedInUser?.id;
+
+  bool get shoppingIsFinalized =>
+      currentShoppingState?.shopping.finalized ?? false;
+
   ShoppingDetailController(
-    this.shoppingListRepository,
+    this._authController,
     this._transactionsRepository,
     this._snackbarController,
     this._shoppingsListRepository,
@@ -52,8 +62,6 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
     _listenForUsersChanges();
     _listenForPurchaseAndAssignmentChanges();
   }
-
-  int? get _shoppingId => currentShoppingState?.shopping.id;
 
   void _listenForShoppingListChanges() {
     observeSocketEvents(
@@ -113,11 +121,6 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
       _shopping.add(null);
       return false;
     }
-  }
-
-  Future<ShoppingWithContext?> shoppingById({required int shoppingId}) async {
-    try {} catch (_) {}
-    return null;
   }
 
   Future<bool> fetchTransactions() async {

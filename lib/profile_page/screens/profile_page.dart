@@ -30,9 +30,6 @@ class ProfilePage extends StatelessWidget {
           icon: const Icon(Icons.logout),
           onPressed: () => _onLogoutButtonPressed(context),
         ),
-        const SizedBox(
-          width: STANDARD_PADDING,
-        )
       ],
       child: Padding(
         padding: const EdgeInsets.all(STANDARD_PADDING),
@@ -103,8 +100,7 @@ class ProfilePage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-          label: 'Do you want to logout?',
-          onConfirm: _logout),
+          label: 'Do you want to logout?', onConfirm: _logout),
     );
   }
 

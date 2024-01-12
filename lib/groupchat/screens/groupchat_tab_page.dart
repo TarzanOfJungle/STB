@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
+import 'package:split_the_bill/common/widgets/empty_chat_banner.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
@@ -56,6 +57,10 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
   }
 
   Widget _buildMessagesList(List<GroupchatMessageWithAuthor> messages) {
+    if (messages.isEmpty) {
+      return const EmptyChatBanner();
+    }
+
     final messagesReversed = messages.reversed.toList();
     return ListView.builder(
       controller: _scrollController,
@@ -88,11 +93,13 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
   }
 
   void _scrollToBottom() {
-    _scrollController.animateTo(
-      0,
-      duration: UiConstants.autoscrollDuration,
-      curve: Curves.fastOutSlowIn,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: UiConstants.autoscrollDuration,
+        curve: Curves.fastOutSlowIn,
+      );
+    }
   }
 
   Future<void> _sendMessage() async {
