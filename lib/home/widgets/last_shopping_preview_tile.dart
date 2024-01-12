@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/components/finalized_indicator.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
@@ -34,13 +35,18 @@ class LastShoppingPreviewTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          shopping.shopping.name,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            if (shopping.shopping.finalized) const FinalizedIndicator(),
+            Text(
+              shopping.shopping.name,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.titleMedium?.fontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
         _buildInfoLine(shopping),
         const SizedBox(

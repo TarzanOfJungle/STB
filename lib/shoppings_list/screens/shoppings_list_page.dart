@@ -22,6 +22,7 @@ class ShoppingsListPage extends StatefulWidget {
 }
 
 class _ShoppingsListPageState extends State<ShoppingsListPage> {
+  bool _showfinalized = false;
   final _searchFieldController = TextEditingController();
 
   @override
@@ -42,20 +43,14 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(SMALL_PADDING),
-            child: TextField(
-              controller: _searchFieldController,
-              onChanged: (query) => widget._shoppingsListController
-                  .updateShoppingsList(searchQuery: query),
-              decoration: InputDecoration(
-                  labelText: 'Search',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                      onPressed: () {
-                        _searchFieldController.clear();
-                        widget._shoppingsListController.updateShoppingsList();
-                        FocusScope.of(context).unfocus();
-                      },
-                      icon: const Icon(Icons.clear))),
+            child: Row(
+              children: [
+                _buildSearchField(),
+                const SizedBox(
+                  width: SMALL_PADDING,
+                ),
+                _buildFinalizedFilter(),
+              ],
             ),
           ),
           FutureBuilder<bool>(
@@ -79,6 +74,45 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
     );
   }
 
+  Widget _buildSearchField() {
+    return Expanded(
+      child: TextField(
+        controller: _searchFieldController,
+        onChanged: (query) => widget._shoppingsListController
+            .updateShoppingsList(searchQuery: query),
+        decoration: InputDecoration(
+            labelText: 'Search',
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+                onPressed: () {
+                  _searchFieldController.clear();
+                  widget._shoppingsListController.updateShoppingsList();
+                  FocusScope.of(context).unfocus();
+                },
+                icon: const Icon(Icons.clear))),
+      ),
+    );
+  }
+
+  Widget _buildFinalizedFilter() {
+    return Column(
+      children: [
+        Switch(
+          value: _showfinalized,
+          onChanged: (_) {
+            _showfinalized = !_showfinalized;
+            setState(() {});
+          },
+        ),
+        Text(
+          "Finalized",
+          style: TextStyle(
+              fontSize: Theme.of(context).textTheme.bodySmall?.fontSize),
+        ),
+      ],
+    );
+  }
+
   Widget _showList() {
     return StreamBuilder<Iterable<ShoppingWithContext>>(
         stream: widget._shoppingsListController.shoppingsListStream,
@@ -92,6 +126,11 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
             );
           } else {
             final shoppingsList = snapshot.data!.toList();
+            final filteredList = _showfinalized
+                ? shoppingsList
+                : shoppingsList
+                    .where((shopping) => !shopping.shopping.finalized)
+                    .toList();
             if (shoppingsList.isEmpty) {
               return const Text(_EMPTY_LIST_MESSAGE);
             }
@@ -100,10 +139,10 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
                 onRefresh: _pullRefresh,
                 child: ListView.separated(
                   itemBuilder: (_, index) => ShoppingTile(
-                    shopping: shoppingsList[index],
+                    shopping: filteredList[index],
                   ),
                   separatorBuilder: (_, __) => const Divider(),
-                  itemCount: shoppingsList.length,
+                  itemCount: filteredList.length,
                 ),
               ),
             );

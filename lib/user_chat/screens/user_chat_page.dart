@@ -99,6 +99,7 @@ class _UserChatPageState extends State<UserChatPage> {
 
   Future<void> _sendMessage() async {
     final messageToSend = _messageInputController.text;
+    if (messageToSend.isEmpty) return;
     _messageInputController.clear();
     final success = await _userChatController.postNewMessage(messageToSend);
     if (!success) {

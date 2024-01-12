@@ -50,6 +50,7 @@ class DetailTabPage extends StatelessWidget {
                     const SizedBox(height: STANDARD_PADDING),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         DetailInfoSection(
                           shopping: shopping,

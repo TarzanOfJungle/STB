@@ -26,6 +26,7 @@ class _ShoppingDetailTabviewWrapperState
   late final TabController _tabController;
   final _shoppingDetailController = get<ShoppingDetailController>();
   final _authController = get<AuthController>();
+
   @override
   void initState() {
     super.initState();
@@ -82,7 +83,10 @@ class _ShoppingDetailTabviewWrapperState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              actions: shopping.shopping.creatorId == loggedInUser!.id ? _actions(shopping) : [],
+              actions: (shopping.shopping.creatorId == loggedInUser!.id &&
+                        !shopping.shopping.finalized)
+                  ? _actions(shopping)
+                  : [],
               bottom: TabBar(
                 controller: _tabController,
                 tabs: _tabViewItems.map((item) => item.tab).toList(),

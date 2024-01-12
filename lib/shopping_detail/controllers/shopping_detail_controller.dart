@@ -23,6 +23,8 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   final BehaviorSubject<List<Transaction>> _transactions =
       BehaviorSubject.seeded([]);
 
+
+
   final ShoppingsListRepositoryBase shoppingListRepository;
   final TrasactionsRepositoryBase _transactionsRepository;
   final SnackbarMessangerController _snackbarController;
@@ -30,6 +32,8 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   final ProductPurchasesRepositoryBase _productPurchasesRepository;
   final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   final UsersRepositoryBase _usersRepository;
+
+
 
   Stream<ShoppingWithContext?> get shopping => _shopping.stream;
 

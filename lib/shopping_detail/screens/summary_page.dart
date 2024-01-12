@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
@@ -32,32 +31,37 @@ class SummaryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _userTransactionsDisplayController.forceLoading();
+    // _userTransactionsDisplayController.forceLoading();
     return PageTemplate(
       showBackButton: true,
       label: 'Shopping Summary',
       child: Padding(
-          padding: const EdgeInsets.all(STANDARD_PADDING),
-          child: FutureBuilder(
-            future: _shoppingDetailController.fetchTransactions(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text('${snapshot.error}'),
-                );
-              } else if (!snapshot.hasData) {
-                //TODO page loading
-                return const LoadingIndicator();
-              } else if (!snapshot.data!) {
-                // TODO something went wrong
-                return const Center(
-                  child: Text(_LOADING_ERROR_MESSAGE),
-                );
-              } else {
-                return _buildPage(context);
-              }
-            },
-          )),
+        padding: const EdgeInsets.all(STANDARD_PADDING),
+        child: FutureBuilder(
+          future: _shoppingDetailController.fetchTransactions(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('${snapshot.error}'),
+              );
+            } else if (!snapshot.hasData) {
+              //TODO page loading
+              return const Center(
+                child: LoadingIndicator(),
+              );
+            } else if (!snapshot.data!) {
+              // TODO something went wrong
+              return const Center(
+                child: Text(_LOADING_ERROR_MESSAGE),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: _buildPage(context),
+              );
+            }
+          },
+        ),
+      ),
     );
   }
 
@@ -68,23 +72,21 @@ class SummaryPage extends StatelessWidget {
         UsersBalanceCarousel(shopping: shopping),
         _buildInfoSection(),
         TransactionsFilterSection(),
-        Expanded(
-          child: StreamBuilder(
-            stream: Rx.combineLatest2(
-              _userTransactionsDisplayController.selectedUsersStream,
-              _userTransactionsDisplayController.isLoadingStream,
-              (user, isLoading) => CombinedData(user, isLoading),
-            ),
+        StreamBuilder(
+            stream: _userTransactionsDisplayController.selectedUsersStream,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(child: Text("${snapshot.error}"));
               } else {
-                var selectedUser = snapshot.hasData ? snapshot.data!.user : null;
+                var selectedUser = snapshot.hasData ? snapshot.data : null;
                 var allTransactions = _shoppingDetailController.transactions;
-
                 var transactions =
                     _getFilteredTransactions(selectedUser, allTransactions);
+                // _userTransactionsDisplayController
+                //     .initLoading(transactions.length);
                 return ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: transactions.length,
                   itemBuilder: (context, index) {
                     var transaction = transactions[index];
@@ -97,7 +99,6 @@ class SummaryPage extends StatelessWidget {
               }
             },
           ),
-        )
       ],
     );
   }
@@ -187,11 +188,4 @@ class SummaryPage extends StatelessWidget {
             t.payedUserId == selectedUser.id)
         .toList();
   }
-}
-
-class CombinedData {
-  final User? user;
-  final bool item;
-
-  CombinedData(this.user, this.item);
 }
