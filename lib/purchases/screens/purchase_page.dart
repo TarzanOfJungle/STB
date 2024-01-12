@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
@@ -23,16 +22,13 @@ class PurchasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _purchaseController.purchaseStateStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner(text: "Something went wrong");
+      buildWhenData: (context, state) {
+        if (state == null) {
+          // Shouldn't ever hapen thanks to stream builder handling
+          return const SizedBox.shrink();
         }
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final state = snapshot.data!;
         return PageTemplate(
           label: state.existingAssignment.product.name,
           showBackButton: true,

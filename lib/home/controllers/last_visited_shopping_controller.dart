@@ -51,14 +51,14 @@ class LastVisitedShoppingController {
       boxScope: (lastVisitedShoppingIdsBox) async {
         final foundId = lastVisitedShoppingIdsBox.get(userId);
         if (foundId != null) {
-          final recoveredShopping = await _getLoadedShoppingById(foundId);
+          final recoveredShopping = await _getShoppingById(foundId);
           _lastVisitedShopping.add(recoveredShopping);
         }
       },
     );
   }
 
-  Future<ShoppingWithContext?> _getLoadedShoppingById(int shoppingId) async {
+  Future<ShoppingWithContext?> _getShoppingById(int shoppingId) async {
     try {
       return await _shoppingsRepository.shoppingById(shoppingId: shoppingId);
     } catch (_) {

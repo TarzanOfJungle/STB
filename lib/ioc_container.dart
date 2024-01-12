@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/repositories/auth_repository.dart';
 import 'package:split_the_bill/auth/repositories/auth_repository_base.dart';
-import 'package:split_the_bill/auth/services/token_validation_service.dart';
 import 'package:split_the_bill/common/api/api_client.dart';
 import 'package:split_the_bill/common/api/api_client_base.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
@@ -173,14 +172,10 @@ abstract class IocContainer {
     ));
     get.registerSingleton<UserTransactionsDisplayController>(
         UserTransactionsDisplayController());
-    get.registerSingleton<TokenValidationService>(TokenValidationService(
-      authController: get<AuthController>(),
-      apiClient: get<ApiClientBase>(),
-      authRepository: get<AuthRepositoryBase>(),
-    ));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(
+      get<AuthController>(),
       get<SinglePurchaseController>(),
       get<ShoppingDetailController>(),
       get<UserChatController>(),

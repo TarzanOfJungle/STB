@@ -21,6 +21,7 @@ class AuthController {
   final BehaviorSubject<AuthenticatedUser?> _loggedInUser =
       BehaviorSubject.seeded(null);
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
+  
   final ApiClientBase _apiClient;
   final SnackbarMessangerController _snackbarController;
   final InternetConnectivityService _internetConnectivityService;

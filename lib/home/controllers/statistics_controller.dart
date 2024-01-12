@@ -9,9 +9,11 @@ import 'package:split_the_bill/purchases/repositories/product_purchases/product_
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 
+final _SELECTED_YEAR_INITIAL_VALUE = DateTime.now().year;
+
 class StatisticsController with AuthenticatedSocketObserver {
   final BehaviorSubject<int> _selectedYear =
-      BehaviorSubject.seeded(DateTime.now().year);
+      BehaviorSubject.seeded(_SELECTED_YEAR_INITIAL_VALUE);
 
   final BehaviorSubject<List<ShoppingWithContext>> _allUserShoppings =
       BehaviorSubject.seeded([]);
@@ -23,11 +25,11 @@ class StatisticsController with AuthenticatedSocketObserver {
 
   List<int> get activeYears => _getLoggedInUserActiveYears();
 
-  Stream<Map<int, double>> get userMonthlySpending => _rawStatistics
-      .map((statistics) => _getUserMonthlySpendingStatistics(statistics));
-
   Stream<Map<int, double>> get _userSpendingPerShoppingId => _rawStatistics
       .map((statistics) => _getUserSpendingPerShoppingId(statistics));
+
+  Stream<Map<int, double>> get userMonthlySpending => _rawStatistics
+      .map((statistics) => _getUserMonthlySpendingStatistics(statistics));
 
   Stream<List<ShoppingWithSpending>> get perShoppingSpending =>
       Rx.combineLatest2(
@@ -59,6 +61,7 @@ class StatisticsController with AuthenticatedSocketObserver {
       if (loggedInUser != null) {
         _updateStatistics();
         _loadShoppings();
+        _selectedYear.add(_SELECTED_YEAR_INITIAL_VALUE);
       }
     });
   }
@@ -130,18 +133,15 @@ class StatisticsController with AuthenticatedSocketObserver {
     final Map<int, double> monthlyStatistics = {};
     final userRawStatistics = rawStatistics
         .expand((shoppingStatistic) => shoppingStatistic.userPurchases)
-        .where((userPurchase) => userPurchase.userId == _loggedInUser!.id);
-
-    final totalSpent = userRawStatistics.fold(
-        0.0, (prev, userStat) => prev + userStat.totalAmmountSpentByUser);
-
-    if (totalSpent <= 0) {
-      return {};
-    }
-
+        .where((userPurchase) =>
+            userPurchase.userId == _loggedInUser!.id &&
+            userPurchase.totalAmmountSpentByUser > 0);
     final productPurchases = userRawStatistics
         .expand((userStatistic) => userStatistic.productPurchases)
         .toList();
+    if (productPurchases.isEmpty) {
+      return {};
+    }
 
     for (var i = 1; i <= 12; i++) {
       final monthPurchases = productPurchases
@@ -150,7 +150,6 @@ class StatisticsController with AuthenticatedSocketObserver {
       monthlyStatistics[i] = monthPurchases.fold(
           0, (prev, purchase) => prev + purchase.purchasedAmmount);
     }
-
     return monthlyStatistics;
   }
 

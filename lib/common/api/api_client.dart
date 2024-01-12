@@ -41,7 +41,7 @@ class ApiClient implements ApiClientBase {
       additionalHeaders: additionalHeaders,
     );
 
-    http.Response? res;
+    final http.Response? res;
     try {
       final streamed =
           await _httpRestClient.send(request).timeout(ApiConstants.timeout);
@@ -159,7 +159,7 @@ class ApiClient implements ApiClientBase {
     final uri = Uri(
       scheme: ApiConstants.httpProtocol,
       host: ApiConstants.host,
-      path: path,
+      path: "${ApiConstants.versionPathPrefix}/$path",
       queryParameters: queryParams,
     );
 
@@ -176,7 +176,7 @@ class ApiClient implements ApiClientBase {
     return request;
   }
 
-  /// For unknown reasons, uri for websocket
+  /// For unknown reasons, uri for websocket protocol
   /// doesn't work, unless it is formed using
   /// Uri.parse() method.
   Uri _createWebsocketUri({
@@ -185,7 +185,7 @@ class ApiClient implements ApiClientBase {
     Map<String, String> queryParams = const {},
   }) {
     var uriString =
-        "${ApiConstants.webSocketProtocol}://${ApiConstants.host}/$path";
+        "${ApiConstants.webSocketProtocol}://${ApiConstants.host}/${ApiConstants.versionPathPrefix}/$path";
     if (useAuthentication || queryParams.isNotEmpty) {
       uriString = "$uriString?";
     }

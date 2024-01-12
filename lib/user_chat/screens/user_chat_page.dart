@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/empty_chat_banner.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/components/chat_input.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/user_chat/controllers/user_chat_controller.dart';
 import 'package:split_the_bill/user_chat/models/user_chat_message_with_users.dart';
@@ -34,16 +33,9 @@ class _UserChatPageState extends State<UserChatPage> {
     return PageTemplate(
       label: _userChatController.otherUser?.username ?? "Chat",
       showBackButton: true,
-      child: StreamBuilder(
+      child: StreamBuilderWithHandling(
         stream: _userChatController.sortedMessagesWithUsersStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const ErrorBanner();
-          }
-          if (!snapshot.hasData) {
-            return const LoadingIndicator();
-          }
-          final messages = snapshot.data!;
+        buildWhenData: (context, messages) {
           WidgetsBinding.instance
               .addPostFrameCallback((_) => _scrollToBottom());
 

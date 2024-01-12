@@ -4,9 +4,9 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/animated_lookup_list.dart';
 import 'package:split_the_bill/common/widgets/components/search_field.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
-import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
@@ -70,13 +70,9 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
     if (!_editingEnabled) {
       return const SizedBox.shrink();
     }
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _membersController.usersToAddStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.hasError) {
-          return const SizedBox.shrink();
-        }
-        final usersToAdd = snapshot.data!;
+      buildWhenData: (context, usersToAdd) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,14 +104,10 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
   }
 
   Widget _buildMembersList(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
         stream: _membersController.shoppingMembersStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.hasError) {
-            return const SizedBox.shrink();
-          }
+        buildWhenData: (context, currentMembers) {
           final currentUserId = _authController.loggedInUser!.id;
-          final currentMembers = snapshot.data!;
           final currentUserIsCreator = _shoppingDetailController.userIsCreator;
           return Column(
             children: [
@@ -177,13 +169,9 @@ class _ShoppingMembersPageState extends State<ShoppingMembersPage> {
   }
 
   Widget _buildUsersLookup() {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _membersController.usersLookupStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.hasError) {
-          return const SizedBox.shrink();
-        }
-        final lookupUsers = snapshot.data!;
+      buildWhenData: (context, lookupUsers) {
         return AnimatedLookupList(
           isShown: lookupUsers.isNotEmpty,
           items: lookupUsers,

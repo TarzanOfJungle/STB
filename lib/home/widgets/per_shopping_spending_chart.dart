@@ -6,7 +6,7 @@ import 'package:split_the_bill/home/widgets/home_page_chart_container.dart';
 import 'package:split_the_bill/home/widgets/per_shopping_spending_list_tile.dart';
 
 const _TITLE = "Your top spendings on shoppings";
-const _MAX_SHOPPINGS = 5;
+const _MAX_SHOPPINGS = 7;
 const _BAR_WIDTH = 15.0;
 
 class PerShoppingSpendingChart extends StatelessWidget {
@@ -17,10 +17,11 @@ class PerShoppingSpendingChart extends StatelessWidget {
     required this.perShoppingSpending,
   });
 
-  List<ShoppingWithSpending> get _shoppingsFilteredAndSorted =>
-      [...perShoppingSpending]
-        ..sort((prev, curr) => curr.spending.compareTo(prev.spending))
-        ..take(_MAX_SHOPPINGS);
+  List<ShoppingWithSpending> get _shoppingsFilteredAndSorted {
+    final sortedFiltered = [...perShoppingSpending]
+      ..sort((prev, curr) => curr.spending.compareTo(prev.spending));
+    return sortedFiltered.take(_MAX_SHOPPINGS).toList();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -30,12 +30,7 @@ class PageTemplate extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(label),
         actions: actions != null
-            ? [
-                ...actions!,
-                const SizedBox(
-                  width: STANDARD_PADDING,
-                )
-              ]
+            ? [...actions!, const SizedBox(width: STANDARD_PADDING)]
             : null,
         leading: _buildBackButton(),
         bottom: bottom,

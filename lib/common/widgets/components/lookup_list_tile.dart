@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 
-const _ICON_BACKGROUND_BORDER_RADIUS = 100.0;
 const _TILE_PADDING = 7.0;
 const _DEFAULT_ICON_SIZE = 15.0;
 
@@ -35,8 +34,7 @@ class LookupListTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(SMALL_PADDING),
               decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(_ICON_BACKGROUND_BORDER_RADIUS),
+                shape: BoxShape.circle,
                 color: iconBackgroundColor ??
                     Theme.of(context).colorScheme.primary,
               ),

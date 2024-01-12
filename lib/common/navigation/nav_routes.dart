@@ -3,7 +3,6 @@ enum NavRoute {
   login("/login"),
   registration("/registration"),
   home("/home"),
-
   shoppingList("/shoppings"),
   friends("/friends"),
 

@@ -8,6 +8,7 @@ import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dar
 import 'package:split_the_bill/common/widgets/components/stb_number_input_field.dart';
 import 'package:split_the_bill/common/widgets/dialogs/confirmation_dialog.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
@@ -143,10 +144,9 @@ class _PurchaseEditingSectionState extends State<PurchaseEditingSection> {
         ? "Add my purchase"
         : "Update my purchase";
 
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _purchaseController.isLoadingStream,
-      builder: (context, snapshot) {
-        final isLoading = snapshot.data ?? true;
+      buildWhenData: (context, isLoading) {
         if (isLoading) {
           return const LoadingIndicator();
         }

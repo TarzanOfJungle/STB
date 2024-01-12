@@ -40,7 +40,6 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
-
   final AuthController _authController;
   final ShoppingDetailController _shoppingDetailController;
   final UsersRepositoryBase _usersRepository;
@@ -184,8 +183,7 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
 
   Future<User?> userById(int userId) async {
     try {
-      var user = await _usersRepository.getUserById(userId);
-      return user;
+      return await _usersRepository.getUserById(userId);
     } catch (_) {
       _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
         message: _FAILED_TO_GET_USER_BY_ID_MESSAGE,

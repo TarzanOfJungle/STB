@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/no_data_banner.dart';
 import 'package:split_the_bill/purchases/models/user_purchases/user_purchases.dart';
 import 'package:split_the_bill/shopping_detail/widgets/member_purchases_grid_tile.dart';
 

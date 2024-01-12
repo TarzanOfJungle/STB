@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
 import 'package:split_the_bill/home/controllers/statistics_controller.dart';
 import 'package:split_the_bill/home/models/shopping_with_spending.dart';
@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
           icon: const Icon(Icons.person),
         ),
       ],
-      child: StreamBuilder(
+      child: StreamBuilderWithHandling(
         stream: Rx.combineLatest3(
             _lastVisitedShoppingController.lastVisitedShoppingStream,
             _statisticsController.userMonthlySpending,
@@ -44,18 +44,10 @@ class HomePage extends StatelessWidget {
                   monthlySpending: monthly,
                   perShoppingSpending: perShopping,
                 )),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: ErrorBanner(),
-            );
-          }
-          if (!snapshot.hasData) {
-            return _buildNoData();
-          }
-          final lastVisitedShopping = snapshot.data!.lastVisited;
-          final userMonthlySpending = snapshot.data!.monthlySpending;
-          final userSpendingPerShopping = snapshot.data!.perShoppingSpending;
+        buildWhenData: (context, data) {
+          final lastVisitedShopping = data.lastVisited;
+          final userMonthlySpending = data.monthlySpending;
+          final userSpendingPerShopping = data.perShoppingSpending;
 
           final noUsableData = lastVisitedShopping == null &&
               userMonthlySpending.isEmpty &&

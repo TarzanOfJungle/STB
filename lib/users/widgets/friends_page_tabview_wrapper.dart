@@ -6,7 +6,7 @@ import 'package:split_the_bill/shopping_detail/models/tab_view_item.dart';
 import 'package:split_the_bill/users/screens/friends_list_page.dart';
 import 'package:split_the_bill/users/screens/pending_friendship_requests_page.dart';
 
-List<TabViewItem> _TABVIEW_ITEMS = [
+final _TABVIEW_ITEMS = [
   TabViewItem(
     tab: const Tab(
       text: "Friends",

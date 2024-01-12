@@ -11,7 +11,7 @@ class AnimatedLookupList<T> extends StatefulWidget {
   final ValueChanged<T> onItemSelected;
   final String Function(T value) getItemTitle;
   final String? Function(T value)? getItemSubtitle;
-  final int? animationDurationMillis;
+  final Duration? animationDuration;
 
   const AnimatedLookupList({
     super.key,
@@ -22,7 +22,7 @@ class AnimatedLookupList<T> extends StatefulWidget {
     required this.itemIcon,
     required this.getItemTitle,
     this.getItemSubtitle,
-    this.animationDurationMillis,
+    this.animationDuration,
   });
 
   @override
@@ -36,9 +36,7 @@ class _AnimatedLookupListState<T> extends State<AnimatedLookupList<T>> {
 
     return AnimatedSize(
       curve: Curves.easeIn,
-      duration: widget.animationDurationMillis != null
-          ? Duration(milliseconds: widget.animationDurationMillis!)
-          : _DEFAULT_ANIMATION_DURATION,
+      duration: widget.animationDuration ?? _DEFAULT_ANIMATION_DURATION,
       child: SizedBox(
         height: size,
         child: ListView.builder(

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/empty_chat_banner.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
 import 'package:split_the_bill/common/widgets/components/chat_input.dart';
@@ -30,16 +29,9 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _groupchatController.sortedMessagesStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner();
-        }
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final messages = snapshot.data!;
+      buildWhenData: (context, messages) {
         WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
 
         return Scaffold(
