@@ -19,8 +19,7 @@ class PurchasesController with AuthenticatedSocketObserver {
 
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
 
-  final BehaviorSubject<ProductAssignmentsWithPurchases?>
-      _filteredProductAssignmentsWithPurchases = BehaviorSubject.seeded(null);
+  final BehaviorSubject<String?> _searchQuery = BehaviorSubject.seeded(null);
 
   Stream<ProductAssignmentsWithPurchases?>
       get productAssignmentsWithPurchasesStream =>
@@ -31,13 +30,17 @@ class PurchasesController with AuthenticatedSocketObserver {
   Stream<List<UserPurchases>> get usersWithPurchasesStream =>
       _usersWithPurchases.stream;
 
+  Stream<ProductAssignmentsWithPurchases?> get filteredAssignmentsStream =>
+      Rx.combineLatest2(
+        _productAssignmentsWithPurchases.stream,
+        _searchQuery.stream,
+        (pa, sq) => _getFilteredProductAssignments(pa, sq),
+      );
+
   ProductAssignmentsWithPurchases? get productAssignmentsWithPurchases =>
       _productAssignmentsWithPurchases.value;
 
   bool get isLoading => _isLoading.value;
-
-  Stream<ProductAssignmentsWithPurchases?> get filteredAssignmentsStream =>
-      _filteredProductAssignmentsWithPurchases.stream;
 
   int? get shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
@@ -97,6 +100,7 @@ class PurchasesController with AuthenticatedSocketObserver {
       return;
     }
     _productAssignmentsWithPurchases.add(null);
+    _searchQuery.add(null);
     _isLoading.add(true);
     try {
       _fetchAssignmentsAndPurchases(shoppingId);
@@ -132,35 +136,29 @@ class PurchasesController with AuthenticatedSocketObserver {
       productPurchases: productPurchases,
     );
     _productAssignmentsWithPurchases.add(assignmentsWithPurchases);
-    clearFilter();
 
     final usersWithPurchases = await _productPurchasesRepository
         .getUserPurchasesOfShopping(shoppingId);
     _usersWithPurchases.add(usersWithPurchases);
   }
 
-  void filterAssignments(String? query) {
-    if (query == null) {
-      clearFilter();
-      return;
+  ProductAssignmentsWithPurchases? _getFilteredProductAssignments(
+    ProductAssignmentsWithPurchases? all,
+    String? searchQuery,
+  ) {
+    if (all == null || searchQuery == null) {
+      return all;
     }
-    var data = _productAssignmentsWithPurchases.value;
-    if (data == null) {
-      return;
-    }
-    var filtered = ProductAssignmentsWithPurchases(
-      productAssignments: _productAssignmentsWithPurchases
-          .value!.productAssignments
-          .where((e) => e.product.name.toLowerCase().contains(query.toLowerCase()))
+    return all.copyWith(
+      productAssignments: all.productAssignments
+          .where((e) =>
+              e.product.name.toLowerCase().contains(searchQuery.toLowerCase()))
           .toList(),
-      productPurchases: data.productPurchases,
     );
-    _filteredProductAssignmentsWithPurchases.add(filtered);
   }
 
-  void clearFilter() {
-    var data = _productAssignmentsWithPurchases.value;
-    _filteredProductAssignmentsWithPurchases.add(data);
+  void filterAssignments(String? query) {
+    _searchQuery.add(query);
   }
 
   Future<void> deleteProductAssignemnt(String productName) async {

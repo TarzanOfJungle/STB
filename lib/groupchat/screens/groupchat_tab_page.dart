@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/empty_chat_banner.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/groupchat/controllers/groupchat_controller.dart';
 import 'package:split_the_bill/groupchat/models/groupchat_message_with_author.dart';
 import 'package:split_the_bill/common/widgets/components/chat_input.dart';
@@ -29,16 +29,9 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _groupchatController.sortedMessagesStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner();
-        }
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final messages = snapshot.data!;
+      buildWhenData: (context, messages) {
         WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
 
         return Scaffold(
@@ -56,6 +49,10 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
   }
 
   Widget _buildMessagesList(List<GroupchatMessageWithAuthor> messages) {
+    if (messages.isEmpty) {
+      return const EmptyChatBanner();
+    }
+
     final messagesReversed = messages.reversed.toList();
     return ListView.builder(
       controller: _scrollController,
@@ -68,10 +65,7 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
       itemCount: messages.length,
       itemBuilder: (context, index) {
         final currentMessage = messagesReversed[index];
-        GroupchatMessageWithAuthor? previousMessage;
-        if (index < messagesReversed.length - 1) {
-          previousMessage = messagesReversed[index + 1];
-        }
+        final previousMessage = messagesReversed.elementAtOrNull(index + 1);
         return GroupchatMessage(
           currentMessage: currentMessage,
           previousMessage: previousMessage,
@@ -91,11 +85,13 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
   }
 
   void _scrollToBottom() {
-    _scrollController.animateTo(
-      0,
-      duration: UiConstants.autoscrollDuration,
-      curve: Curves.fastOutSlowIn,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0,
+        duration: UiConstants.autoscrollDuration,
+        curve: Curves.fastOutSlowIn,
+      );
+    }
   }
 
   Future<void> _sendMessage() async {

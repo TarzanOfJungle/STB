@@ -8,6 +8,7 @@ import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
 import 'package:split_the_bill/purchases/models/add_product_assignment_state/add_product_assignment_state.dart';
@@ -121,13 +122,9 @@ class _AddProductAssignmentDialogState
   }
 
   Widget _buildSuggestionsList() {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _addProductAssignmentController.productLookup,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.hasError) {
-          return const SizedBox.shrink();
-        }
-        final lookupValues = snapshot.data!;
+      buildWhenData: (context, lookupValues) {
         return AnimatedLookupList(
           isShown: lookupValues.isNotEmpty,
           items: lookupValues,

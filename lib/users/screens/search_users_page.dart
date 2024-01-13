@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
+import 'package:split_the_bill/common/widgets/components/search_field.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/users/controllers/friends_controller.dart';
 import 'package:split_the_bill/users/models/friendship_request/friendship_request.dart';
 import 'package:split_the_bill/users/models/user/user.dart';
 import 'package:split_the_bill/users/widgets/non_friend_user_detail_dialog.dart';
 import 'package:split_the_bill/users/widgets/user_list_tile.dart';
+
+const _SEARCH_USERS_ICON_SIZE = 70.0;
+const _SEARCH_USERS_MESSAGE =
+    "Type in username or email of desired user to search!";
 
 class SearchUsersPage extends StatefulWidget {
   const SearchUsersPage({super.key});
@@ -44,25 +48,30 @@ class _SearchUsersPageState extends State<SearchUsersPage> {
     return PageTemplate(
       showBackButton: true,
       label: "Search users",
-      child: StreamBuilder(
+      child: StreamBuilderWithHandling(
         stream: Rx.combineLatest2(
           _friendsController.nonFriendsSearchStream,
           _friendsController.allPendingFriendshipRequests,
           (users, friendshipRequests) =>
               (nonFriends: users, friendshipRequests: friendshipRequests),
         ),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: ErrorBanner());
-          }
-
-          final nonFriendUsers = snapshot.data?.nonFriends ?? [];
-          final friendshipRequests = snapshot.data?.friendshipRequests ?? [];
+        buildWhenData: (context, data) {
+          final nonFriendUsers = data.nonFriends;
+          final friendshipRequests = data.friendshipRequests;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildUserSearch(),
+              Padding(
+                padding: const EdgeInsets.all(STANDARD_PADDING),
+                child: SearchField(
+                  controller: _userTextSearchController,
+                  onValueChanged: (value) => _friendsController
+                      .searchNonFriendUsers(value.isEmpty ? null : value),
+                  onSearchCleared: () =>
+                      _friendsController.searchNonFriendUsers(null),
+                ),
+              ),
               Expanded(
                 child: _buildUserList(
                   nonFriendUsers,
@@ -72,20 +81,6 @@ class _SearchUsersPageState extends State<SearchUsersPage> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildUserSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(STANDARD_PADDING),
-      child: StbTextField(
-        controller: _userTextSearchController,
-        label: "Search",
-        maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
-        onChanged: (value) => _friendsController
-            .searchNonFriendUsers(value.isEmpty ? null : value),
       ),
     );
   }
@@ -118,9 +113,23 @@ class _SearchUsersPageState extends State<SearchUsersPage> {
 
   Widget _buildNoUsersBanner() {
     return const Padding(
-      padding: EdgeInsets.all(STANDARD_PADDING),
+      padding: EdgeInsets.all(30),
       child: Center(
-        child: Text("Type in username or email of desired user to search!"),
+        child: Column(
+          children: [
+            Spacer(),
+            Icon(
+              Icons.search_rounded,
+              size: _SEARCH_USERS_ICON_SIZE,
+            ),
+            SizedBox(height: STANDARD_PADDING),
+            Text(
+              _SEARCH_USERS_MESSAGE,
+              textAlign: TextAlign.center,
+            ),
+            Spacer(),
+          ],
+        ),
       ),
     );
   }

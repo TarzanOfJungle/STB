@@ -5,6 +5,7 @@ import 'package:split_the_bill/auth/widgets/auth_button/auth_button_display_type
 import 'package:split_the_bill/common/services/internet_connectivity_service.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 class AuthButton extends StatelessWidget {
@@ -26,13 +27,10 @@ class AuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _getButtonStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        switch (snapshot.data!) {
+      buildWhenData: (context, status) {
+        switch (status) {
           case AuthButtonDisplayType.LOADING:
             return const LoadingIndicator();
           case AuthButtonDisplayType.NO_INTERNET:

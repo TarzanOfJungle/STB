@@ -32,7 +32,7 @@ class ProfileController with AuthenticatedSocketObserver {
     var loggedInUserId = _authController.loggedInUser?.id;
     if (loggedInUserId != null) {
       try {
-        var user = await _usersRepository.getUserById(loggedInUserId);
+        final user = await _usersRepository.getUserById(loggedInUserId);
         _userInformations.add(user);
       } catch (_) {
         _userInformations.add(null);

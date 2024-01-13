@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
 import 'package:split_the_bill/home/controllers/statistics_controller.dart';
 import 'package:split_the_bill/home/models/shopping_with_spending.dart';
@@ -13,6 +13,7 @@ import 'package:split_the_bill/home/widgets/per_shopping_spending_chart.dart';
 import 'package:split_the_bill/home/widgets/year_filter_chip.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
+const _NO_DATA_ICON_SIZE = 100.0;
 const _NO_DATA_MESSAGE =
     "Start participating in shoppings in the Shoppings tab.";
 
@@ -32,11 +33,8 @@ class HomePage extends StatelessWidget {
           onPressed: () => _navRouter.toProfile(),
           icon: const Icon(Icons.person),
         ),
-        const SizedBox(
-          width: STANDARD_PADDING,
-        )
       ],
-      child: StreamBuilder(
+      child: StreamBuilderWithHandling(
         stream: Rx.combineLatest3(
             _lastVisitedShoppingController.lastVisitedShoppingStream,
             _statisticsController.userMonthlySpending,
@@ -46,18 +44,10 @@ class HomePage extends StatelessWidget {
                   monthlySpending: monthly,
                   perShoppingSpending: perShopping,
                 )),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: ErrorBanner(),
-            );
-          }
-          if (!snapshot.hasData) {
-            return _buildNoData();
-          }
-          final lastVisitedShopping = snapshot.data!.lastVisited;
-          final userMonthlySpending = snapshot.data!.monthlySpending;
-          final userSpendingPerShopping = snapshot.data!.perShoppingSpending;
+        buildWhenData: (context, data) {
+          final lastVisitedShopping = data.lastVisited;
+          final userMonthlySpending = data.monthlySpending;
+          final userSpendingPerShopping = data.perShoppingSpending;
 
           final noUsableData = lastVisitedShopping == null &&
               userMonthlySpending.isEmpty &&
@@ -92,15 +82,28 @@ class HomePage extends StatelessWidget {
 
   Widget _buildNoData() {
     return const Center(
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              _NO_DATA_MESSAGE,
-              textAlign: TextAlign.center,
+      child: Padding(
+        padding: EdgeInsets.all(STANDARD_PADDING),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.add_shopping_cart_rounded,
+              size: _NO_DATA_ICON_SIZE,
             ),
-          ),
-        ],
+            SizedBox(height: STANDARD_PADDING),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _NO_DATA_MESSAGE,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

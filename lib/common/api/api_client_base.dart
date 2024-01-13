@@ -19,7 +19,7 @@ abstract class ApiClientBase {
   void removeErrorListener(ResponseErrorListener listener);
 
   /// Sends an HTTP request with optional body. Is expedted to return data,
-  /// which are to be parsed from JSON using the processBody function.
+  /// which are to be parsed from JSON using the [processBody] function.
   Future<T> sendDataRequest<T>({
     required String path,
     required HttpMethod method,
@@ -31,7 +31,7 @@ abstract class ApiClientBase {
     required T Function(String rawBody) processBody,
   });
 
-  /// Sends an HTTP request with optional body. Is expedted not expected to return data,
+  /// Sends an HTTP request with optional body. Is not expected to return data,
   /// instead returns the response status code.
   Future<int> sendRequest({
     required String path,
@@ -47,7 +47,6 @@ abstract class ApiClientBase {
   /// The returned stream only fires on events matching the [events] message names,
   /// other values are ignored. The stream is not expected to yield any data (just
   /// fires when the given event occurs).
-  /// 
   /// If [useAuthentication] is true, current
   /// logged in users's token is appended to the request. Other [queryParams]
   /// are optional. 
@@ -62,7 +61,6 @@ abstract class ApiClientBase {
   /// The returned stream only fires on events matching the [event.messageName],
   /// other values are ignored. The stream is expected to yield data in the occuring event,
   /// these data are to be parsed from the json format using the [processEventData] function.
-  /// 
   /// If [useAuthentication] is true, current
   /// logged in users's token is appended to the request. Other [queryParams]
   /// are optional. 

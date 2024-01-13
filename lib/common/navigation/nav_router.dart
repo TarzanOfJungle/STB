@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:split_the_bill/auth/controllers/auth_controller.dart';
 import 'package:split_the_bill/auth/screens/login_page.dart';
 import 'package:split_the_bill/auth/screens/registration_page.dart';
 import 'package:split_the_bill/common/navigation/nav_routes.dart';
@@ -26,6 +27,7 @@ import 'package:split_the_bill/users/widgets/friends_page_tabview_wrapper.dart';
 
 class NavRouter {
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  final AuthController _authController;
   final SinglePurchaseController _singlePurchaseController;
   final ShoppingDetailController _shoppingDetailController;
   final UserChatController _userChatController;
@@ -33,14 +35,18 @@ class NavRouter {
   RouterConfig<Object> get router => _router;
 
   NavRouter(
+    this._authController,
     this._singlePurchaseController,
     this._shoppingDetailController,
     this._userChatController,
   );
 
+  NavRoute get _initialLocation =>
+      _authController.loggedInUser == null ? NavRoute.login : NavRoute.home;
+
   late final _router = GoRouter(
     navigatorKey: _navigatorKey,
-    initialLocation: NavRoute.login.path,
+    initialLocation: _initialLocation.path,
     routes: [
       GoRoute(
         path: NavRoute.login.path,

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/home/models/shopping_with_spending.dart';
+import 'package:split_the_bill/home/widgets/home_page_chart_container.dart';
+import 'package:split_the_bill/home/widgets/per_shopping_spending_list_tile.dart';
 
 const _TITLE = "Your top spendings on shoppings";
-const _MAX_HEIGHT = 150.0;
 const _MAX_SHOPPINGS = 7;
 const _BAR_WIDTH = 15.0;
 
@@ -16,44 +17,33 @@ class PerShoppingSpendingChart extends StatelessWidget {
     required this.perShoppingSpending,
   });
 
-  List<ShoppingWithSpending> get _shoppingsFilteredAndSorted =>
-      [...perShoppingSpending]
-        ..sort((prev, curr) => prev.spending.compareTo(curr.spending))
-        ..take(_MAX_SHOPPINGS);
+  List<ShoppingWithSpending> get _shoppingsFilteredAndSorted {
+    final sortedFiltered = [...perShoppingSpending]
+      ..sort((prev, curr) => curr.spending.compareTo(prev.spending));
+    return sortedFiltered.take(_MAX_SHOPPINGS).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(
-        top: 15,
-        bottom: 20,
-        left: 15,
-        right: 30,
+    return HomePageChartContainer(
+      title: _TITLE,
+      chart: BarChart(
+        _getBarData(context),
       ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
-          color: Theme.of(context).colorScheme.surface),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _TITLE,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+      belowChart: _buildShoppingsList(),
+    );
+  }
+
+  Widget _buildShoppingsList() {
+    return Column(
+      children: [
+        ..._shoppingsFilteredAndSorted.map(
+          (shopping) => PerShoppingSpendingListTile(
+            shoppingWithSpending: shopping,
+            shoppingColor: _getShoppingColor(shopping),
           ),
-          const SizedBox(height: 25),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: _MAX_HEIGHT),
-            child: BarChart(
-              _getBarData(context),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -84,7 +74,7 @@ class PerShoppingSpendingChart extends StatelessWidget {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 42,
+            reservedSize: 48,
           ),
         ),
       ),
@@ -109,7 +99,7 @@ class PerShoppingSpendingChart extends StatelessWidget {
 
     for (var i = 0; i < _shoppingsFilteredAndSorted.length; i++) {
       final shoppingWithSpending = _shoppingsFilteredAndSorted[i];
-      final color = UiConstants.getChartColorByAnyIndex(i);
+      final color = _getShoppingColor(shoppingWithSpending);
       groups.add(
         BarChartGroupData(
           x: i,
@@ -152,5 +142,10 @@ class PerShoppingSpendingChart extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Color _getShoppingColor(ShoppingWithSpending shopping) {
+    final index = _shoppingsFilteredAndSorted.indexOf(shopping);
+    return UiConstants.getChartColorByAnyIndex(index);
   }
 }

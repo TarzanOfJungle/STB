@@ -10,13 +10,15 @@ import 'package:split_the_bill/groupchat/models/post_groupchat_message/post_grou
 import 'package:split_the_bill/groupchat/repositories/groupchat_repository_base.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
+import 'package:split_the_bill/users/models/user/user.dart';
 
 const _FAILED_TO_LOAD_CHAT_MESSAGE = "Failed to load messages";
 const _FAILED_TO_SEND_MESSAGE = "Failed to send message";
 const _FAILED_TO_DELETE_MESSAGE = "Failed to delete message";
 
 class GroupchatController with AuthenticatedSocketObserver {
-  final _loadedMessages = BehaviorSubject<List<GroupchatMessage>>.seeded([]);
+  final BehaviorSubject<List<GroupchatMessage>> _loadedMessages =
+      BehaviorSubject.seeded([]);
   final BehaviorSubject<bool> _isLoading = BehaviorSubject.seeded(false);
 
   final ShoppingDetailController _shoppingDetailController;
@@ -31,21 +33,7 @@ class GroupchatController with AuthenticatedSocketObserver {
       Rx.combineLatest2(
         _loadedMessages.stream,
         _shoppingMembersController.shoppingMembersStream,
-        (messages, members) {
-          final messagesWithAuthors = messages.map((m) {
-            final authorOfMessage =
-                members.where((u) => u.id == m.userId).firstOrNull;
-            return GroupchatMessageWithAuthor(
-              message: m,
-              author: authorOfMessage,
-            );
-          }).toList();
-          messagesWithAuthors.sort(
-            (curr, next) =>
-                curr.message.created.compareTo(next.message.created),
-          );
-          return messagesWithAuthors;
-        },
+        (messages, members) => _combineMessagesWithAuthors(messages, members),
       );
 
   GroupchatController(
@@ -143,6 +131,24 @@ class GroupchatController with AuthenticatedSocketObserver {
       ));
     }
     _isLoading.add(false);
+  }
+
+  List<GroupchatMessageWithAuthor> _combineMessagesWithAuthors(
+    List<GroupchatMessage> messages,
+    List<User> shoppingMembers,
+  ) {
+    final messagesWithAuthors = messages.map((m) {
+      final authorOfMessage =
+          shoppingMembers.where((u) => u.id == m.userId).firstOrNull;
+      return GroupchatMessageWithAuthor(
+        message: m,
+        author: authorOfMessage,
+      );
+    }).toList();
+    messagesWithAuthors.sort(
+      (curr, next) => curr.message.created.compareTo(next.message.created),
+    );
+    return messagesWithAuthors;
   }
 
   void _onReceiveNewMessage(GroupchatMessage message) {

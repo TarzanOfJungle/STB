@@ -32,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _restorePreviousUser();
-    // FlutterNativeSplash.remove();
     super.initState();
   }
 
@@ -42,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

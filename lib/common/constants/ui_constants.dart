@@ -16,14 +16,14 @@ abstract class UiConstants {
   static const ammountIcon = Icons.paid_rounded;
 
   static const chartColors = [
-    Color.fromARGB(255, 117, 75, 196),
+    Color.fromARGB(255, 85, 75, 196),
     Color.fromARGB(255, 196, 75, 99),
     Color.fromARGB(255, 196, 190, 75),
-    Color.fromARGB(255, 166, 72, 153),
     Color.fromARGB(255, 75, 196, 119),
-    Color.fromARGB(255, 85, 75, 196),
+    Color.fromARGB(255, 166, 72, 146),
     Color.fromARGB(255, 75, 196, 190),
-    Color.fromARGB(255, 75, 119, 196),
+    Color.fromARGB(255, 117, 75, 196),
+    Color.fromARGB(255, 196, 75, 75),
     Color.fromARGB(255, 148, 196, 75),
   ];
 

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/icon_button_with_background.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
@@ -11,24 +10,25 @@ import 'package:split_the_bill/purchases/widgets/dialogs/update_product_assignme
 import 'package:split_the_bill/purchases/widgets/general_info_label.dart';
 import 'package:split_the_bill/purchases/widgets/purchase_editing_section.dart';
 import 'package:split_the_bill/purchases/widgets/user_purchase_list_tile.dart';
+import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 
 class PurchasePage extends StatelessWidget {
   final _purchaseController = get<SinglePurchaseController>();
+  final _shoppingDetailController = get<ShoppingDetailController>();
 
   PurchasePage({super.key});
 
+  bool get _editingEnabled => !_shoppingDetailController.shoppingIsFinalized;
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _purchaseController.purchaseStateStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner(text: "Something went wrong");
+      buildWhenData: (context, state) {
+        if (state == null) {
+          // Shouldn't ever hapen thanks to stream builder handling
+          return const SizedBox.shrink();
         }
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final state = snapshot.data!;
         return PageTemplate(
           label: state.existingAssignment.product.name,
           showBackButton: true,
@@ -37,7 +37,7 @@ class PurchasePage extends StatelessWidget {
             children: [
               const SizedBox(height: STANDARD_PADDING),
               _buildGeneralInfo(context, state),
-              PurchaseEditingSection(purchaseState: state),
+              if (_editingEnabled) PurchaseEditingSection(purchaseState: state),
               const Divider(height: 30),
               ..._buildUserPurchasesList(context, state),
             ],
@@ -57,10 +57,12 @@ class PurchasePage extends StatelessWidget {
           value:
               "${state.totalPurchasedQuantity}/${state.totalQuantityToBePurchased}",
           label: "Total Qty.",
-          trailingButton: IconButtonWithBackground(
-            onTap: () => _showEditTotalQuantityDialog(context, state),
-            icon: Icons.edit,
-          ),
+          trailingButton: _editingEnabled
+              ? IconButtonWithBackground(
+                  onTap: () => _showEditTotalQuantityDialog(context, state),
+                  icon: Icons.edit,
+                )
+              : null,
         ),
         GeneralInfoLabel(
           icon: UiConstants.ammountIcon,

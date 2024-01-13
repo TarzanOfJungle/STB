@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
@@ -6,6 +7,7 @@ class PageTemplate extends StatelessWidget {
   final String label;
   final Widget child;
   final Widget? floatingActionButton;
+  final PreferredSizeWidget? bottom;
   final bool showBackButton;
   final List<Widget>? actions;
 
@@ -16,25 +18,26 @@ class PageTemplate extends StatelessWidget {
     required this.label,
     required this.child,
     this.floatingActionButton,
+    this.bottom,
     this.showBackButton = false,
     this.actions,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text(label),
-          actions: actions,
-          leading: _buildBackButton(),
-        ),
-        floatingActionButton: floatingActionButton,
-        body: SafeArea(
-          child: child,
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(label),
+        actions: actions != null
+            ? [...actions!, const SizedBox(width: STANDARD_PADDING)]
+            : null,
+        leading: _buildBackButton(),
+        bottom: bottom,
+      ),
+      floatingActionButton: floatingActionButton,
+      body: SafeArea(
+        child: child,
       ),
     );
   }

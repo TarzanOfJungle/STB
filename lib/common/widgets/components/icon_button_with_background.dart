@@ -7,13 +7,14 @@ class IconButtonWithBackground extends StatelessWidget {
   final Color? backgroundColor;
   final Color? iconColor;
 
-  const IconButtonWithBackground(
-      {super.key,
-      required this.onTap,
-      required this.icon,
-      this.backgroundColor,
-      this.iconColor,
-      this.scale = 0.6});
+  const IconButtonWithBackground({
+    super.key,
+    required this.onTap,
+    required this.icon,
+    this.backgroundColor,
+    this.iconColor,
+    this.scale = 0.6,
+  });
 
   @override
   Widget build(BuildContext context) {
