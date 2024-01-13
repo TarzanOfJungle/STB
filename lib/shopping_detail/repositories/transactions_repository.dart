@@ -6,10 +6,10 @@ import '../../common/api/api_client_base.dart';
 import '../../common/api/http_method.dart';
 import '../../common/constants/api_constants.dart';
 
-class TrasactionsRepository implements TrasactionsRepositoryBase {
+class TransactionsRepository implements TransactionsRepositoryBase {
   final ApiClientBase _apiClient;
 
-  TrasactionsRepository(this._apiClient);
+  TransactionsRepository(this._apiClient);
 
   @override
   Future<List<Transaction>> getTransactionsOfShopping(

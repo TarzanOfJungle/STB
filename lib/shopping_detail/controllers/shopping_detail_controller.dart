@@ -6,14 +6,10 @@ import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.d
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message_category.dart';
 import 'package:split_the_bill/purchases/repositories/product_assignments/product_assignments_repository_base.dart';
 import 'package:split_the_bill/purchases/repositories/product_purchases/product_purchases_repository_base.dart';
-import 'package:split_the_bill/shopping_detail/models/transaction/transaction.dart';
-import 'package:split_the_bill/shopping_detail/repositories/transactions_repository_base.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/shoppings_list/repositories/shoppings_list_repository_base.dart';
 import 'package:split_the_bill/users/repositories/users_repository_base.dart';
 
-const String _FETCH_TRANSACTIONS_ERROR_MESSAGE =
-    'Unable to update transactions';
 const String _FAILED_TO_LOAD_SHOPPING_MESSAGE =
     "Failed to load shopping detail";
 
@@ -21,28 +17,18 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
   final BehaviorSubject<ShoppingWithContext?> _shopping =
       BehaviorSubject.seeded(null);
 
-  final BehaviorSubject<List<Transaction>> _transactions =
-      BehaviorSubject.seeded([]);
-
   int? get _shoppingId => currentShoppingState?.shopping.id;
 
   final AuthController _authController;
-  final TrasactionsRepositoryBase _transactionsRepository;
   final SnackbarMessangerController _snackbarController;
   final ShoppingsListRepositoryBase _shoppingsListRepository;
   final ProductPurchasesRepositoryBase _productPurchasesRepository;
   final ProductAssignmentsRepositoryBase _productAssignmentsRepository;
   final UsersRepositoryBase _usersRepository;
 
-
-
   Stream<ShoppingWithContext?> get shopping => _shopping.stream;
 
-  Stream<List<Transaction>> get transactionsStream => _transactions.stream;
-
   ShoppingWithContext? get currentShoppingState => _shopping.value;
-
-  List<Transaction> get transactions => _transactions.value;
 
   bool get userIsCreator =>
       currentShoppingState?.shopping.creatorId ==
@@ -53,7 +39,6 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
 
   ShoppingDetailController(
     this._authController,
-    this._transactionsRepository,
     this._snackbarController,
     this._shoppingsListRepository,
     this._usersRepository,
@@ -123,21 +108,6 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
       _shopping.add(null);
       return false;
     }
-  }
-
-  Future<bool> fetchTransactions() async {
-    var wasSuccess = false;
-    try {
-      final transactions =
-          await _transactionsRepository.getTransactionsOfShopping(
-              shoppingId: currentShoppingState!.shopping.id);
-      _transactions.add(transactions);
-      wasSuccess = true;
-    } catch (_) {
-      _transactions.add([]);
-      _showError(_FETCH_TRANSACTIONS_ERROR_MESSAGE);
-    }
-    return wasSuccess;
   }
 
   void _showError(String errorMessage) {

@@ -5,6 +5,7 @@ import '../product_with_purchase_context/product_with_purchase_context.dart';
 
 part 'user_purchases.freezed.dart';
 part 'user_purchases.g.dart';
+
 @freezed
 class UserPurchases with _$UserPurchases {
   const factory UserPurchases({
@@ -15,4 +16,7 @@ class UserPurchases with _$UserPurchases {
 
   factory UserPurchases.fromJson(Map<String, Object?> json) =>
       _$UserPurchasesFromJson(json);
+
+  double get totalAmmount => productPurchases.fold(
+      0.0, (previousValue, p) => previousValue + p.totalAmountSpent);
 }

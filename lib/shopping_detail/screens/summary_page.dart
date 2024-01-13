@@ -1,34 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
-import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
-import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
+import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shopping_detail/controllers/user_transactions_display_controller.dart';
+import 'package:split_the_bill/shopping_detail/models/transaction_with_users.dart';
 import 'package:split_the_bill/shopping_detail/widgets/info_item.dart';
+import 'package:split_the_bill/shopping_detail/widgets/transactions_filter_section.dart';
 import 'package:split_the_bill/shopping_detail/widgets/users_balance_carousel.dart';
-
-import '../../ioc_container.dart';
-import '../../shoppings_list/models/shopping_with_context/shopping_with_context.dart';
-import '../../users/models/user/user.dart';
-import '../models/transaction/transaction.dart';
-import '../widgets/transactions_filter_section.dart';
+import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
+import 'package:split_the_bill/users/models/user/user.dart';
 
 const double _TRANSACTION_TILE_HEIGHT = 70.0;
-const String _LOADING_ERROR_MESSAGE = 'Something failed, try again later';
 
-class SummaryPage extends StatelessWidget {
+class SummaryPage extends StatefulWidget {
   final ShoppingWithContext shopping;
+  const SummaryPage({super.key, required this.shopping});
 
-  SummaryPage({super.key, required this.shopping});
+  @override
+  State<SummaryPage> createState() => _SummaryPageState();
+}
 
-  final _shoppingDetailController = get<ShoppingDetailController>();
-  final _shoppingMembersController = get<ShoppingMembersController>();
-
+class _SummaryPageState extends State<SummaryPage> {
   final _userTransactionsDisplayController =
       get<UserTransactionsDisplayController>();
+
+  @override
+  void dispose() {
+    _userTransactionsDisplayController.selectUser(null);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,51 +39,37 @@ class SummaryPage extends StatelessWidget {
       label: 'Shopping Summary',
       child: Padding(
         padding: const EdgeInsets.all(STANDARD_PADDING),
-        child: FutureBuilder(
-          future: _shoppingDetailController.fetchTransactions(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('${snapshot.error}'),
-              );
-            } else if (!snapshot.hasData) {
-              return const Center(
-                child: LoadingIndicator(),
-              );
-            } else if (!snapshot.data!) {
-              return const Center(
-                child: Text(_LOADING_ERROR_MESSAGE),
-              );
-            } else {
-              return SingleChildScrollView(
-                child: _buildPage(context),
-              );
-            }
+        child: StreamBuilderWithHandling(
+          stream: _userTransactionsDisplayController
+              .filteredTransactionsWithUsersStream,
+          buildWhenData: (context, transactions) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                UsersBalanceCarousel(),
+                _buildInfoSection(),
+                TransactionsFilterSection(),
+                Expanded(
+                  child: _buildTransactionsList(transactions),
+                ),
+              ],
+            );
           },
         ),
       ),
     );
   }
 
-  Widget _buildPage(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        UsersBalanceCarousel(shopping: shopping),
-        _buildInfoSection(),
-        TransactionsFilterSection(),
-        StreamBuilderWithHandling(
-          stream: _userTransactionsDisplayController.selectedUsersStream,
-          assumeNullDataMeansLoading: false,
-          whenNoData: _buildTransactionsList(_shoppingDetailController.transactions),
-          buildWhenData: (context, data) {
-            final allTransactions = _shoppingDetailController.transactions;
-            final transactions =
-                _getFilteredTransactions(data, allTransactions);
-            return _buildTransactionsList(transactions);
-          },
-        ),
-      ],
+  Widget _buildTransactionsList(List<TransactionWithUsers> transactions) {
+    return ListView.separated(
+      physics: const AlwaysScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        var transaction = transactions[index];
+        return _buildTransactionTile(context, transaction);
+      },
+      separatorBuilder: (_, index) => const SizedBox(height: SMALL_PADDING),
     );
   }
 
@@ -94,34 +82,20 @@ class SummaryPage extends StatelessWidget {
           InfoItem(
             icon: const Icon(CupertinoIcons.money_dollar),
             label: 'Amount spent',
-            data: '${shopping.ammountSpent},-',
+            data: '${widget.shopping.ammountSpent},-',
           ),
           InfoItem(
             icon: const Icon(CupertinoIcons.person_2_fill),
             label: 'Members',
-            data: '${shopping.numberOfParticipants}',
+            data: '${widget.shopping.numberOfParticipants}',
           ),
         ],
       ),
     );
   }
-  
-  Widget _buildTransactionsList(List<Transaction> transactions) {
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: transactions.length,
-      itemBuilder: (context, index) {
-        final transaction = transactions[index];
-        return _buildTransactionTile(context, transaction);
-      },
-      separatorBuilder: (_, __) => const SizedBox(
-        height: SMALL_PADDING,
-      ),
-    );
-  }
 
-  Widget _buildTransactionTile(BuildContext context, Transaction transaction) {
+  Widget _buildTransactionTile(
+      BuildContext context, TransactionWithUsers transaction) {
     return Container(
       height: _TRANSACTION_TILE_HEIGHT,
       decoration: BoxDecoration(
@@ -132,32 +106,18 @@ class SummaryPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(flex: 2, child: _buildNameDisplay(transaction.payingUserId)),
+          Expanded(flex: 2, child: _buildNameDisplay(transaction.payingUser)),
           Expanded(child: _buildTransactionAmountDisplay(transaction.ammount)),
-          Expanded(flex: 2, child: _buildNameDisplay(transaction.payedUserId)),
+          Expanded(flex: 2, child: _buildNameDisplay(transaction.payedUser)),
         ],
       ),
     );
   }
 
-  Widget _buildNameDisplay(int userId) {
-    return FutureBuilder(
-      future: _shoppingMembersController.userById(userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Id: $userId, ERROR');
-        } else if (!snapshot.hasData) {
-          return const Center(child: LoadingIndicator());
-        } else {
-          if (snapshot.data == null) {
-            return Text('Id: $userId, ERROR');
-          }
-          return Text(
-            snapshot.data!.username,
-            textAlign: TextAlign.center,
-          );
-        }
-      },
+  Widget _buildNameDisplay(User? user) {
+    return Text(
+      user?.username ?? "Unknown user",
+      textAlign: TextAlign.center,
     );
   }
 
@@ -172,17 +132,5 @@ class SummaryPage extends StatelessWidget {
         const Icon(CupertinoIcons.arrow_right),
       ],
     );
-  }
-
-  List<Transaction> _getFilteredTransactions(
-      User? selectedUser, List<Transaction> allTransactions) {
-    if (selectedUser == null) {
-      return allTransactions;
-    }
-    return allTransactions
-        .where((t) =>
-            t.payingUserId == selectedUser.id ||
-            t.payedUserId == selectedUser.id)
-        .toList();
   }
 }

@@ -35,6 +35,8 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
         return _filterUserLookup(usersFromLookup);
       });
 
+  List<User> get shoppingMembers => _shoppingMembers.value.values.toList();
+
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 
@@ -176,18 +178,6 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
         message: _FAILED_TO_UNASSIGN_USER,
         category: SnackbarMessageCategory.ERROR,
       ));
-    }
-  }
-
-  Future<User?> userById(int userId) async {
-    try {
-      return await _usersRepository.getUserById(userId);
-    } catch (_) {
-      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
-        message: _FAILED_TO_GET_USER_BY_ID_MESSAGE,
-        category: SnackbarMessageCategory.ERROR,
-      ));
-      return null;
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/users/models/user/user.dart';
 
 const _OUTER_PADDING = 3.0;
@@ -23,7 +22,7 @@ class UserToAssignChip extends StatelessWidget {
         shape: const StadiumBorder(),
         backgroundColor: Theme.of(context).colorScheme.primary,
         deleteIcon: const Icon(Icons.close_rounded),
-        deleteIconColor: UiConstants.deleteColor,
+        deleteIconColor: Theme.of(context).colorScheme.onPrimary,
         onDeleted: onCancel,
         label: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: _MAX_TEXT_WIDTH),

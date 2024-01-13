@@ -63,8 +63,8 @@ abstract class IocContainer {
         ProductAssignmentsRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductPurchasesRepositoryBase>(
         ProductPurchasesRepository(get<ApiClientBase>()));
-    get.registerSingleton<TrasactionsRepositoryBase>(
-        TrasactionsRepository(get<ApiClientBase>()));
+    get.registerSingleton<TransactionsRepositoryBase>(
+        TransactionsRepository(get<ApiClientBase>()));
     get.registerSingleton<GroupchatRepositoryBase>(
         GroupchatRepository(get<ApiClientBase>()));
     get.registerSingleton<ProductsRepositoryBase>(
@@ -104,7 +104,6 @@ abstract class IocContainer {
     );
     get.registerSingleton<ShoppingDetailController>(ShoppingDetailController(
       get<AuthController>(),
-      get<TrasactionsRepositoryBase>(),
       get<SnackbarMessangerController>(),
       get<ShoppingsListRepositoryBase>(),
       get<UsersRepositoryBase>(),
@@ -171,7 +170,14 @@ abstract class IocContainer {
       get<ProductPurchasesRepositoryBase>(),
     ));
     get.registerSingleton<UserTransactionsDisplayController>(
-        UserTransactionsDisplayController());
+        UserTransactionsDisplayController(
+      get<ShoppingDetailController>(),
+      get<ShoppingMembersController>(),
+      get<SnackbarMessangerController>(),
+      get<TransactionsRepositoryBase>(),
+      get<ProductPurchasesRepositoryBase>(),
+      get<UsersRepositoryBase>(),
+    ));
 
     // Router
     get.registerSingleton<NavRouter>(NavRouter(

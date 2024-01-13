@@ -3,7 +3,6 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 import 'package:split_the_bill/users/models/update_user/put_user.dart';
