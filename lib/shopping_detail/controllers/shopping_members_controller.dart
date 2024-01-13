@@ -15,7 +15,6 @@ const _USERS_ASSIGNED_MESSAGE = "Users assigned";
 const _FAILED_TO_ASSIGN_USERS_MESSAGE =
     "Failed to assign some of the selected users";
 const _FAILED_TO_UNASSIGN_USER = "Failed to unassign this user";
-const _FAILED_TO_GET_USER_BY_ID_MESSAGE = "Failed to get usernames";
 
 class ShoppingMembersController with AuthenticatedSocketObserver {
   final BehaviorSubject<Map<int, User>> _shoppingMembers =

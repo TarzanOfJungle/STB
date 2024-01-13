@@ -6,7 +6,7 @@ import 'package:split_the_bill/auth/screens/registration_page.dart';
 import 'package:split_the_bill/common/navigation/nav_routes.dart';
 import 'package:split_the_bill/common/widgets/wrappers/bottom_nav_bar_wrapper.dart';
 import 'package:split_the_bill/home/screens/home_page.dart';
-import 'package:split_the_bill/profile_page/screens/profile_page.dart';
+import 'package:split_the_bill/profile/screens/profile_page.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/product_purchase/product_purchase.dart';
 import 'package:split_the_bill/purchases/models/product_shopping_assignment/product_shopping_assignment.dart';

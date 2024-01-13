@@ -2,39 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/utils/validator.dart';
-import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
-import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
-import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
-import 'package:split_the_bill/users/models/update_user/put_user.dart';
+import 'package:split_the_bill/profile/controllers/profile_controller.dart';
 
 import '../../common/models/snackbar_message/snackbar_message.dart';
 import '../../common/models/snackbar_message/snackbar_message_category.dart';
 import '../../common/navigation/nav_router.dart';
 import '../../common/widgets/components/stb_elevated_button.dart';
 import '../../common/widgets/components/stb_text_field.dart';
+import '../../common/widgets/dialogs/stb_dialog.dart';
 import '../../ioc_container.dart';
+import '../../users/models/update_user/put_user.dart';
 import '../../users/models/user/user.dart';
 
-const _TITLE = "Edit username";
-const _USERNAME_EDIT_ERROR_MESSAGE = "Cannot change username";
+const _TITLE = "Change password";
 
-class UsernameEditDialog extends StatefulWidget {
+const _CHANGE_FAILED_MASSEGE = "Unable to change password";
+
+class PasswordChangeDialog extends StatefulWidget {
   final User user;
 
-  const UsernameEditDialog({
-    super.key,
-    required this.user,
-  });
+  const PasswordChangeDialog({super.key, required this.user});
 
   @override
-  State<UsernameEditDialog> createState() => _UsernameEditDialogState();
+  State<PasswordChangeDialog> createState() => _PasswordChangeDialogState();
 }
 
-class _UsernameEditDialogState extends State<UsernameEditDialog> {
+class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
   final _navRouter = get<NavRouter>();
   final _profileController = get<ProfileController>();
   final _snackbarController = get<SnackbarMessangerController>();
-  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmationController = TextEditingController();
   final _registrationFormKey = GlobalKey<FormState>();
 
   @override
@@ -42,27 +40,31 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
     return StbDialog(
       title: _TITLE,
       titleIcon: Icons.edit,
-      body: Column(
-        children: [
-          StreamBuilderWithHandling(
-            stream: _profileController.userInformationsStream,
-            buildWhenData: (context, data) {
-                _usernameController.text = data!.username;
-                return Form(
-                  key: _registrationFormKey,
-                  child: StbTextField(
-                    controller: _usernameController,
-                    label: "New username",
-                    validator: (value) => Validator.validateUsername(value),
-                  ),
-                );
-              }
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          _buildButtons(),
-        ],
+      body: Form(
+        key: _registrationFormKey,
+        child: Column(
+          children: [
+            StbTextField(
+              controller: _passwordController,
+              label: 'New password',
+              obscureText: true,
+              validator: (value) => Validator.validatePassword(value),
+            ),
+            const SizedBox(
+              height: STANDARD_PADDING,
+            ),
+            StbTextField(
+              controller: _confirmationController,
+              label: 'Confirm Password',
+              obscureText: true,
+              validator: (value) => Validator.validatePassword(value),
+            ),
+            const SizedBox(
+              height: STANDARD_PADDING,
+            ),
+            _buildButtons(),
+          ],
+        ),
       ),
     );
   }
@@ -81,8 +83,9 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
           text: 'Confirm',
           stretch: true,
           onTap: () async {
-            final wasChanged = await _onConfirm();
-            if (wasChanged) {
+            final wasSuccess = await _onConfirm();
+            if (wasSuccess) {
+              _showMessage('Password changed', SnackbarMessageCategory.INFO);
               _navRouter.returnBack();
             }
           },
@@ -95,13 +98,18 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
   Future<bool> _onConfirm() async {
     var wasSuccess = false;
     if (_registrationFormKey.currentState!.validate()) {
+      if (_passwordController.text != _confirmationController.text) {
+        _showMessage('Password must match', SnackbarMessageCategory.WARNING);
+        _confirmationController.clear();
+        return false;
+      }
       final post = PutUser(
         id: widget.user.id,
-        username: _usernameController.text,
+        password: _passwordController.text,
       );
       wasSuccess = await _profileController.updateUser(post);
       if (!wasSuccess) {
-        _showMessage(_USERNAME_EDIT_ERROR_MESSAGE, SnackbarMessageCategory.ERROR);
+        _showMessage(_CHANGE_FAILED_MASSEGE, SnackbarMessageCategory.ERROR);
       }
     }
     return wasSuccess;
