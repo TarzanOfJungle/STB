@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
+import 'package:split_the_bill/common/api/websocket_event.dart';
 import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.dart';
 import 'package:split_the_bill/common/mixins/authenticated_socket_observer.dart';
 import 'package:split_the_bill/common/models/snackbar_message/snackbar_message.dart';
@@ -56,6 +57,9 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
       onValueChanged: (assignmentEvent) {
         if (_shoppingId != null &&
             assignmentEvent.data.shopping.id == _shoppingId) {
+          if (assignmentEvent.event == WebsocketEvent.shoppingDeleted) {
+            return;
+          }
           putShopping(_shoppingId!);
         }
       },

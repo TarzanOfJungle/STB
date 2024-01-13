@@ -43,16 +43,16 @@ class _SummaryPageState extends State<SummaryPage> {
           stream: _userTransactionsDisplayController
               .filteredTransactionsWithUsersStream,
           buildWhenData: (context, transactions) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                UsersBalanceCarousel(),
-                _buildInfoSection(),
-                TransactionsFilterSection(),
-                Expanded(
-                  child: _buildTransactionsList(transactions),
-                ),
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  UsersBalanceCarousel(),
+                  _buildInfoSection(),
+                  TransactionsFilterSection(),
+                  _buildTransactionsList(transactions),
+                ],
+              ),
             );
           },
         ),
@@ -62,7 +62,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
   Widget _buildTransactionsList(List<TransactionWithUsers> transactions) {
     return ListView.separated(
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: transactions.length,
       itemBuilder: (context, index) {

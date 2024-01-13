@@ -1,6 +1,6 @@
 extension DateTimeConvert on DateTime {
   String toDateTimeString() {
-    return "$day.$month.$year $hour:$minute";
+    return "$day.$month.$year ${_getDateTimeComponentPaddedLeft(hour)}:${_getDateTimeComponentPaddedLeft(minute)}";
   }
 
   String toApiCompatibleString() {
