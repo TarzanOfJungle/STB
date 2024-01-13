@@ -3,10 +3,10 @@ import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
-import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
-import 'package:split_the_bill/profile_page/dialogs/password_change_dialog.dart';
-import 'package:split_the_bill/profile_page/dialogs/username_edit_dialog.dart';
-import 'package:split_the_bill/profile_page/widgets/profile_tile.dart';
+import 'package:split_the_bill/profile/controllers/profile_controller.dart';
+import 'package:split_the_bill/profile/dialogs/password_change_dialog.dart';
+import 'package:split_the_bill/profile/dialogs/username_edit_dialog.dart';
+import 'package:split_the_bill/profile/widgets/profile_tile.dart';
 
 import '../../auth/controllers/auth_controller.dart';
 import '../../common/navigation/nav_router.dart';
@@ -32,9 +32,11 @@ class ProfilePage extends StatelessWidget {
           iconData: Icons.logout,
         ),
       ],
-      child: Padding(
-        padding: const EdgeInsets.all(STANDARD_PADDING),
-        child: _buildBody(),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(STANDARD_PADDING),
+          child: _buildBody(),
+        ),
       ),
     );
   }

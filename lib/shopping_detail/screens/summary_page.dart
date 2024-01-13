@@ -82,7 +82,7 @@ class _SummaryPageState extends State<SummaryPage> {
           InfoItem(
             icon: const Icon(CupertinoIcons.money_dollar),
             label: 'Amount spent',
-            data: '${widget.shopping.ammountSpent},-',
+            data: '${widget.shopping.ammountSpent.toStringAsFixed(1)},-',
           ),
           InfoItem(
             icon: const Icon(CupertinoIcons.person_2_fill),

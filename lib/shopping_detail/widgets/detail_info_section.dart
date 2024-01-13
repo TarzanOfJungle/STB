@@ -21,7 +21,7 @@ class DetailInfoSection extends StatelessWidget {
         InfoItem(
           icon: const Icon(CupertinoIcons.money_dollar),
           label: 'Amount spent',
-          data: '${shopping.ammountSpent},-',
+          data: '${shopping.ammountSpent.toStringAsFixed(1)},-',
         ),
         InfoItem(
           icon: const Icon(CupertinoIcons.shopping_cart),

@@ -56,7 +56,7 @@ class ShoppingTile extends StatelessWidget {
       children: [
         const Icon(UiConstants.ammountIcon),
         const SizedBox(width: SMALL_PADDING,),
-        Text('${shopping.ammountSpent}'),
+        Text(shopping.ammountSpent.toStringAsFixed(1)),
       ],
     );
   }
