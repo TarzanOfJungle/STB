@@ -180,16 +180,4 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
       ));
     }
   }
-
-  Future<User?> userById(int userId) async {
-    try {
-      return await _usersRepository.getUserById(userId);
-    } catch (_) {
-      _snackbarMessangerController.showSnackbarMessage(SnackbarMessage(
-        message: _FAILED_TO_GET_USER_BY_ID_MESSAGE,
-        category: SnackbarMessageCategory.ERROR,
-      ));
-      return null;
-    }
-  }
 }
