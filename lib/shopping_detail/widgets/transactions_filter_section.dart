@@ -5,9 +5,6 @@ import 'package:split_the_bill/shopping_detail/controllers/shopping_members_cont
 import 'package:split_the_bill/shopping_detail/controllers/user_transactions_display_controller.dart';
 import '../../ioc_container.dart';
 import '../../users/models/user/user.dart';
-
-const double _USER_FILTER_MENU_WIDTH = 220.0;
-
 class TransactionsFilterSection extends StatefulWidget {
   TransactionsFilterSection({super.key});
 

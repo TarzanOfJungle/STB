@@ -31,8 +31,8 @@ class _ShoppingDetailTabviewWrapperState
   void initState() {
     super.initState();
     _tabViewItems = [
-      TabViewItem(
-        tab: const Tab(
+      const TabViewItem(
+        tab: Tab(
           text: 'Items',
         ),
         page: PurchasesTabPage(),
@@ -68,7 +68,6 @@ class _ShoppingDetailTabviewWrapperState
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData) {
-          //TODO page loading
           return const LoadingIndicator();
         }
         var shopping = snapshot.data!;

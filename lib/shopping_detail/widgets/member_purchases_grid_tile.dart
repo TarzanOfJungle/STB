@@ -24,7 +24,7 @@ class MemberPurchasesGridTile extends StatelessWidget {
         userPurchases.productPurchases.length < _NUMBER_OF_ITEMS + 1
             ? userPurchases.productPurchases.length
             : _NUMBER_OF_ITEMS + 1; // Bonus 1 for ellipsis line
-    return Container(
+    return SizedBox(
       height: 300.0,
       width: 300.0,
       child: InkWell(

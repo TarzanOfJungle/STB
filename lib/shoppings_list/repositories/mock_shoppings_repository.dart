@@ -51,33 +51,28 @@ class MockShoppingsRepository implements ShoppingsListRepositoryBase {
   @override
   Future<ShoppingWithContext> addShopping(
       {required PostShopping postShopping}) {
-    // TODO: implement addShopping
     throw UnimplementedError();
   }
 
   @override
   Future<ShoppingWithContext> shoppingById({required int shoppingId}) {
-    // TODO: implement shoppingById
     throw UnimplementedError();
   }
 
   @override
   Future<bool> deleteShopping({required int shoppingId}) {
-    // TODO: implement deleteShopping
     throw UnimplementedError();
   }
 
   @override
   Future<ShoppingWithContext> updateShopping(
       {required UpdateShopping updateShopping}) {
-    // TODO: implement updateShopping
     throw UnimplementedError();
   }
 
   @override
   Stream<WebsocketEventWithData<ShoppingWithContext>>
       getShoppingChangesStream() {
-    // TODO: implement getShoppingChangesStream
     throw UnimplementedError();
   }
 }

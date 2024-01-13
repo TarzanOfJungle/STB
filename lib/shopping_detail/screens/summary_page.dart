@@ -45,12 +45,10 @@ class SummaryPage extends StatelessWidget {
                 child: Text('${snapshot.error}'),
               );
             } else if (!snapshot.hasData) {
-              //TODO page loading
               return const Center(
                 child: LoadingIndicator(),
               );
             } else if (!snapshot.data!) {
-              // TODO something went wrong
               return const Center(
                 child: Text(_LOADING_ERROR_MESSAGE),
               );

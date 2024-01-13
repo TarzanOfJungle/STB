@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/widgets/components/lookup_list_tile.dart';
 
-const _DEFAULT_ANIMATION_DURATION = const Duration(milliseconds: 150);
+const _DEFAULT_ANIMATION_DURATION = Duration(milliseconds: 150);
 
 class AnimatedLookupList<T> extends StatefulWidget {
   final bool isShown;

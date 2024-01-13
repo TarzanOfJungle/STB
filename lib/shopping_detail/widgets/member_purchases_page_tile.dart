@@ -69,7 +69,7 @@ class MemberPurchasesPageTile extends StatelessWidget {
     return Row(
       children: [
         Text(
-          '${value.toStringAsFixed(1)}',
+          value.toStringAsFixed(1),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),

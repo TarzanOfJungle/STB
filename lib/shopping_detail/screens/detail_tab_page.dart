@@ -29,7 +29,6 @@ class DetailTabPage extends StatelessWidget {
         if (snapshot.hasError) {
           return const ErrorBanner();
         } else if (!snapshot.hasData) {
-          //TODO page loading
           return const LoadingIndicator();
         }
         var shopping = snapshot.data!.shopping;
