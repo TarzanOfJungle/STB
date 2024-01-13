@@ -57,10 +57,6 @@ class PerShoppingSpendingChart extends StatelessWidget {
     );
   }
 
-  Widget _buildShoppingsList() {
-    return Column();
-  }
-
   BarChartData _getBarData(BuildContext context) {
     return BarChartData(
       barTouchData: BarTouchData(

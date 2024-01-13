@@ -16,8 +16,9 @@ class MemberPurchasesPageTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(STANDARD_PADDING),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Column(
@@ -65,33 +66,18 @@ class MemberPurchasesPageTile extends StatelessWidget {
     required BuildContext context,
     required double value,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Row(
       children: [
-        Flexible(
-          child: Text(
-            'Total price',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+        Text(
+          value.toStringAsFixed(1),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Icon(
-              UiConstants.ammountIcon,
-              size: 25,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              '${value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1)},-',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
+        const SizedBox(width: SMALL_PADDING),
+        const Icon(
+          UiConstants.ammountIcon,
+          size: 25,
         ),
       ],
     );

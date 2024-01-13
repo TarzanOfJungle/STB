@@ -126,16 +126,17 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   }
 
   Future<bool> updateShopping(
-      {required PostShopping postShopping, required int shoppingId}) async {
+      {PostShopping? postShopping, required int shoppingId, bool finalize = false}) async {
     var wasSuccess = false;
     try {
       UpdateShopping update = UpdateShopping(
           id: shoppingId,
-          name: postShopping.name,
+          finalized: finalize ? true : null,
+          name: postShopping?.name,
           updateDue: true,
           due: DateTime.now(),
           updateDescription: true,
-          description: postShopping.description);
+          description: postShopping?.description);
       var shopping =
           await _shoppingsListRepository.updateShopping(updateShopping: update);
       _lastUpdatedShopping.add(shopping);

@@ -100,6 +100,7 @@ class _GroupchatTabPageState extends State<GroupchatTabPage> {
 
   Future<void> _sendMessage() async {
     final messageToSend = _messageInputController.text;
+    if (messageToSend.isEmpty) return;
     _messageInputController.clear();
     final success = await _groupchatController.postNewMessage(messageToSend);
     if (!success) {

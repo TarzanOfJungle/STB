@@ -17,7 +17,7 @@ const _NO_ITEMS_YET =
 const _NOTHING_FOUND_SEARCH_MESSAGE = "No items found";
 
 class PurchasesTabPage extends StatefulWidget {
-  PurchasesTabPage({super.key});
+  const PurchasesTabPage({super.key});
 
   @override
   State<PurchasesTabPage> createState() => _PurchasesTabPageState();

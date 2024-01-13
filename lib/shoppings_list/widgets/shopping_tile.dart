@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/components/finalized_indicator.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
 import '../../common/constants/ui_constants.dart';
@@ -28,6 +29,7 @@ class ShoppingTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      if (shopping.shopping.finalized) const FinalizedIndicator(),
                       Expanded(
                         child: Text(
                           shopping.shopping.name,

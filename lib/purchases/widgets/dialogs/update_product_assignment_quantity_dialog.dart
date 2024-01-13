@@ -8,8 +8,6 @@ import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/single_purchase_controller.dart';
 import 'package:split_the_bill/purchases/models/purchase_state/purchase_state.dart';
 
-const _INCREMENT_BUTTONS_WIDTH = 120.0;
-
 class UpdateProductAssignmentQuantityDialog extends StatefulWidget {
   final PurchaseState purchaseState;
 

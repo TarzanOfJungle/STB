@@ -6,7 +6,7 @@ import 'package:split_the_bill/shopping_detail/widgets/member_purchases_page_til
 class MemberPurchasesPage extends StatelessWidget {
   final UserPurchases userPurchases;
 
-  MemberPurchasesPage({super.key, required this.userPurchases});
+  const MemberPurchasesPage({super.key, required this.userPurchases});
 
   @override
   Widget build(BuildContext context) {

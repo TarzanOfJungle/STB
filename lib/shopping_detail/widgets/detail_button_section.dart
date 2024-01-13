@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
-import 'package:split_the_bill/common/api/api_exception.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
@@ -39,16 +38,17 @@ class DetailButtonSection extends StatelessWidget {
     var loggedInUser = _authController.loggedInUser;
     if (loggedInUser?.id == shopping.shopping.creatorId) {
       return [
-        _buildButton(
-          const Icon(Icons.done),
-          'Finalize',
-              () {}, //TODO
-          color: UiConstants.confirmColor,
-        ),
+        if (!shopping.shopping.finalized)
+          _buildButton(
+            const Icon(Icons.done),
+            'Finalize',
+            () => _onFinalizedButtonPressed(context),
+            color: UiConstants.confirmColor,
+          ),
         _buildButton(
           const Icon(CupertinoIcons.trash),
           'Delete',
-              () => _onDeleteButtonPressed(context, shopping),
+          () => _onDeleteButtonPressed(context),
           color: UiConstants.deleteColor,
         ),
       ];
@@ -69,14 +69,28 @@ class DetailButtonSection extends StatelessWidget {
     );
   }
 
-  void _onDeleteButtonPressed(context, ShoppingWithContext shopping) {
+  void _onDeleteButtonPressed(context) {
     showDialog(
       context: context,
       builder: (context) => ConfirmationDialog(
-          label: 'Delete Shopping:\n${shopping.shopping.name}?',
-          description:
-              'Are you sure about this?\nYou cannot take it back',
-          onConfirm: _delete),
+        label: 'Delete Shopping:\n${shopping.shopping.name}?',
+        description: 'Are you sure about this?\nYou cannot take it back',
+        onConfirm: _delete,
+      ),
+    );
+  }
+
+  void _onFinalizedButtonPressed(context) {
+    showDialog(
+      context: context,
+      builder: (context) => ConfirmationDialog(
+        label: 'Finalize Shopping:\n${shopping.shopping.name}?',
+        description:
+            'Shopping will be preserved but no further changes would be possible in the future.',
+        onConfirm: _finalize,
+        confirmText: 'Finalize',
+        confirmColor: UiConstants.confirmColor,
+      ),
     );
   }
 
@@ -85,8 +99,16 @@ class DetailButtonSection extends StatelessWidget {
         shoppingId: shopping.shopping.id);
     if (wasSuccess) {
       _navRouter.toShoppingList();
-    } else {
-      throw const ApiUnspecifiedException();
+    }
+  }
+
+  Future<void> _finalize() async {
+    var wasSuccess = await _shoppingsListController.updateShopping(
+      shoppingId: shopping.shopping.id,
+      finalize: true,
+    );
+    if (wasSuccess) {
+      _navRouter.toShoppingList();
     }
   }
 }

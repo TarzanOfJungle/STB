@@ -26,12 +26,13 @@ class _ShoppingDetailTabviewWrapperState
   late final TabController _tabController;
   final _shoppingDetailController = get<ShoppingDetailController>();
   final _authController = get<AuthController>();
+
   @override
   void initState() {
     super.initState();
     _tabViewItems = [
-      TabViewItem(
-        tab: const Tab(
+      const TabViewItem(
+        tab: Tab(
           text: 'Items',
         ),
         page: PurchasesTabPage(),
@@ -67,7 +68,6 @@ class _ShoppingDetailTabviewWrapperState
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData) {
-          //TODO page loading
           return const LoadingIndicator();
         }
         var shopping = snapshot.data!;
@@ -82,7 +82,10 @@ class _ShoppingDetailTabviewWrapperState
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              actions: shopping.shopping.creatorId == loggedInUser!.id ? _actions(shopping) : [],
+              actions: (shopping.shopping.creatorId == loggedInUser!.id &&
+                        !shopping.shopping.finalized)
+                  ? _actions(shopping)
+                  : [],
               bottom: TabBar(
                 controller: _tabController,
                 tabs: _tabViewItems.map((item) => item.tab).toList(),
