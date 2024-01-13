@@ -6,8 +6,6 @@ import 'package:split_the_bill/common/widgets/components/quantity_editing_sectio
 import 'package:split_the_bill/common/widgets/components/stb_elevated_button.dart';
 import 'package:split_the_bill/common/widgets/components/stb_text_field.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
-import 'package:split_the_bill/common/widgets/error_banner.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/purchases/controllers/add_product_assignment_controller.dart';
@@ -53,16 +51,10 @@ class _AddProductAssignmentDialogState
   }
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _addProductAssignmentController.addProductAssignmentStateStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner();
-        }
-        if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final state = snapshot.data!;
+      buildWhenData: (context, data) {
+        final state = data;
         _adjustTextEditControllersToNewState(state);
         return Column(
           mainAxisSize: MainAxisSize.min,

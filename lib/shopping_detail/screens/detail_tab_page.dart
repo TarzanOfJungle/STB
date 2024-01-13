@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/error_banner.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/purchases/controllers/purchases_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/widgets/detail_button_section.dart';
@@ -9,7 +10,6 @@ import 'package:split_the_bill/shopping_detail/widgets/detail_info_section.dart'
 import 'package:split_the_bill/shopping_detail/widgets/member_purchases_section.dart';
 import 'package:split_the_bill/shopping_detail/widgets/show_summary_button.dart';
 
-import '../../common/widgets/loading_indicator.dart';
 import '../../ioc_container.dart';
 
 class DetailTabPage extends StatelessWidget {
@@ -20,19 +20,14 @@ class DetailTabPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: Rx.combineLatest2(
           _shoppingDetailController.shopping,
           _purchasesController.productAssignmentsWithPurchasesStream,
           (a, b) => (shopping: a, productAssignments: b)),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const ErrorBanner();
-        } else if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        var shopping = snapshot.data!.shopping;
-        var productAssignments = snapshot.data!.productAssignments;
+      buildWhenData: (context, data) {
+        final shopping = data.shopping;
+        final productAssignments = data.productAssignments;
         if (shopping == null || productAssignments == null) {
           return const ErrorBanner();
         }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/home/controllers/last_visited_shopping_controller.dart';
@@ -29,9 +30,9 @@ class HomePage extends StatelessWidget {
     return PageTemplate(
       label: 'Home',
       actions: [
-        IconButton(
+        StbIconAppbarButton(
           onPressed: () => _navRouter.toProfile(),
-          icon: const Icon(Icons.person),
+          iconData: Icons.person,
         ),
       ],
       child: StreamBuilderWithHandling(

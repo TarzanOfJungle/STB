@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/ioc_container.dart';
 
 class PageTemplate extends StatelessWidget {
@@ -46,9 +47,9 @@ class PageTemplate extends StatelessWidget {
     if (!showBackButton) {
       return null;
     }
-    return IconButton(
+    return StbIconAppbarButton(
       onPressed: () => _navRouter.returnBack(),
-      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+      iconData: Icons.arrow_back_ios_new_rounded,
     );
   }
 }

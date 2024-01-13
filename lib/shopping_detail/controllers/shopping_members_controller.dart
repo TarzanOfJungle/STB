@@ -35,8 +35,6 @@ class ShoppingMembersController with AuthenticatedSocketObserver {
         return _filterUserLookup(usersFromLookup);
       });
 
-  List<User> get shoppingMembers => _shoppingMembers.value.values.toList();
-
   int? get _shoppingId =>
       _shoppingDetailController.currentShoppingState?.shopping.id;
 

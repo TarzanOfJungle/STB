@@ -10,7 +10,6 @@ const double _BUTTON_HEIGHT = 40.0;
 class ShowSummaryButton extends StatelessWidget {
   final ShoppingWithContext shopping;
   ShowSummaryButton({super.key, required this.shopping});
-
   final _navRouter = get<NavRouter>();
   @override
   Widget build(BuildContext context) {

@@ -91,17 +91,17 @@ class _ShoppingParametersDialogState extends State<ShoppingParametersDialog> {
   Future<void> _confirm() async {
     if (_nameController.text.isNotEmpty && _nameController.text.trim() != "") {
       var wasSuccess = false;
-      var description = _descriptionController.text.isNotEmpty
+      final description = _descriptionController.text.isNotEmpty
           ? _descriptionController.text
           : null;
-      var post =
+      final post =
           PostShopping(name: _nameController.text, description: description);
       wasSuccess = widget.shopping == null
           ? await _shoppingsListController.addShopping(postShopping: post)
           : await _shoppingsListController.updateShopping(
               postShopping: post, shoppingId: widget.shopping!.shopping.id);
       if (wasSuccess) {
-        var shopping = await _shoppingsListController.lastUpdatedShopping.first;
+        final shopping = await _shoppingsListController.lastUpdatedShopping.first;
         _navRouter.toShoppingDetail(shopping!.shopping.id);
       }
     }

@@ -114,7 +114,7 @@ class ShoppingDetailController with AuthenticatedSocketObserver {
 
   Future<bool> putShopping(int shoppingId) async {
     try {
-      var foundShopping =
+      final foundShopping =
           await _shoppingsListRepository.shoppingById(shoppingId: shoppingId);
       _shopping.add(foundShopping);
       return true;

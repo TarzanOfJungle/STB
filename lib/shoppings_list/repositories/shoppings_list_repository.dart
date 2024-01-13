@@ -68,7 +68,7 @@ class ShoppingsListRepository implements ShoppingsListRepositoryBase {
 
   @override
   Future<bool> deleteShopping({required int shoppingId}) async {
-    var status = await _apiClient.sendRequest(
+    final status = await _apiClient.sendRequest(
       path: '${ApiConstants.shoppingsList}/$shoppingId',
       method: HttpMethod.delete,
       queryParams: {'shoppingId': '$shoppingId'},
@@ -79,7 +79,7 @@ class ShoppingsListRepository implements ShoppingsListRepositoryBase {
   @override
   Future<ShoppingWithContext> updateShopping(
       {required UpdateShopping updateShopping}) async {
-    var updatedShopping = await _apiClient.sendDataRequest(
+    final updatedShopping = await _apiClient.sendDataRequest(
         path: ApiConstants.shoppingsList,
         method: HttpMethod.put,
         jsonBody: updateShopping.toJson(),

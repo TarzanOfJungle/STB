@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/groupchat/screens/groupchat_tab_page.dart';
 import 'package:split_the_bill/purchases/screens/purchases_tab_page.dart';
 import 'package:split_the_bill/purchases/widgets/dialogs/add_product_assignment_dialog.dart';
@@ -63,19 +64,10 @@ class _ShoppingDetailTabviewWrapperState
   Widget build(BuildContext context) {
     final currentTabviewIndex = _tabController.index;
 
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _shoppingDetailController.shopping,
-      builder: (
-        BuildContext context,
-        AsyncSnapshot<ShoppingWithContext?> snapshot,
-      ) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData) {
-          return const LoadingIndicator();
-        }
-        final shopping = snapshot.data!;
-
+      buildWhenData: (context, data) {
+        final shopping = data!;
         return PageTemplate(
           label: shopping.shopping.name,
           showBackButton: true,
@@ -105,16 +97,16 @@ class _ShoppingDetailTabviewWrapperState
 
     if (currentTabviewIndex == 0 && addingShoppingItemsEnabled) {
       return [
-        IconButton(
-          icon: const Icon(Icons.add_shopping_cart_rounded, size: 30),
+        StbIconAppbarButton(
           onPressed: () => _showAddProductAssignmentDialog(),
+          iconData: Icons.add_shopping_cart_rounded,
         ),
       ];
     } else if (currentTabviewIndex == 1 && userAuthorizedForEditingShopping) {
       return [
-        IconButton(
-          icon: const Icon(Icons.edit, size: 30),
+        StbIconAppbarButton(
           onPressed: () => _onEditButtonPressed(shopping),
+          iconData: Icons.edit,
         ),
       ];
     }

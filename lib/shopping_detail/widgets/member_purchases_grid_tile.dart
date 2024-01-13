@@ -20,7 +20,7 @@ class MemberPurchasesGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var listLength =
+    final listLength =
         userPurchases.productPurchases.length < _NUMBER_OF_ITEMS + 1
             ? userPurchases.productPurchases.length
             : _NUMBER_OF_ITEMS + 1; // Bonus 1 for ellipsis line
@@ -33,8 +33,6 @@ class MemberPurchasesGridTile extends StatelessWidget {
           userPurchases: userPurchases,
         ),
         child: Container(
-          height: 300.0,
-          width: 300.0,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(STANDARD_BORDER_RADIUS),
@@ -47,9 +45,6 @@ class MemberPurchasesGridTile extends StatelessWidget {
                   userPurchases.user.username,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                // const SizedBox(
-                //   height: SMALL_PADDING,
-                // ),
                 Expanded(
                     child: ListView.separated(
                   separatorBuilder: (_, __) => const Divider(),
@@ -109,7 +104,7 @@ class MemberPurchasesGridTile extends StatelessWidget {
   }
 
   Widget _buildTotalAmountLine() {
-    var totalAmount = userPurchases.productPurchases.fold(0.0,
+    final totalAmount = userPurchases.productPurchases.fold(0.0,
         (previousValue, purchase) => previousValue + purchase.totalAmountSpent);
     return Row(
       children: [

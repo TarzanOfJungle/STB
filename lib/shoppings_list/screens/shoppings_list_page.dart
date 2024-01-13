@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/widgets/components/search_field.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/shoppings_list/controllers/shopping_list_controller.dart';
-import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 import 'package:split_the_bill/common/widgets/dialogs/shopping_parameters_dialog.dart';
 import 'package:split_the_bill/shoppings_list/widgets/shopping_tile.dart';
 
@@ -11,7 +11,6 @@ import '../../common/constants/ui_constants.dart';
 import '../../ioc_container.dart';
 
 const String _EMPTY_LIST_MESSAGE = "No shoppings yet";
-const String _LOADING_LIST_ERROR_MESSAGE = "Unable to load list of shoppings";
 
 class ShoppingsListPage extends StatefulWidget {
   ShoppingsListPage({super.key});
@@ -26,15 +25,21 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
   bool _showfinalized = false;
   final _searchFieldController = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+    widget._shoppingsListController.updateShoppingsList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PageTemplate(
       label: 'Shoppings',
       actions: [
-        IconButton(
-          iconSize: 30.0,
-          icon: const Icon(Icons.add),
+        StbIconAppbarButton(
           onPressed: () => _onNewButtonPressed(context),
+          iconData: Icons.add,
         ),
       ],
       child: Column(
@@ -51,22 +56,7 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
               ],
             ),
           ),
-          FutureBuilder<bool>(
-            future: widget._shoppingsListController
-                .updateShoppingsList(searchQuery: _searchFieldController.text),
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData) {
-                return const Center(child: LoadingIndicator());
-              } else {
-                if (!snapshot.data!) {
-                  return const Text(_LOADING_LIST_ERROR_MESSAGE);
-                }
-                return _showList();
-              }
-            },
-          ),
+          _showList(),
         ],
       ),
     );
@@ -104,39 +94,30 @@ class _ShoppingsListPageState extends State<ShoppingsListPage> {
   }
 
   Widget _showList() {
-    return StreamBuilder<Iterable<ShoppingWithContext>>(
+    return StreamBuilderWithHandling(
         stream: widget._shoppingsListController.shoppingsListStream,
-        builder: (BuildContext context,
-            AsyncSnapshot<Iterable<ShoppingWithContext>> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (!snapshot.hasData) {
-            return const Center(
-              child: LoadingIndicator(),
-            );
-          } else {
-            final shoppingsList = snapshot.data!.toList();
-            final filteredList = _showfinalized
-                ? shoppingsList
-                : shoppingsList
-                    .where((shopping) => !shopping.shopping.finalized)
-                    .toList();
-            if (shoppingsList.isEmpty) {
-              return const Text(_EMPTY_LIST_MESSAGE);
-            }
-            return Expanded(
-              child: RefreshIndicator(
-                onRefresh: _pullRefresh,
-                child: ListView.separated(
-                  itemBuilder: (_, index) => ShoppingTile(
-                    shopping: filteredList[index],
-                  ),
-                  separatorBuilder: (_, __) => const Divider(),
-                  itemCount: filteredList.length,
-                ),
-              ),
-            );
+        buildWhenData: (context, data) {
+          final shoppingsList = data.toList();
+          final filteredList = _showfinalized
+              ? shoppingsList
+              : shoppingsList
+                  .where((shopping) => !shopping.shopping.finalized)
+                  .toList();
+          if (shoppingsList.isEmpty) {
+            return const Text(_EMPTY_LIST_MESSAGE);
           }
+          return Expanded(
+            child: RefreshIndicator(
+              onRefresh: _pullRefresh,
+              child: ListView.separated(
+                itemBuilder: (_, index) => ShoppingTile(
+                  shopping: filteredList[index],
+                ),
+                separatorBuilder: (_, __) => const Divider(),
+                itemCount: filteredList.length,
+              ),
+            ),
+          );
         });
   }
 

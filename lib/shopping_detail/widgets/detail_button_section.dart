@@ -35,7 +35,7 @@ class DetailButtonSection extends StatelessWidget {
   }
 
   List<Widget> _finalizeAndDeleteButtons(BuildContext context) {
-    var loggedInUser = _authController.loggedInUser;
+    final loggedInUser = _authController.loggedInUser;
     if (loggedInUser?.id == shopping.shopping.creatorId) {
       return [
         if (!shopping.shopping.finalized)
@@ -95,7 +95,7 @@ class DetailButtonSection extends StatelessWidget {
   }
 
   Future<void> _delete() async {
-    var wasSuccess = await _shoppingsListController.deleteShopping(
+    final wasSuccess = await _shoppingsListController.deleteShopping(
         shoppingId: shopping.shopping.id);
     if (wasSuccess) {
       _navRouter.toShoppingList();
@@ -103,7 +103,7 @@ class DetailButtonSection extends StatelessWidget {
   }
 
   Future<void> _finalize() async {
-    var wasSuccess = await _shoppingsListController.updateShopping(
+    final wasSuccess = await _shoppingsListController.updateShopping(
       shoppingId: shopping.shopping.id,
       finalize: true,
     );
