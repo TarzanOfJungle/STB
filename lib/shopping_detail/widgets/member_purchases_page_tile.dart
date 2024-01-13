@@ -6,7 +6,6 @@ const _TILE_HEIGHT = 90.0;
 
 class MemberPurchasesPageTile extends StatelessWidget {
   final ProductWithPurchaseContext purchase;
-
   const MemberPurchasesPageTile({super.key, required this.purchase});
 
   @override
@@ -16,7 +15,6 @@ class MemberPurchasesPageTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(STANDARD_PADDING),
         child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -33,7 +31,6 @@ class MemberPurchasesPageTile extends StatelessWidget {
                   const SizedBox(
                     height: SMALL_PADDING,
                   ),
-                  // Text(purchase.product.description ?? ''),
                 ],
               ),
             ),

@@ -83,7 +83,7 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
           text: 'Confirm',
           stretch: true,
           onTap: () async {
-            var wasSuccess = await _onConfirm();
+            final wasSuccess = await _onConfirm();
             if (wasSuccess) {
               _showMessage('Password changed', SnackbarMessageCategory.INFO);
               _navRouter.returnBack();
@@ -103,7 +103,7 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
         _confirmationController.clear();
         return false;
       }
-      var post = PutUser(
+      final post = PutUser(
         id: widget.user.id,
         password: _passwordController.text,
       );

@@ -56,6 +56,6 @@ class ProfileTile extends StatelessWidget {
         text: buttonLabel,
       );
     }
-    return Container();
+    return const SizedBox.shrink();
   }
 }

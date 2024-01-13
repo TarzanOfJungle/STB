@@ -29,7 +29,7 @@ class ProfileController with AuthenticatedSocketObserver {
   Stream<User?> get userInformationsStream => _userInformations.stream;
 
   Future<void> refreshUserInformations() async{
-    var loggedInUserId = _authController.loggedInUser?.id;
+    final loggedInUserId = _authController.loggedInUser?.id;
     if (loggedInUserId != null) {
       try {
         final user = await _usersRepository.getUserById(loggedInUserId);

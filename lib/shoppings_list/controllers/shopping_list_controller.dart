@@ -102,7 +102,7 @@ class ShoppingsListController with AuthenticatedSocketObserver {
   Future<bool> addShopping({required PostShopping postShopping}) async {
     var wasSuccess = false;
     try {
-      var newShopping = await _shoppingsListRepository.addShopping(
+      final newShopping = await _shoppingsListRepository.addShopping(
           postShopping: postShopping);
       _lastUpdatedShopping.add(newShopping);
       wasSuccess = true;
@@ -137,7 +137,7 @@ class ShoppingsListController with AuthenticatedSocketObserver {
           due: DateTime.now(),
           updateDescription: true,
           description: postShopping?.description);
-      var shopping =
+      final shopping =
           await _shoppingsListRepository.updateShopping(updateShopping: update);
       _lastUpdatedShopping.add(shopping);
       wasSuccess = true;

@@ -15,6 +15,8 @@ import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_contr
 const _NO_ITEMS_YET =
     "This shopping doesn't have any items. Add some by clicking the button in upper right corner.";
 
+const _NO_ITEMS_IN_FINALIZED = "This shopping did not contain any items.";
+
 const _NOTHING_FOUND_SEARCH_MESSAGE = "No items found";
 
 class PurchasesTabPage extends StatefulWidget {
@@ -52,9 +54,6 @@ class _PurchasesTabPageState extends State<PurchasesTabPage> {
           child: StreamBuilderWithHandling(
             stream: _purchasesController.filteredAssignmentsStream,
             buildWhenData: (context, data) {
-              if (data == null) {
-                _buildNoData();
-              }
               final dataEmpty = data!.productAssignments.isEmpty &&
                   data.productPurchases.isEmpty;
               final nothingFound = _searchFieldController.text.isNotEmpty &&
@@ -63,7 +62,9 @@ class _PurchasesTabPageState extends State<PurchasesTabPage> {
                 return _buildNoData();
               }
               if (nothingFound) {
-                return const Text(_NOTHING_FOUND_SEARCH_MESSAGE);
+                return _editingEnabled
+                    ? const Text(_NOTHING_FOUND_SEARCH_MESSAGE)
+                    : const Text(_NO_ITEMS_IN_FINALIZED);
               }
               return SlidableAutoCloseBehavior(
                 child: ListView.separated(

@@ -109,7 +109,7 @@ class FriendsController with AuthenticatedSocketObserver {
 
   Future<void> _loadFriendshipRequests() async {
     try {
-      var pendingFriendshipRequests =
+      final pendingFriendshipRequests =
           await _friendshipManagementRepository.getFriendshipRequests(
         status: FriendshipRequestStatus.PENDING,
       );

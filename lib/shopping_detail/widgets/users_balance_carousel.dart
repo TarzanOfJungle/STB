@@ -1,10 +1,10 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/auth/controllers/auth_controller.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/shoppings_list/models/shopping_with_context/shopping_with_context.dart';
 
 import '../../common/constants/ui_constants.dart';
-import '../../common/widgets/loading_indicator.dart';
 import '../../ioc_container.dart';
 import '../../purchases/controllers/purchases_controller.dart';
 import '../../purchases/models/user_purchases/user_purchases.dart';
@@ -32,34 +32,27 @@ class UsersBalanceCarousel extends StatelessWidget {
       children: [
         SizedBox(
           height: _CAROUSEL_HEIGHT,
-          child: StreamBuilder(
+          child: StreamBuilderWithHandling(
               stream: _shoppingMembersController.shoppingMembersStream,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<User>?> snapshot) {
-                if (snapshot.hasError) {
-                  return Center(child: Text(snapshot.error.toString()));
-                } else if (!snapshot.hasData) {
-                  return const Center(child: LoadingIndicator());
-                } else {
-                  var users = snapshot.data!;
-                  var currentUserId = _authController.loggedInUser!.id;
-                  return Swiper(
-                    index: users.indexWhere((e) => e.id == currentUserId),
-                    itemBuilder: (BuildContext context, int itemIndex) {
-                      return _buildCarouselItem(
-                        context,
-                        itemIndex % shopping.numberOfParticipants,
-                        users[itemIndex],
-                      );
-                    },
-                    itemCount: shopping.numberOfParticipants,
-                    pagination: SwiperPagination(
-                      builder: DotSwiperPaginationBuilder(
-                        activeColor: Theme.of(context).colorScheme.onSurface,
-                      ),
+              buildWhenData: (context, data) {
+                final users = data;
+                final currentUserId = _authController.loggedInUser!.id;
+                return Swiper(
+                  index: users.indexWhere((e) => e.id == currentUserId),
+                  itemBuilder: (BuildContext context, int itemIndex) {
+                    return _buildCarouselItem(
+                      context,
+                      itemIndex % shopping.numberOfParticipants,
+                      users[itemIndex],
+                    );
+                  },
+                  itemCount: shopping.numberOfParticipants,
+                  pagination: SwiperPagination(
+                    builder: DotSwiperPaginationBuilder(
+                      activeColor: Theme.of(context).colorScheme.onSurface,
                     ),
-                  );
-                }
+                  ),
+                );
               }),
         )
       ],
@@ -67,8 +60,8 @@ class UsersBalanceCarousel extends StatelessWidget {
   }
 
   Widget _buildCarouselItem(BuildContext context, int itemIndex, User user) {
-    var transactions = _shoppingDetailController.transactions;
-    var amount = transactions.fold(
+    final transactions = _shoppingDetailController.transactions;
+    final amount = transactions.fold(
         0.0,
         (previousValue, e) => e.payedUserId == user.id
             ? (previousValue + e.ammount)
@@ -115,8 +108,8 @@ class UsersBalanceCarousel extends StatelessWidget {
   }
 
   double _userTotalAmount(User user) {
-    var userPurchases = _purchasesController.usersWithPurchases.firstWhere(
-        (element) => element.user.id == user.id,
+    final userPurchases = _purchasesController.usersWithPurchases.firstWhere(
+        (e) => e.user.id == user.id,
         orElse: () => UserPurchases(user: user, productPurchases: []));
     return userPurchases.productPurchases.fold(0.0,
         (previousValue, element) => previousValue + element.totalAmountSpent);

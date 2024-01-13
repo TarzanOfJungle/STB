@@ -10,15 +10,14 @@ const _TILE_HEIGHT = 100.0;
 
 class ShoppingTile extends StatelessWidget {
   final ShoppingWithContext shopping;
+  ShoppingTile({super.key, required this.shopping});
 
-  const ShoppingTile({super.key, required this.shopping});
+  final _navRouter = get<NavRouter>();
 
   @override
   Widget build(BuildContext context) {
-    final navRouter = get<NavRouter>();
-
     return InkWell(
-        onTap: () => navRouter.toShoppingDetail(shopping.shopping.id),
+        onTap: () => _navRouter.toShoppingDetail(shopping.shopping.id),
         child: SizedBox(
           height: _TILE_HEIGHT,
           child: Padding(

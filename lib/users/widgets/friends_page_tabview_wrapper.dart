@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/navigation/nav_router.dart';
+import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
 import 'package:split_the_bill/ioc_container.dart';
 import 'package:split_the_bill/shopping_detail/models/tab_view_item.dart';
@@ -51,9 +52,9 @@ class _FriendsPageTabviewWrapperState extends State<FriendsPageTabviewWrapper>
     return PageTemplate(
       label: "Friends",
       actions: [
-        IconButton(
+        StbIconAppbarButton(
           onPressed: () => _navRouter.toUsersSearch(),
-          icon: const Icon(Icons.person_add_rounded),
+          iconData: Icons.person_add_rounded,
         ),
       ],
       bottom: TabBar(

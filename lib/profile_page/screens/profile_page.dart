@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
-import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/components/stb_icon_appbar_button.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 import 'package:split_the_bill/profile_page/dialogs/password_change_dialog.dart';
 import 'package:split_the_bill/profile_page/dialogs/username_edit_dialog.dart';
@@ -26,9 +27,9 @@ class ProfilePage extends StatelessWidget {
       label: 'Profile',
       showBackButton: true,
       actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
+        StbIconAppbarButton(
           onPressed: () => _onLogoutButtonPressed(context),
+          iconData: Icons.logout,
         ),
       ],
       child: Padding(
@@ -40,33 +41,23 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildBody() {
     _profileController.refreshUserInformations();
-    return StreamBuilder(
+    return StreamBuilderWithHandling(
       stream: _profileController.userInformationsStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('${snapshot.error}'),
-          );
-        } else if (!snapshot.hasData) {
-          return const Center(
-            child: LoadingIndicator(),
-          );
-        } else {
-          var user = snapshot.data!;
-          return Column(
-            children: [
-              _buildEmailTile(user),
-              const SizedBox(
-                height: SMALL_PADDING,
-              ),
-              _buildUsernameTile(context, user),
-              const SizedBox(
-                height: SMALL_PADDING,
-              ),
-              _buildPasswordTile(context, user),
-            ],
-          );
-        }
+      buildWhenData: (context, data) {
+        final user = data!;
+        return Column(
+          children: [
+            _buildEmailTile(user),
+            const SizedBox(
+              height: SMALL_PADDING,
+            ),
+            _buildUsernameTile(context, user),
+            const SizedBox(
+              height: SMALL_PADDING,
+            ),
+            _buildPasswordTile(context, user),
+          ],
+        );
       },
     );
   }

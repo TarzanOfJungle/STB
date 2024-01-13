@@ -4,6 +4,7 @@ import 'package:split_the_bill/common/controllers/snackbar_messanger_controller.
 import 'package:split_the_bill/common/utils/validator.dart';
 import 'package:split_the_bill/common/widgets/dialogs/stb_dialog.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/profile_page/controllers/profile_controller.dart';
 import 'package:split_the_bill/users/models/update_user/put_user.dart';
 
@@ -44,15 +45,10 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
       titleIcon: Icons.edit,
       body: Column(
         children: [
-          StreamBuilder(
+          StreamBuilderWithHandling(
             stream: _profileController.userInformationsStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString(),),);
-              } else if (!snapshot.hasData) {
-                return const Center(child: LoadingIndicator(),);
-              } else {
-                _usernameController.text = snapshot.data!.username;
+            buildWhenData: (context, data) {
+                _usernameController.text = data!.username;
                 return Form(
                   key: _registrationFormKey,
                   child: StbTextField(
@@ -62,7 +58,6 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
                   ),
                 );
               }
-            }
           ),
           const SizedBox(
             height: 20.0,
@@ -87,7 +82,7 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
           text: 'Confirm',
           stretch: true,
           onTap: () async {
-            var wasChanged = await _onConfirm();
+            final wasChanged = await _onConfirm();
             if (wasChanged) {
               _navRouter.returnBack();
             }
@@ -101,7 +96,7 @@ class _UsernameEditDialogState extends State<UsernameEditDialog> {
   Future<bool> _onConfirm() async {
     var wasSuccess = false;
     if (_registrationFormKey.currentState!.validate()) {
-      var post = PutUser(
+      final post = PutUser(
         id: widget.user.id,
         username: _usernameController.text,
       );

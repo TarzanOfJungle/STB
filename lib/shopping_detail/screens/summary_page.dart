@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:split_the_bill/common/constants/ui_constants.dart';
 import 'package:split_the_bill/common/widgets/loading_indicator.dart';
 import 'package:split_the_bill/common/widgets/page_template.dart';
+import 'package:split_the_bill/common/widgets/wrappers/stream_builder_with_handling.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_detail_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/shopping_members_controller.dart';
 import 'package:split_the_bill/shopping_detail/controllers/user_transactions_display_controller.dart';
@@ -31,7 +32,6 @@ class SummaryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // _userTransactionsDisplayController.forceLoading();
     return PageTemplate(
       showBackButton: true,
       label: 'Shopping Summary',
@@ -70,33 +70,17 @@ class SummaryPage extends StatelessWidget {
         UsersBalanceCarousel(shopping: shopping),
         _buildInfoSection(),
         TransactionsFilterSection(),
-        StreamBuilder(
-            stream: _userTransactionsDisplayController.selectedUsersStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(child: Text("${snapshot.error}"));
-              } else {
-                var selectedUser = snapshot.hasData ? snapshot.data : null;
-                var allTransactions = _shoppingDetailController.transactions;
-                var transactions =
-                    _getFilteredTransactions(selectedUser, allTransactions);
-                // _userTransactionsDisplayController
-                //     .initLoading(transactions.length);
-                return ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: transactions.length,
-                  itemBuilder: (context, index) {
-                    var transaction = transactions[index];
-                    return _buildTransactionTile(context, transaction);
-                  },
-                  separatorBuilder: (_, __) => const SizedBox(
-                    height: SMALL_PADDING,
-                  ),
-                );
-              }
-            },
-          ),
+        StreamBuilderWithHandling(
+          stream: _userTransactionsDisplayController.selectedUsersStream,
+          assumeNullDataMeansLoading: false,
+          whenNoData: _buildTransactionsList(_shoppingDetailController.transactions),
+          buildWhenData: (context, data) {
+            final allTransactions = _shoppingDetailController.transactions;
+            final transactions =
+                _getFilteredTransactions(data, allTransactions);
+            return _buildTransactionsList(transactions);
+          },
+        ),
       ],
     );
   }
@@ -118,6 +102,21 @@ class SummaryPage extends StatelessWidget {
             data: '${shopping.numberOfParticipants}',
           ),
         ],
+      ),
+    );
+  }
+  
+  Widget _buildTransactionsList(List<Transaction> transactions) {
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        final transaction = transactions[index];
+        return _buildTransactionTile(context, transaction);
+      },
+      separatorBuilder: (_, __) => const SizedBox(
+        height: SMALL_PADDING,
       ),
     );
   }
