@@ -134,7 +134,7 @@ class PerShoppingSpendingChart extends StatelessWidget {
       ),
       children: [
         TextSpan(
-          text: "${rod.toY},-",
+          text: "${rod.toY.toStringAsFixed(1)},-",
           style: TextStyle(
             color: fontColor,
             fontWeight: FontWeight.bold,

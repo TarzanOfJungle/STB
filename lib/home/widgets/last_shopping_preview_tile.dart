@@ -61,7 +61,7 @@ class LastShoppingPreviewTile extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Amount spent: ${shopping.ammountSpent}'),
+        Text('Amount spent: ${shopping.ammountSpent.toStringAsFixed(1)}'),
         Text('Members: ${shopping.numberOfParticipants}'),
       ],
     );
